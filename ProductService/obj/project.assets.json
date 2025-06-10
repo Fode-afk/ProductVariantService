@@ -5632,23 +5632,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\User\\.nuget\\packages\\": {},
+    "C:\\Users\\romch\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\Projects\\HLShop\\ProductService\\ProductService\\ProductService.csproj",
+      "projectUniqueName": "K:\\Programming\\Harita\\ProductService\\ProductService\\ProductService.csproj",
       "projectName": "ProductService",
-      "projectPath": "D:\\Projects\\HLShop\\ProductService\\ProductService\\ProductService.csproj",
-      "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
-      "outputPath": "D:\\Projects\\HLShop\\ProductService\\ProductService\\obj\\",
+      "projectPath": "K:\\Programming\\Harita\\ProductService\\ProductService\\ProductService.csproj",
+      "packagesPath": "C:\\Users\\romch\\.nuget\\packages\\",
+      "outputPath": "K:\\Programming\\Harita\\ProductService\\ProductService\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\User\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\romch\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -5657,7 +5657,6 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-        "C:\\Program Files\\dotnet\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {

@@ -6,8 +6,8 @@ namespace ProductService.Data
     {
         Task<IEnumerable<Product>> GetAllProductsAsync();
         Task<Product> GetProductByIdAsync(string productId);
-        Task CreateProductAsync(Product product);
-        Task UpdateProductAsync(Product product);
-        Task DeleteProductAsync(string productId);
+        Task<bool> CreateProductAsync(Product product);
+        Task<bool> UpdateProductAsync(Product product);
+        Task<bool> DeleteProductAsync(string productId);
     }
 }

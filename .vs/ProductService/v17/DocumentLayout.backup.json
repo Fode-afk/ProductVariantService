@@ -1,34 +1,90 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "D:\\Projects\\HLShop\\ProductService\\",
+  "WorkspaceRootPath": "K:\\Programming\\Harita\\ProductService\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{AE46DBC7-5F87-4FEE-A927-A5B047710DDB}|ProductService\\ProductService.csproj|d:\\projects\\hlshop\\productservice\\productservice\\models\\product.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{AE46DBC7-5F87-4FEE-A927-A5B047710DDB}|ProductService\\ProductService.csproj|solutionrelative:productservice\\models\\product.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{AE46DBC7-5F87-4FEE-A927-A5B047710DDB}|ProductService\\ProductService.csproj|d:\\projects\\hlshop\\productservice\\productservice\\grpc\\grpcserver.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{AE46DBC7-5F87-4FEE-A927-A5B047710DDB}|ProductService\\ProductService.csproj|solutionrelative:productservice\\grpc\\grpcserver.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{AE46DBC7-5F87-4FEE-A927-A5B047710DDB}|ProductService\\ProductService.csproj|d:\\projects\\hlshop\\productservice\\productservice\\protos\\products.proto||{3B902123-F8A7-4915-9F01-361F908088D0}",
+      "AbsoluteMoniker": "D:0:0:{AE46DBC7-5F87-4FEE-A927-A5B047710DDB}|ProductService\\ProductService.csproj|k:\\programming\\harita\\productservice\\productservice\\protos\\products.proto||{3B902123-F8A7-4915-9F01-361F908088D0}",
       "RelativeMoniker": "D:0:0:{AE46DBC7-5F87-4FEE-A927-A5B047710DDB}|ProductService\\ProductService.csproj|solutionrelative:productservice\\protos\\products.proto||{3B902123-F8A7-4915-9F01-361F908088D0}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{AE46DBC7-5F87-4FEE-A927-A5B047710DDB}|ProductService\\ProductService.csproj|d:\\projects\\hlshop\\productservice\\productservice\\data\\productrepo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{AE46DBC7-5F87-4FEE-A927-A5B047710DDB}|ProductService\\ProductService.csproj|solutionrelative:productservice\\data\\productrepo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{AE46DBC7-5F87-4FEE-A927-A5B047710DDB}|ProductService\\ProductService.csproj|k:\\programming\\harita\\productservice\\productservice\\grpc\\grpcserver.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{AE46DBC7-5F87-4FEE-A927-A5B047710DDB}|ProductService\\ProductService.csproj|solutionrelative:productservice\\grpc\\grpcserver.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{AE46DBC7-5F87-4FEE-A927-A5B047710DDB}|ProductService\\ProductService.csproj|d:\\projects\\hlshop\\productservice\\productservice\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{AE46DBC7-5F87-4FEE-A927-A5B047710DDB}|ProductService\\ProductService.csproj|solutionrelative:productservice\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{AE46DBC7-5F87-4FEE-A927-A5B047710DDB}|ProductService\\ProductService.csproj|k:\\programming\\harita\\productservice\\productservice\\grpc\\validators\\updateproductvalidator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{AE46DBC7-5F87-4FEE-A927-A5B047710DDB}|ProductService\\ProductService.csproj|solutionrelative:productservice\\grpc\\validators\\updateproductvalidator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{AE46DBC7-5F87-4FEE-A927-A5B047710DDB}|ProductService\\ProductService.csproj|d:\\projects\\hlshop\\productservice\\productservice\\profiles\\productsprofile.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{AE46DBC7-5F87-4FEE-A927-A5B047710DDB}|ProductService\\ProductService.csproj|k:\\programming\\harita\\productservice\\productservice\\profiles\\productsprofile.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{AE46DBC7-5F87-4FEE-A927-A5B047710DDB}|ProductService\\ProductService.csproj|solutionrelative:productservice\\profiles\\productsprofile.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{AE46DBC7-5F87-4FEE-A927-A5B047710DDB}|ProductService\\ProductService.csproj|d:\\projects\\hlshop\\productservice\\productservice\\models\\productattribute.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{AE46DBC7-5F87-4FEE-A927-A5B047710DDB}|ProductService\\ProductService.csproj|k:\\programming\\harita\\productservice\\productservice\\settings\\mongosettings.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{AE46DBC7-5F87-4FEE-A927-A5B047710DDB}|ProductService\\ProductService.csproj|solutionrelative:productservice\\settings\\mongosettings.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AE46DBC7-5F87-4FEE-A927-A5B047710DDB}|ProductService\\ProductService.csproj|k:\\programming\\harita\\productservice\\productservice\\data\\iproductrepo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{AE46DBC7-5F87-4FEE-A927-A5B047710DDB}|ProductService\\ProductService.csproj|solutionrelative:productservice\\data\\iproductrepo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AE46DBC7-5F87-4FEE-A927-A5B047710DDB}|ProductService\\ProductService.csproj|k:\\programming\\harita\\productservice\\productservice\\data\\productrepo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{AE46DBC7-5F87-4FEE-A927-A5B047710DDB}|ProductService\\ProductService.csproj|solutionrelative:productservice\\data\\productrepo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AE46DBC7-5F87-4FEE-A927-A5B047710DDB}|ProductService\\ProductService.csproj|k:\\programming\\harita\\productservice\\productservice\\dtos\\productreaddto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{AE46DBC7-5F87-4FEE-A927-A5B047710DDB}|ProductService\\ProductService.csproj|solutionrelative:productservice\\dtos\\productreaddto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AE46DBC7-5F87-4FEE-A927-A5B047710DDB}|ProductService\\ProductService.csproj|k:\\programming\\harita\\productservice\\productservice\\grpc\\validators\\deleteproductvalidator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{AE46DBC7-5F87-4FEE-A927-A5B047710DDB}|ProductService\\ProductService.csproj|solutionrelative:productservice\\grpc\\validators\\deleteproductvalidator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AE46DBC7-5F87-4FEE-A927-A5B047710DDB}|ProductService\\ProductService.csproj|k:\\programming\\harita\\productservice\\productservice\\grpc\\validators\\getproductvalidator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{AE46DBC7-5F87-4FEE-A927-A5B047710DDB}|ProductService\\ProductService.csproj|solutionrelative:productservice\\grpc\\validators\\getproductvalidator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AE46DBC7-5F87-4FEE-A927-A5B047710DDB}|ProductService\\ProductService.csproj|k:\\programming\\harita\\productservice\\productservice\\grpc\\validators\\createproductvalidator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{AE46DBC7-5F87-4FEE-A927-A5B047710DDB}|ProductService\\ProductService.csproj|solutionrelative:productservice\\grpc\\validators\\createproductvalidator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AE46DBC7-5F87-4FEE-A927-A5B047710DDB}|ProductService\\ProductService.csproj|k:\\programming\\harita\\productservice\\productservice\\grpc\\validators\\ivalidator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{AE46DBC7-5F87-4FEE-A927-A5B047710DDB}|ProductService\\ProductService.csproj|solutionrelative:productservice\\grpc\\validators\\ivalidator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AE46DBC7-5F87-4FEE-A927-A5B047710DDB}|ProductService\\ProductService.csproj|k:\\programming\\harita\\productservice\\productservice\\grpc\\validators\\validationresult.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{AE46DBC7-5F87-4FEE-A927-A5B047710DDB}|ProductService\\ProductService.csproj|solutionrelative:productservice\\grpc\\validators\\validationresult.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AE46DBC7-5F87-4FEE-A927-A5B047710DDB}|ProductService\\ProductService.csproj|k:\\programming\\harita\\productservice\\productservice\\models\\product.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{AE46DBC7-5F87-4FEE-A927-A5B047710DDB}|ProductService\\ProductService.csproj|solutionrelative:productservice\\models\\product.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AE46DBC7-5F87-4FEE-A927-A5B047710DDB}|ProductService\\ProductService.csproj|k:\\programming\\harita\\productservice\\productservice\\appsettings.development.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{AE46DBC7-5F87-4FEE-A927-A5B047710DDB}|ProductService\\ProductService.csproj|solutionrelative:productservice\\appsettings.development.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AE46DBC7-5F87-4FEE-A927-A5B047710DDB}|ProductService\\ProductService.csproj|k:\\programming\\harita\\productservice\\productservice\\appsettings.production.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{AE46DBC7-5F87-4FEE-A927-A5B047710DDB}|ProductService\\ProductService.csproj|solutionrelative:productservice\\appsettings.production.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AE46DBC7-5F87-4FEE-A927-A5B047710DDB}|ProductService\\ProductService.csproj|k:\\programming\\harita\\productservice\\productservice\\productservice.http||{5703B403-55E7-4C63-8C88-A8F52C7A45C5}",
+      "RelativeMoniker": "D:0:0:{AE46DBC7-5F87-4FEE-A927-A5B047710DDB}|ProductService\\ProductService.csproj|solutionrelative:productservice\\productservice.http||{5703B403-55E7-4C63-8C88-A8F52C7A45C5}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AE46DBC7-5F87-4FEE-A927-A5B047710DDB}|ProductService\\ProductService.csproj|k:\\programming\\harita\\productservice\\productservice\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{AE46DBC7-5F87-4FEE-A927-A5B047710DDB}|ProductService\\ProductService.csproj|solutionrelative:productservice\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AE46DBC7-5F87-4FEE-A927-A5B047710DDB}|ProductService\\ProductService.csproj|k:\\programming\\harita\\productservice\\productservice\\properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{AE46DBC7-5F87-4FEE-A927-A5B047710DDB}|ProductService\\ProductService.csproj|solutionrelative:productservice\\properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AE46DBC7-5F87-4FEE-A927-A5B047710DDB}|ProductService\\ProductService.csproj|k:\\programming\\harita\\productservice\\productservice\\models\\productattribute.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{AE46DBC7-5F87-4FEE-A927-A5B047710DDB}|ProductService\\ProductService.csproj|solutionrelative:productservice\\models\\productattribute.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AE46DBC7-5F87-4FEE-A927-A5B047710DDB}|ProductService\\ProductService.csproj|k:\\programming\\harita\\productservice\\productservice\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{AE46DBC7-5F87-4FEE-A927-A5B047710DDB}|ProductService\\ProductService.csproj|solutionrelative:productservice\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -38,51 +94,245 @@
       "DocumentGroups": [
         {
           "DockedWidth": 479,
-          "SelectedChildIndex": 4,
+          "SelectedChildIndex": 20,
           "Children": [
             {
               "$type": "Bookmark",
-              "Name": "ST:0:0:{e1b7d1f8-9b3c-49b1-8f4f-bfc63a88835d}"
+              "Name": "ST:0:0:{b1e99781-ab81-11d0-b683-00aa00a3ee26}"
             },
             {
               "$type": "Bookmark",
-              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+              "Name": "ST:0:0:{1c64b9c2-e352-428e-a56d-0ace190b99a6}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{3ae79031-e1bc-11d0-8f78-00a0c9110057}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{004be353-6879-467c-9d1e-9ac23cdf6d49}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{cce594b6-0c39-4442-ba28-10c64ac7e89f}"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 8,
+              "Title": "DeleteProductValidator.cs",
+              "DocumentMoniker": "K:\\Programming\\Harita\\ProductService\\ProductService\\Grpc\\Validators\\DeleteProductValidator.cs",
+              "RelativeDocumentMoniker": "ProductService\\Grpc\\Validators\\DeleteProductValidator.cs",
+              "ToolTip": "K:\\Programming\\Harita\\ProductService\\ProductService\\Grpc\\Validators\\DeleteProductValidator.cs",
+              "RelativeToolTip": "ProductService\\Grpc\\Validators\\DeleteProductValidator.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAyAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-10T21:11:05.303Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "UpdateProductValidator.cs",
+              "DocumentMoniker": "K:\\Programming\\Harita\\ProductService\\ProductService\\Grpc\\Validators\\UpdateProductValidator.cs",
+              "RelativeDocumentMoniker": "ProductService\\Grpc\\Validators\\UpdateProductValidator.cs",
+              "ToolTip": "K:\\Programming\\Harita\\ProductService\\ProductService\\Grpc\\Validators\\UpdateProductValidator.cs",
+              "RelativeToolTip": "ProductService\\Grpc\\Validators\\UpdateProductValidator.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAAARAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-10T21:06:25.682Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "GetProductValidator.cs",
+              "DocumentMoniker": "K:\\Programming\\Harita\\ProductService\\ProductService\\Grpc\\Validators\\GetProductValidator.cs",
+              "RelativeDocumentMoniker": "ProductService\\Grpc\\Validators\\GetProductValidator.cs",
+              "ToolTip": "K:\\Programming\\Harita\\ProductService\\ProductService\\Grpc\\Validators\\GetProductValidator.cs",
+              "RelativeToolTip": "ProductService\\Grpc\\Validators\\GetProductValidator.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-10T21:02:23.039Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "ProductService.http",
+              "DocumentMoniker": "K:\\Programming\\Harita\\ProductService\\ProductService\\ProductService.http",
+              "RelativeDocumentMoniker": "ProductService\\ProductService.http",
+              "ToolTip": "K:\\Programming\\Harita\\ProductService\\ProductService\\ProductService.http",
+              "RelativeToolTip": "ProductService\\ProductService.http",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003502|",
+              "WhenOpened": "2025-06-10T20:45:54.712Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 17,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "K:\\Programming\\Harita\\ProductService\\ProductService\\appsettings.json",
+              "RelativeDocumentMoniker": "ProductService\\appsettings.json",
+              "ToolTip": "K:\\Programming\\Harita\\ProductService\\ProductService\\appsettings.json",
+              "RelativeToolTip": "ProductService\\appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-06-10T20:45:45.148Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 18,
+              "Title": "launchSettings.json",
+              "DocumentMoniker": "K:\\Programming\\Harita\\ProductService\\ProductService\\Properties\\launchSettings.json",
+              "RelativeDocumentMoniker": "ProductService\\Properties\\launchSettings.json",
+              "ToolTip": "K:\\Programming\\Harita\\ProductService\\ProductService\\Properties\\launchSettings.json",
+              "RelativeToolTip": "ProductService\\Properties\\launchSettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-06-10T20:45:27.172Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "appsettings.Production.json",
+              "DocumentMoniker": "K:\\Programming\\Harita\\ProductService\\ProductService\\appsettings.Production.json",
+              "RelativeDocumentMoniker": "ProductService\\appsettings.Production.json",
+              "ToolTip": "K:\\Programming\\Harita\\ProductService\\ProductService\\appsettings.Production.json",
+              "RelativeToolTip": "ProductService\\appsettings.Production.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-06-10T20:45:17.796Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "CreateProductValidator.cs",
+              "DocumentMoniker": "K:\\Programming\\Harita\\ProductService\\ProductService\\Grpc\\Validators\\CreateProductValidator.cs",
+              "RelativeDocumentMoniker": "ProductService\\Grpc\\Validators\\CreateProductValidator.cs",
+              "ToolTip": "K:\\Programming\\Harita\\ProductService\\ProductService\\Grpc\\Validators\\CreateProductValidator.cs",
+              "RelativeToolTip": "ProductService\\Grpc\\Validators\\CreateProductValidator.cs",
+              "ViewState": "AgIAAA0AAAAAAAAAAAAAAC4AAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-10T20:29:19.024Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "ValidationResult.cs",
+              "DocumentMoniker": "K:\\Programming\\Harita\\ProductService\\ProductService\\Grpc\\Validators\\ValidationResult.cs",
+              "RelativeDocumentMoniker": "ProductService\\Grpc\\Validators\\ValidationResult.cs",
+              "ToolTip": "K:\\Programming\\Harita\\ProductService\\ProductService\\Grpc\\Validators\\ValidationResult.cs",
+              "RelativeToolTip": "ProductService\\Grpc\\Validators\\ValidationResult.cs",
+              "ViewState": "AgIAAAQAAAAAAAAAAAAuwBgAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-10T20:23:29.334Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "IValidator.cs",
+              "DocumentMoniker": "K:\\Programming\\Harita\\ProductService\\ProductService\\Grpc\\Validators\\IValidator.cs",
+              "RelativeDocumentMoniker": "ProductService\\Grpc\\Validators\\IValidator.cs",
+              "ToolTip": "K:\\Programming\\Harita\\ProductService\\ProductService\\Grpc\\Validators\\IValidator.cs",
+              "RelativeToolTip": "ProductService\\Grpc\\Validators\\IValidator.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-10T20:22:43.441Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "IProductRepo.cs",
+              "DocumentMoniker": "K:\\Programming\\Harita\\ProductService\\ProductService\\Data\\IProductRepo.cs",
+              "RelativeDocumentMoniker": "ProductService\\Data\\IProductRepo.cs",
+              "ToolTip": "K:\\Programming\\Harita\\ProductService\\ProductService\\Data\\IProductRepo.cs",
+              "RelativeToolTip": "ProductService\\Data\\IProductRepo.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAqwAUAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-10T20:22:04.165Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "ProductReadDto.cs",
+              "DocumentMoniker": "K:\\Programming\\Harita\\ProductService\\ProductService\\Dtos\\ProductReadDto.cs",
+              "RelativeDocumentMoniker": "ProductService\\Dtos\\ProductReadDto.cs",
+              "ToolTip": "K:\\Programming\\Harita\\ProductService\\ProductService\\Dtos\\ProductReadDto.cs",
+              "RelativeToolTip": "ProductService\\Dtos\\ProductReadDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-10T20:21:57.532Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "MongoSettings.cs",
+              "DocumentMoniker": "K:\\Programming\\Harita\\ProductService\\ProductService\\Settings\\MongoSettings.cs",
+              "RelativeDocumentMoniker": "ProductService\\Settings\\MongoSettings.cs",
+              "ToolTip": "K:\\Programming\\Harita\\ProductService\\ProductService\\Settings\\MongoSettings.cs",
+              "RelativeToolTip": "ProductService\\Settings\\MongoSettings.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-10T20:20:19.419Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "appsettings.Development.json",
+              "DocumentMoniker": "K:\\Programming\\Harita\\ProductService\\ProductService\\appsettings.Development.json",
+              "RelativeDocumentMoniker": "ProductService\\appsettings.Development.json",
+              "ToolTip": "K:\\Programming\\Harita\\ProductService\\ProductService\\appsettings.Development.json",
+              "RelativeToolTip": "ProductService\\appsettings.Development.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAAnAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-06-10T20:20:13.678Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
               "Title": "ProductRepo.cs",
-              "DocumentMoniker": "D:\\Projects\\HLShop\\ProductService\\ProductService\\Data\\ProductRepo.cs",
+              "DocumentMoniker": "K:\\Programming\\Harita\\ProductService\\ProductService\\Data\\ProductRepo.cs",
               "RelativeDocumentMoniker": "ProductService\\Data\\ProductRepo.cs",
-              "ToolTip": "D:\\Projects\\HLShop\\ProductService\\ProductService\\Data\\ProductRepo.cs",
+              "ToolTip": "K:\\Programming\\Harita\\ProductService\\ProductService\\Data\\ProductRepo.cs",
               "RelativeToolTip": "ProductService\\Data\\ProductRepo.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAAJAAAAAAAAAA==",
+              "ViewState": "AgIAAAgAAAAAAAAAAAAQwB8AAAAMAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-06-10T19:28:57.474Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 0,
               "Title": "products.proto",
-              "DocumentMoniker": "D:\\Projects\\HLShop\\ProductService\\ProductService\\Protos\\products.proto",
+              "DocumentMoniker": "K:\\Programming\\Harita\\ProductService\\ProductService\\Protos\\products.proto",
               "RelativeDocumentMoniker": "ProductService\\Protos\\products.proto",
-              "ToolTip": "D:\\Projects\\HLShop\\ProductService\\ProductService\\Protos\\products.proto",
+              "ToolTip": "K:\\Programming\\Harita\\ProductService\\ProductService\\Protos\\products.proto",
               "RelativeToolTip": "ProductService\\Protos\\products.proto",
-              "ViewState": "AgIAACoAAAAAAAAAAAAAADoAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAADsAAAAAAAAAAADwv0EAAAAfAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003853|",
               "WhenOpened": "2025-06-10T17:10:03.608Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 13,
               "Title": "Product.cs",
-              "DocumentMoniker": "D:\\Projects\\HLShop\\ProductService\\ProductService\\Models\\Product.cs",
+              "DocumentMoniker": "K:\\Programming\\Harita\\ProductService\\ProductService\\Models\\Product.cs",
               "RelativeDocumentMoniker": "ProductService\\Models\\Product.cs",
-              "ToolTip": "D:\\Projects\\HLShop\\ProductService\\ProductService\\Models\\Product.cs",
+              "ToolTip": "K:\\Programming\\Harita\\ProductService\\ProductService\\Models\\Product.cs",
               "RelativeToolTip": "ProductService\\Models\\Product.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAmAAAAAAAAAA==",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAmwBYAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-06-10T08:47:26.042Z",
               "EditorCaption": ""
@@ -91,22 +341,22 @@
               "$type": "Document",
               "DocumentIndex": 1,
               "Title": "GrpcServer.cs",
-              "DocumentMoniker": "D:\\Projects\\HLShop\\ProductService\\ProductService\\Grpc\\GrpcServer.cs",
+              "DocumentMoniker": "K:\\Programming\\Harita\\ProductService\\ProductService\\Grpc\\GrpcServer.cs",
               "RelativeDocumentMoniker": "ProductService\\Grpc\\GrpcServer.cs",
-              "ToolTip": "D:\\Projects\\HLShop\\ProductService\\ProductService\\Grpc\\GrpcServer.cs",
+              "ToolTip": "K:\\Programming\\Harita\\ProductService\\ProductService\\Grpc\\GrpcServer.cs",
               "RelativeToolTip": "ProductService\\Grpc\\GrpcServer.cs",
-              "ViewState": "AgIAABkAAAAAAAAAAAAswDIAAAANAAAAAAAAAA==",
+              "ViewState": "AgIAADIAAAAAAAAAAAAIwEQAAAArAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-06-10T06:43:26.726Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 19,
               "Title": "ProductAttribute.cs",
-              "DocumentMoniker": "D:\\Projects\\HLShop\\ProductService\\ProductService\\Models\\ProductAttribute.cs",
+              "DocumentMoniker": "K:\\Programming\\Harita\\ProductService\\ProductService\\Models\\ProductAttribute.cs",
               "RelativeDocumentMoniker": "ProductService\\Models\\ProductAttribute.cs",
-              "ToolTip": "D:\\Projects\\HLShop\\ProductService\\ProductService\\Models\\ProductAttribute.cs",
+              "ToolTip": "K:\\Programming\\Harita\\ProductService\\ProductService\\Models\\ProductAttribute.cs",
               "RelativeToolTip": "ProductService\\Models\\ProductAttribute.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAApAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -115,29 +365,28 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 3,
               "Title": "ProductsProfile.cs",
-              "DocumentMoniker": "D:\\Projects\\HLShop\\ProductService\\ProductService\\Profiles\\ProductsProfile.cs",
+              "DocumentMoniker": "K:\\Programming\\Harita\\ProductService\\ProductService\\Profiles\\ProductsProfile.cs",
               "RelativeDocumentMoniker": "ProductService\\Profiles\\ProductsProfile.cs",
-              "ToolTip": "D:\\Projects\\HLShop\\ProductService\\ProductService\\Profiles\\ProductsProfile.cs",
+              "ToolTip": "K:\\Programming\\Harita\\ProductService\\ProductService\\Profiles\\ProductsProfile.cs",
               "RelativeToolTip": "ProductService\\Profiles\\ProductsProfile.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABQAAAA2AAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-06-10T10:36:10.95Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 20,
               "Title": "Program.cs",
-              "DocumentMoniker": "D:\\Projects\\HLShop\\ProductService\\ProductService\\Program.cs",
+              "DocumentMoniker": "K:\\Programming\\Harita\\ProductService\\ProductService\\Program.cs",
               "RelativeDocumentMoniker": "ProductService\\Program.cs",
-              "ToolTip": "D:\\Projects\\HLShop\\ProductService\\ProductService\\Program.cs",
+              "ToolTip": "K:\\Programming\\Harita\\ProductService\\ProductService\\Program.cs",
               "RelativeToolTip": "ProductService\\Program.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAAqAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-09T16:56:30.476Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-06-09T16:56:30.476Z"
             }
           ]
         },
@@ -147,17 +396,11 @@
           "Children": [
             {
               "$type": "Bookmark",
-              "Name": "ST:0:0:{3ae79031-e1bc-11d0-8f78-00a0c9110057}"
-            }
-          ]
-        },
-        {
-          "DockedWidth": 101,
-          "SelectedChildIndex": -1,
-          "Children": [
+              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
+            },
             {
               "$type": "Bookmark",
-              "Name": "ST:0:0:{40ea2e6b-2121-4bb8-a43e-c83c04b51041}"
+              "Name": "ST:0:0:{d78612c7-9962-4b83-95d9-268046dad23a}"
             }
           ]
         }

@@ -16,7 +16,7 @@ namespace ProductService.Profiles
                 .ForMember(dest => dest.Attributes, opt => opt.MapFrom(src => src.Attributes))
                 .ForMember(dest => dest.ImageURLs, opt => opt.MapFrom(src => src.ImageURLs));
 
-            CreateMap<ProductAttributeGrpc, ProductAttribute>().ReverseMap();
+            //CreateMap<ProductAttributeGrpc, ProductAttribute>().ReverseMap();
 
             CreateMap<UpdateProductRequest, Product>()
                .ForAllMembers(opt => opt.Condition((src, dest, srcMember) => srcMember != null));

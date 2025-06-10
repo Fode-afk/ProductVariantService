@@ -8,15 +8,18 @@ namespace ProductService.Data
     {
         private readonly IMongoCollection<Product> _products = database.GetCollection<Product>("Products");
 
-
-        public async Task CreateProductAsync(Product product)
+        public async Task<bool> CreateProductAsync(Product product)
         {
             await _products.InsertOneAsync(product);
+            return true;
+            //TODO Проверка на выполнение
         }
 
-        public async Task DeleteProductAsync(string productId)
+        public async Task<bool> DeleteProductAsync(string productId)
         {
             await _products.DeleteOneAsync(p => p.Id == productId);
+            return true;
+            //TODO Проверка на выполнение
         }
 
         public async Task<IEnumerable<Product>> GetAllProductsAsync()
@@ -29,10 +32,12 @@ namespace ProductService.Data
             return await _products.Find(p => p.Id == productId).FirstOrDefaultAsync();
         }
 
-        public async Task UpdateProductAsync(Product product)
+        public async Task<bool> UpdateProductAsync(Product product)
         {
             var filter = Builders<Product>.Filter.Eq(p => p.Id, product.Id);
             await _products.ReplaceOneAsync(filter, product);
+            return true;
+            //TODO Проверка на выполнение
         }
     }
 }
