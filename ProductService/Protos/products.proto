@@ -1,0 +1,73 @@
+syntax = "proto3";
+
+option csharp_namespace = "ProductService.Protos";
+
+
+service GrpcProducts
+{
+	rpc CreateProduct(CreateProductRequest) returns (CreateProductResponse);
+	rpc GetProductById(GetProductRequest) returns (GetProductResponse);
+	rpc UpdateProductById(UpdateProductRequest) returns (UpdateProductResponse);
+	rpc DeleteProductById(DeleteProductRequest) returns (DeleteProductResponse);
+}
+
+message ProductGrpc
+{
+	string name = 1;
+	string description = 2;
+	int32 price = 3;
+	repeated string imageURLs = 4;
+	repeated ProductAttribute attributes = 5;
+}
+
+message ProductAttribute
+{
+	string name = 1;
+	string value = 2;
+}
+
+message CreateProductRequest
+{
+	ProductGrpc product = 1;
+}
+
+message CreateProductResponse
+{
+	bool status = 1;
+}
+
+message GetProductRequest
+{
+	string productId = 1;
+}
+
+message GetProductResponse
+{
+	bool status = 1;
+	ProductGrpc product = 2;
+}
+
+message DeleteProductRequest
+{
+	string productId = 1;
+}
+
+message DeleteProductResponse
+{
+	bool status = 1;
+}
+
+message UpdateProductRequest
+{
+	string productId = 1;
+	optional string name = 2;
+	optional string description = 3;
+	optional int32 price = 4;
+	repeated string image_URLs = 5;
+	repeated ProductAttribute attributes = 6;
+}
+
+message UpdateProductResponse
+{
+	bool status = 1;
+}
