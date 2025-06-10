@@ -31,7 +31,8 @@ namespace ProductService.Data
 
         public async Task UpdateProductAsync(Product product)
         {
-            //await _products.UpdateOneAsync(product);
+            var filter = Builders<Product>.Filter.Eq(p => p.Id, product.Id);
+            await _products.ReplaceOneAsync(filter, product);
         }
     }
 }

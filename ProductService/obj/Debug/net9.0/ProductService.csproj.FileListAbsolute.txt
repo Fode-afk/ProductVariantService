@@ -166,3 +166,11 @@ D:\Projects\HLShop\ProductService\ProductService\obj\Debug\net9.0\refint\Product
 D:\Projects\HLShop\ProductService\ProductService\obj\Debug\net9.0\ProductService.pdb
 D:\Projects\HLShop\ProductService\ProductService\obj\Debug\net9.0\ProductService.genruntimeconfig.cache
 D:\Projects\HLShop\ProductService\ProductService\obj\Debug\net9.0\ref\ProductService.dll
+D:\Projects\HLShop\ProductService\ProductService\obj\Debug\net9.0\ProductService.sourcelink.json
+D:\Projects\HLShop\ProductService\ProductService\bin\Debug\net9.0\appsettings.Production.json
+D:\Projects\HLShop\ProductService\ProductService\bin\Debug\net9.0\DnsClient.dll
+D:\Projects\HLShop\ProductService\ProductService\bin\Debug\net9.0\MongoDB.Bson.dll
+D:\Projects\HLShop\ProductService\ProductService\bin\Debug\net9.0\MongoDB.Driver.dll
+D:\Projects\HLShop\ProductService\ProductService\bin\Debug\net9.0\SharpCompress.dll
+D:\Projects\HLShop\ProductService\ProductService\bin\Debug\net9.0\Snappier.dll
+D:\Projects\HLShop\ProductService\ProductService\bin\Debug\net9.0\ZstdSharp.dll
