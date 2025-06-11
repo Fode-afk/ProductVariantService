@@ -1,0 +1,16 @@
+﻿# Build artifacts
+bin/
+obj/
+*.dll
+*.exe
+*.pdb
+
+# Visual Studio files
+.vs/
+*.user
+*.suo
+
+# Others
+*.log
+*.tmp
+
