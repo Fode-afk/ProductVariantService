@@ -13,11 +13,12 @@ service GrpcProducts
 
 message ProductGrpc
 {
-	string name = 1;
-	string description = 2;
-	int32 price = 3;
-	repeated string imageURLs = 4;
-	repeated ProductAttributeGrpc attributes = 5;
+	string ownerId = 1;
+	string name = 2;
+	string description = 3;
+	int32 price = 4;
+	repeated string imageURLs = 5;
+	repeated ProductAttributeGrpc attributes = 6;
 }
 
 message ProductAttributeGrpc
@@ -60,11 +61,12 @@ message DeleteProductResponse
 message UpdateProductRequest
 {
 	string productId = 1;
-	optional string name = 2;
-	optional string description = 3;
-	optional int32 price = 4;
-	repeated string imageURLs = 5;
-	repeated ProductAttributeGrpc attributes = 6;
+	optional string ownerId = 2;
+	optional string name = 3;
+	optional string description = 4;
+	optional int32 price = 5;
+	repeated string imageURLs = 6;
+	repeated ProductAttributeGrpc attributes = 7;
 }
 
 message UpdateProductResponse

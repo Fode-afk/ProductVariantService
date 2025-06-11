@@ -8,6 +8,8 @@ namespace ProductService.Models
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
         public string ProductId { get; set; }
+
+        public string OwnerId { get; set; }
        
         public string Name { get; set; }
 

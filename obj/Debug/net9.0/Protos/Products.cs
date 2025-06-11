@@ -24,34 +24,35 @@ namespace ProductService.Protos {
     static ProductsReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "ChVQcm90b3MvcHJvZHVjdHMucHJvdG8ifQoLUHJvZHVjdEdycGMSDAoEbmFt",
-            "ZRgBIAEoCRITCgtkZXNjcmlwdGlvbhgCIAEoCRINCgVwcmljZRgDIAEoBRIR",
-            "CglpbWFnZVVSTHMYBCADKAkSKQoKYXR0cmlidXRlcxgFIAMoCzIVLlByb2R1",
-            "Y3RBdHRyaWJ1dGVHcnBjIjMKFFByb2R1Y3RBdHRyaWJ1dGVHcnBjEgwKBG5h",
-            "bWUYASABKAkSDQoFdmFsdWUYAiABKAkiNQoUQ3JlYXRlUHJvZHVjdFJlcXVl",
-            "c3QSHQoHcHJvZHVjdBgBIAEoCzIMLlByb2R1Y3RHcnBjIicKFUNyZWF0ZVBy",
-            "b2R1Y3RSZXNwb25zZRIOCgZzdGF0dXMYASABKAgiJgoRR2V0UHJvZHVjdFJl",
-            "cXVlc3QSEQoJcHJvZHVjdElkGAEgASgJIkMKEkdldFByb2R1Y3RSZXNwb25z",
-            "ZRIOCgZzdGF0dXMYASABKAgSHQoHcHJvZHVjdBgCIAEoCzIMLlByb2R1Y3RH",
-            "cnBjIikKFERlbGV0ZVByb2R1Y3RSZXF1ZXN0EhEKCXByb2R1Y3RJZBgBIAEo",
-            "CSInChVEZWxldGVQcm9kdWN0UmVzcG9uc2USDgoGc3RhdHVzGAEgASgIIssB",
-            "ChRVcGRhdGVQcm9kdWN0UmVxdWVzdBIRCglwcm9kdWN0SWQYASABKAkSEQoE",
-            "bmFtZRgCIAEoCUgAiAEBEhgKC2Rlc2NyaXB0aW9uGAMgASgJSAGIAQESEgoF",
-            "cHJpY2UYBCABKAVIAogBARIRCglpbWFnZVVSTHMYBSADKAkSKQoKYXR0cmli",
-            "dXRlcxgGIAMoCzIVLlByb2R1Y3RBdHRyaWJ1dGVHcnBjQgcKBV9uYW1lQg4K",
-            "DF9kZXNjcmlwdGlvbkIICgZfcHJpY2UiJwoVVXBkYXRlUHJvZHVjdFJlc3Bv",
-            "bnNlEg4KBnN0YXR1cxgBIAEoCDKRAgoMR3JwY1Byb2R1Y3RzEj4KDUNyZWF0",
-            "ZVByb2R1Y3QSFS5DcmVhdGVQcm9kdWN0UmVxdWVzdBoWLkNyZWF0ZVByb2R1",
-            "Y3RSZXNwb25zZRI5Cg5HZXRQcm9kdWN0QnlJZBISLkdldFByb2R1Y3RSZXF1",
-            "ZXN0GhMuR2V0UHJvZHVjdFJlc3BvbnNlEkIKEVVwZGF0ZVByb2R1Y3RCeUlk",
-            "EhUuVXBkYXRlUHJvZHVjdFJlcXVlc3QaFi5VcGRhdGVQcm9kdWN0UmVzcG9u",
-            "c2USQgoRRGVsZXRlUHJvZHVjdEJ5SWQSFS5EZWxldGVQcm9kdWN0UmVxdWVz",
-            "dBoWLkRlbGV0ZVByb2R1Y3RSZXNwb25zZUIYqgIVUHJvZHVjdFNlcnZpY2Uu",
-            "UHJvdG9zYgZwcm90bzM="));
+            "ChVQcm90b3MvcHJvZHVjdHMucHJvdG8ijgEKC1Byb2R1Y3RHcnBjEg8KB293",
+            "bmVySWQYASABKAkSDAoEbmFtZRgCIAEoCRITCgtkZXNjcmlwdGlvbhgDIAEo",
+            "CRINCgVwcmljZRgEIAEoBRIRCglpbWFnZVVSTHMYBSADKAkSKQoKYXR0cmli",
+            "dXRlcxgGIAMoCzIVLlByb2R1Y3RBdHRyaWJ1dGVHcnBjIjMKFFByb2R1Y3RB",
+            "dHRyaWJ1dGVHcnBjEgwKBG5hbWUYASABKAkSDQoFdmFsdWUYAiABKAkiNQoU",
+            "Q3JlYXRlUHJvZHVjdFJlcXVlc3QSHQoHcHJvZHVjdBgBIAEoCzIMLlByb2R1",
+            "Y3RHcnBjIicKFUNyZWF0ZVByb2R1Y3RSZXNwb25zZRIOCgZzdGF0dXMYASAB",
+            "KAgiJgoRR2V0UHJvZHVjdFJlcXVlc3QSEQoJcHJvZHVjdElkGAEgASgJIkMK",
+            "EkdldFByb2R1Y3RSZXNwb25zZRIOCgZzdGF0dXMYASABKAgSHQoHcHJvZHVj",
+            "dBgCIAEoCzIMLlByb2R1Y3RHcnBjIikKFERlbGV0ZVByb2R1Y3RSZXF1ZXN0",
+            "EhEKCXByb2R1Y3RJZBgBIAEoCSInChVEZWxldGVQcm9kdWN0UmVzcG9uc2US",
+            "DgoGc3RhdHVzGAEgASgIIu0BChRVcGRhdGVQcm9kdWN0UmVxdWVzdBIRCglw",
+            "cm9kdWN0SWQYASABKAkSFAoHb3duZXJJZBgCIAEoCUgAiAEBEhEKBG5hbWUY",
+            "AyABKAlIAYgBARIYCgtkZXNjcmlwdGlvbhgEIAEoCUgCiAEBEhIKBXByaWNl",
+            "GAUgASgFSAOIAQESEQoJaW1hZ2VVUkxzGAYgAygJEikKCmF0dHJpYnV0ZXMY",
+            "ByADKAsyFS5Qcm9kdWN0QXR0cmlidXRlR3JwY0IKCghfb3duZXJJZEIHCgVf",
+            "bmFtZUIOCgxfZGVzY3JpcHRpb25CCAoGX3ByaWNlIicKFVVwZGF0ZVByb2R1",
+            "Y3RSZXNwb25zZRIOCgZzdGF0dXMYASABKAgykQIKDEdycGNQcm9kdWN0cxI+",
+            "Cg1DcmVhdGVQcm9kdWN0EhUuQ3JlYXRlUHJvZHVjdFJlcXVlc3QaFi5DcmVh",
+            "dGVQcm9kdWN0UmVzcG9uc2USOQoOR2V0UHJvZHVjdEJ5SWQSEi5HZXRQcm9k",
+            "dWN0UmVxdWVzdBoTLkdldFByb2R1Y3RSZXNwb25zZRJCChFVcGRhdGVQcm9k",
+            "dWN0QnlJZBIVLlVwZGF0ZVByb2R1Y3RSZXF1ZXN0GhYuVXBkYXRlUHJvZHVj",
+            "dFJlc3BvbnNlEkIKEURlbGV0ZVByb2R1Y3RCeUlkEhUuRGVsZXRlUHJvZHVj",
+            "dFJlcXVlc3QaFi5EZWxldGVQcm9kdWN0UmVzcG9uc2VCGKoCFVByb2R1Y3RT",
+            "ZXJ2aWNlLlByb3Rvc2IGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::ProductService.Protos.ProductGrpc), global::ProductService.Protos.ProductGrpc.Parser, new[]{ "Name", "Description", "Price", "ImageURLs", "Attributes" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::ProductService.Protos.ProductGrpc), global::ProductService.Protos.ProductGrpc.Parser, new[]{ "OwnerId", "Name", "Description", "Price", "ImageURLs", "Attributes" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::ProductService.Protos.ProductAttributeGrpc), global::ProductService.Protos.ProductAttributeGrpc.Parser, new[]{ "Name", "Value" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::ProductService.Protos.CreateProductRequest), global::ProductService.Protos.CreateProductRequest.Parser, new[]{ "Product" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::ProductService.Protos.CreateProductResponse), global::ProductService.Protos.CreateProductResponse.Parser, new[]{ "Status" }, null, null, null, null),
@@ -59,7 +60,7 @@ namespace ProductService.Protos {
             new pbr::GeneratedClrTypeInfo(typeof(global::ProductService.Protos.GetProductResponse), global::ProductService.Protos.GetProductResponse.Parser, new[]{ "Status", "Product" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::ProductService.Protos.DeleteProductRequest), global::ProductService.Protos.DeleteProductRequest.Parser, new[]{ "ProductId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::ProductService.Protos.DeleteProductResponse), global::ProductService.Protos.DeleteProductResponse.Parser, new[]{ "Status" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::ProductService.Protos.UpdateProductRequest), global::ProductService.Protos.UpdateProductRequest.Parser, new[]{ "ProductId", "Name", "Description", "Price", "ImageURLs", "Attributes" }, new[]{ "Name", "Description", "Price" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::ProductService.Protos.UpdateProductRequest), global::ProductService.Protos.UpdateProductRequest.Parser, new[]{ "ProductId", "OwnerId", "Name", "Description", "Price", "ImageURLs", "Attributes" }, new[]{ "OwnerId", "Name", "Description", "Price" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::ProductService.Protos.UpdateProductResponse), global::ProductService.Protos.UpdateProductResponse.Parser, new[]{ "Status" }, null, null, null, null)
           }));
     }
@@ -102,6 +103,7 @@ namespace ProductService.Protos {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public ProductGrpc(ProductGrpc other) : this() {
+      ownerId_ = other.ownerId_;
       name_ = other.name_;
       description_ = other.description_;
       price_ = other.price_;
@@ -116,8 +118,20 @@ namespace ProductService.Protos {
       return new ProductGrpc(this);
     }
 
+    /// <summary>Field number for the "ownerId" field.</summary>
+    public const int OwnerIdFieldNumber = 1;
+    private string ownerId_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string OwnerId {
+      get { return ownerId_; }
+      set {
+        ownerId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
     /// <summary>Field number for the "name" field.</summary>
-    public const int NameFieldNumber = 1;
+    public const int NameFieldNumber = 2;
     private string name_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -129,7 +143,7 @@ namespace ProductService.Protos {
     }
 
     /// <summary>Field number for the "description" field.</summary>
-    public const int DescriptionFieldNumber = 2;
+    public const int DescriptionFieldNumber = 3;
     private string description_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -141,7 +155,7 @@ namespace ProductService.Protos {
     }
 
     /// <summary>Field number for the "price" field.</summary>
-    public const int PriceFieldNumber = 3;
+    public const int PriceFieldNumber = 4;
     private int price_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -153,9 +167,9 @@ namespace ProductService.Protos {
     }
 
     /// <summary>Field number for the "imageURLs" field.</summary>
-    public const int ImageURLsFieldNumber = 4;
+    public const int ImageURLsFieldNumber = 5;
     private static readonly pb::FieldCodec<string> _repeated_imageURLs_codec
-        = pb::FieldCodec.ForString(34);
+        = pb::FieldCodec.ForString(42);
     private readonly pbc::RepeatedField<string> imageURLs_ = new pbc::RepeatedField<string>();
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -164,9 +178,9 @@ namespace ProductService.Protos {
     }
 
     /// <summary>Field number for the "attributes" field.</summary>
-    public const int AttributesFieldNumber = 5;
+    public const int AttributesFieldNumber = 6;
     private static readonly pb::FieldCodec<global::ProductService.Protos.ProductAttributeGrpc> _repeated_attributes_codec
-        = pb::FieldCodec.ForMessage(42, global::ProductService.Protos.ProductAttributeGrpc.Parser);
+        = pb::FieldCodec.ForMessage(50, global::ProductService.Protos.ProductAttributeGrpc.Parser);
     private readonly pbc::RepeatedField<global::ProductService.Protos.ProductAttributeGrpc> attributes_ = new pbc::RepeatedField<global::ProductService.Protos.ProductAttributeGrpc>();
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -189,6 +203,7 @@ namespace ProductService.Protos {
       if (ReferenceEquals(other, this)) {
         return true;
       }
+      if (OwnerId != other.OwnerId) return false;
       if (Name != other.Name) return false;
       if (Description != other.Description) return false;
       if (Price != other.Price) return false;
@@ -201,6 +216,7 @@ namespace ProductService.Protos {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override int GetHashCode() {
       int hash = 1;
+      if (OwnerId.Length != 0) hash ^= OwnerId.GetHashCode();
       if (Name.Length != 0) hash ^= Name.GetHashCode();
       if (Description.Length != 0) hash ^= Description.GetHashCode();
       if (Price != 0) hash ^= Price.GetHashCode();
@@ -224,16 +240,20 @@ namespace ProductService.Protos {
     #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       output.WriteRawMessage(this);
     #else
-      if (Name.Length != 0) {
+      if (OwnerId.Length != 0) {
         output.WriteRawTag(10);
+        output.WriteString(OwnerId);
+      }
+      if (Name.Length != 0) {
+        output.WriteRawTag(18);
         output.WriteString(Name);
       }
       if (Description.Length != 0) {
-        output.WriteRawTag(18);
+        output.WriteRawTag(26);
         output.WriteString(Description);
       }
       if (Price != 0) {
-        output.WriteRawTag(24);
+        output.WriteRawTag(32);
         output.WriteInt32(Price);
       }
       imageURLs_.WriteTo(output, _repeated_imageURLs_codec);
@@ -248,16 +268,20 @@ namespace ProductService.Protos {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
-      if (Name.Length != 0) {
+      if (OwnerId.Length != 0) {
         output.WriteRawTag(10);
+        output.WriteString(OwnerId);
+      }
+      if (Name.Length != 0) {
+        output.WriteRawTag(18);
         output.WriteString(Name);
       }
       if (Description.Length != 0) {
-        output.WriteRawTag(18);
+        output.WriteRawTag(26);
         output.WriteString(Description);
       }
       if (Price != 0) {
-        output.WriteRawTag(24);
+        output.WriteRawTag(32);
         output.WriteInt32(Price);
       }
       imageURLs_.WriteTo(ref output, _repeated_imageURLs_codec);
@@ -272,6 +296,9 @@ namespace ProductService.Protos {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public int CalculateSize() {
       int size = 0;
+      if (OwnerId.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(OwnerId);
+      }
       if (Name.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(Name);
       }
@@ -294,6 +321,9 @@ namespace ProductService.Protos {
     public void MergeFrom(ProductGrpc other) {
       if (other == null) {
         return;
+      }
+      if (other.OwnerId.Length != 0) {
+        OwnerId = other.OwnerId;
       }
       if (other.Name.Length != 0) {
         Name = other.Name;
@@ -326,22 +356,26 @@ namespace ProductService.Protos {
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
           case 10: {
-            Name = input.ReadString();
+            OwnerId = input.ReadString();
             break;
           }
           case 18: {
+            Name = input.ReadString();
+            break;
+          }
+          case 26: {
             Description = input.ReadString();
             break;
           }
-          case 24: {
+          case 32: {
             Price = input.ReadInt32();
             break;
           }
-          case 34: {
+          case 42: {
             imageURLs_.AddEntriesFrom(input, _repeated_imageURLs_codec);
             break;
           }
-          case 42: {
+          case 50: {
             attributes_.AddEntriesFrom(input, _repeated_attributes_codec);
             break;
           }
@@ -365,22 +399,26 @@ namespace ProductService.Protos {
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
           case 10: {
-            Name = input.ReadString();
+            OwnerId = input.ReadString();
             break;
           }
           case 18: {
+            Name = input.ReadString();
+            break;
+          }
+          case 26: {
             Description = input.ReadString();
             break;
           }
-          case 24: {
+          case 32: {
             Price = input.ReadInt32();
             break;
           }
-          case 34: {
+          case 42: {
             imageURLs_.AddEntriesFrom(ref input, _repeated_imageURLs_codec);
             break;
           }
-          case 42: {
+          case 50: {
             attributes_.AddEntriesFrom(ref input, _repeated_attributes_codec);
             break;
           }
@@ -1907,6 +1945,7 @@ namespace ProductService.Protos {
     public UpdateProductRequest(UpdateProductRequest other) : this() {
       _hasBits0 = other._hasBits0;
       productId_ = other.productId_;
+      ownerId_ = other.ownerId_;
       name_ = other.name_;
       description_ = other.description_;
       price_ = other.price_;
@@ -1933,8 +1972,34 @@ namespace ProductService.Protos {
       }
     }
 
+    /// <summary>Field number for the "ownerId" field.</summary>
+    public const int OwnerIdFieldNumber = 2;
+    private readonly static string OwnerIdDefaultValue = "";
+
+    private string ownerId_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string OwnerId {
+      get { return ownerId_ ?? OwnerIdDefaultValue; }
+      set {
+        ownerId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+    /// <summary>Gets whether the "ownerId" field is set</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool HasOwnerId {
+      get { return ownerId_ != null; }
+    }
+    /// <summary>Clears the value of the "ownerId" field</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void ClearOwnerId() {
+      ownerId_ = null;
+    }
+
     /// <summary>Field number for the "name" field.</summary>
-    public const int NameFieldNumber = 2;
+    public const int NameFieldNumber = 3;
     private readonly static string NameDefaultValue = "";
 
     private string name_;
@@ -1960,7 +2025,7 @@ namespace ProductService.Protos {
     }
 
     /// <summary>Field number for the "description" field.</summary>
-    public const int DescriptionFieldNumber = 3;
+    public const int DescriptionFieldNumber = 4;
     private readonly static string DescriptionDefaultValue = "";
 
     private string description_;
@@ -1986,7 +2051,7 @@ namespace ProductService.Protos {
     }
 
     /// <summary>Field number for the "price" field.</summary>
-    public const int PriceFieldNumber = 4;
+    public const int PriceFieldNumber = 5;
     private readonly static int PriceDefaultValue = 0;
 
     private int price_;
@@ -2013,9 +2078,9 @@ namespace ProductService.Protos {
     }
 
     /// <summary>Field number for the "imageURLs" field.</summary>
-    public const int ImageURLsFieldNumber = 5;
+    public const int ImageURLsFieldNumber = 6;
     private static readonly pb::FieldCodec<string> _repeated_imageURLs_codec
-        = pb::FieldCodec.ForString(42);
+        = pb::FieldCodec.ForString(50);
     private readonly pbc::RepeatedField<string> imageURLs_ = new pbc::RepeatedField<string>();
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -2024,9 +2089,9 @@ namespace ProductService.Protos {
     }
 
     /// <summary>Field number for the "attributes" field.</summary>
-    public const int AttributesFieldNumber = 6;
+    public const int AttributesFieldNumber = 7;
     private static readonly pb::FieldCodec<global::ProductService.Protos.ProductAttributeGrpc> _repeated_attributes_codec
-        = pb::FieldCodec.ForMessage(50, global::ProductService.Protos.ProductAttributeGrpc.Parser);
+        = pb::FieldCodec.ForMessage(58, global::ProductService.Protos.ProductAttributeGrpc.Parser);
     private readonly pbc::RepeatedField<global::ProductService.Protos.ProductAttributeGrpc> attributes_ = new pbc::RepeatedField<global::ProductService.Protos.ProductAttributeGrpc>();
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -2050,6 +2115,7 @@ namespace ProductService.Protos {
         return true;
       }
       if (ProductId != other.ProductId) return false;
+      if (OwnerId != other.OwnerId) return false;
       if (Name != other.Name) return false;
       if (Description != other.Description) return false;
       if (Price != other.Price) return false;
@@ -2063,6 +2129,7 @@ namespace ProductService.Protos {
     public override int GetHashCode() {
       int hash = 1;
       if (ProductId.Length != 0) hash ^= ProductId.GetHashCode();
+      if (HasOwnerId) hash ^= OwnerId.GetHashCode();
       if (HasName) hash ^= Name.GetHashCode();
       if (HasDescription) hash ^= Description.GetHashCode();
       if (HasPrice) hash ^= Price.GetHashCode();
@@ -2090,16 +2157,20 @@ namespace ProductService.Protos {
         output.WriteRawTag(10);
         output.WriteString(ProductId);
       }
-      if (HasName) {
+      if (HasOwnerId) {
         output.WriteRawTag(18);
+        output.WriteString(OwnerId);
+      }
+      if (HasName) {
+        output.WriteRawTag(26);
         output.WriteString(Name);
       }
       if (HasDescription) {
-        output.WriteRawTag(26);
+        output.WriteRawTag(34);
         output.WriteString(Description);
       }
       if (HasPrice) {
-        output.WriteRawTag(32);
+        output.WriteRawTag(40);
         output.WriteInt32(Price);
       }
       imageURLs_.WriteTo(output, _repeated_imageURLs_codec);
@@ -2118,16 +2189,20 @@ namespace ProductService.Protos {
         output.WriteRawTag(10);
         output.WriteString(ProductId);
       }
-      if (HasName) {
+      if (HasOwnerId) {
         output.WriteRawTag(18);
+        output.WriteString(OwnerId);
+      }
+      if (HasName) {
+        output.WriteRawTag(26);
         output.WriteString(Name);
       }
       if (HasDescription) {
-        output.WriteRawTag(26);
+        output.WriteRawTag(34);
         output.WriteString(Description);
       }
       if (HasPrice) {
-        output.WriteRawTag(32);
+        output.WriteRawTag(40);
         output.WriteInt32(Price);
       }
       imageURLs_.WriteTo(ref output, _repeated_imageURLs_codec);
@@ -2144,6 +2219,9 @@ namespace ProductService.Protos {
       int size = 0;
       if (ProductId.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(ProductId);
+      }
+      if (HasOwnerId) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(OwnerId);
       }
       if (HasName) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(Name);
@@ -2170,6 +2248,9 @@ namespace ProductService.Protos {
       }
       if (other.ProductId.Length != 0) {
         ProductId = other.ProductId;
+      }
+      if (other.HasOwnerId) {
+        OwnerId = other.OwnerId;
       }
       if (other.HasName) {
         Name = other.Name;
@@ -2206,22 +2287,26 @@ namespace ProductService.Protos {
             break;
           }
           case 18: {
-            Name = input.ReadString();
+            OwnerId = input.ReadString();
             break;
           }
           case 26: {
+            Name = input.ReadString();
+            break;
+          }
+          case 34: {
             Description = input.ReadString();
             break;
           }
-          case 32: {
+          case 40: {
             Price = input.ReadInt32();
             break;
           }
-          case 42: {
+          case 50: {
             imageURLs_.AddEntriesFrom(input, _repeated_imageURLs_codec);
             break;
           }
-          case 50: {
+          case 58: {
             attributes_.AddEntriesFrom(input, _repeated_attributes_codec);
             break;
           }
@@ -2249,22 +2334,26 @@ namespace ProductService.Protos {
             break;
           }
           case 18: {
-            Name = input.ReadString();
+            OwnerId = input.ReadString();
             break;
           }
           case 26: {
+            Name = input.ReadString();
+            break;
+          }
+          case 34: {
             Description = input.ReadString();
             break;
           }
-          case 32: {
+          case 40: {
             Price = input.ReadInt32();
             break;
           }
-          case 42: {
+          case 50: {
             imageURLs_.AddEntriesFrom(ref input, _repeated_imageURLs_codec);
             break;
           }
-          case 50: {
+          case 58: {
             attributes_.AddEntriesFrom(ref input, _repeated_attributes_codec);
             break;
           }
