@@ -18,6 +18,7 @@ namespace ProductService.Grpc
 
         private readonly IValidator<CreateProductRequest> _createProductValidator = new CreateProductValidator();
         private readonly IValidator<GetProductRequest> _getProductValidator = new GetProductValidator();
+        private readonly IValidator<GetAllProductsByOwnerIdRequest> _getAllProductsValidator = new GetAllProductsValidator();
         private readonly IValidator<UpdateProductRequest> _updateProductValidator = new UpdateProductValidator();
         private readonly IValidator<DeleteProductRequest> _deleteProductValidator = new DeleteProductValidator();
 
@@ -29,6 +30,13 @@ namespace ProductService.Grpc
         /// <returns>A response with the list of products or failure status.</returns>
         public override async Task<GetAllProductsByOwnerIdResponse> GetAllProductsByOwnerId(GetAllProductsByOwnerIdRequest request, ServerCallContext context)
         {
+            var valres = _getAllProductsValidator.Validate(request);
+
+            if (!valres.IsValid)
+            {
+                throw new RpcException(new Status(StatusCode.InvalidArgument, valres.ErrorMessage));
+            }
+
             var products = await _productRepo.GetAllProductsByOwnerIdAsync(request.OwnerId);
 
             if (products == null)

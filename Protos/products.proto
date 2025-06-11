@@ -155,9 +155,6 @@ message UpdateProductRequest
     /// <summary>Product ID.</summary>
     string productId = 1;
 
-    /// <summary>Optional updated owner ID.</summary>
-    optional string ownerId = 2;
-
     /// <summary>Optional updated name.</summary>
     optional string name = 3;
 
