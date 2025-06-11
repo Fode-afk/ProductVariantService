@@ -526,3 +526,7 @@ D:\Projects\HLShop\ProductService\obj\Debug\net9.0\refint\ProductService.dll
 D:\Projects\HLShop\ProductService\obj\Debug\net9.0\ProductService.pdb
 D:\Projects\HLShop\ProductService\obj\Debug\net9.0\ProductService.genruntimeconfig.cache
 D:\Projects\HLShop\ProductService\obj\Debug\net9.0\ref\ProductService.dll
+D:\Projects\HLShop\ProductService\obj\Debug\net9.0\rpswa.dswa.cache.json
+D:\Projects\HLShop\ProductService\obj\Debug\net9.0\rjimswa.dswa.cache.json
+D:\Projects\HLShop\ProductService\obj\Debug\net9.0\rjsmrazor.dswa.cache.json
+D:\Projects\HLShop\ProductService\obj\Debug\net9.0\rjsmcshtml.dswa.cache.json

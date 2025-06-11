@@ -79,6 +79,14 @@ namespace ProductService.Protos {
         __Marshaller_GetProductResponse);
 
     [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
+    static readonly grpc::Method<global::ProductService.Protos.GetProductRequest, global::ProductService.Protos.GetProductResponse> __Method_GetProductByIdAndOwnerId = new grpc::Method<global::ProductService.Protos.GetProductRequest, global::ProductService.Protos.GetProductResponse>(
+        grpc::MethodType.Unary,
+        __ServiceName,
+        "GetProductByIdAndOwnerId",
+        __Marshaller_GetProductRequest,
+        __Marshaller_GetProductResponse);
+
+    [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
     static readonly grpc::Method<global::ProductService.Protos.UpdateProductRequest, global::ProductService.Protos.UpdateProductResponse> __Method_UpdateProductById = new grpc::Method<global::ProductService.Protos.UpdateProductRequest, global::ProductService.Protos.UpdateProductResponse>(
         grpc::MethodType.Unary,
         __ServiceName,
@@ -117,6 +125,12 @@ namespace ProductService.Protos {
       }
 
       [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
+      public virtual global::System.Threading.Tasks.Task<global::ProductService.Protos.GetProductResponse> GetProductByIdAndOwnerId(global::ProductService.Protos.GetProductRequest request, grpc::ServerCallContext context)
+      {
+        throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
+      }
+
+      [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
       public virtual global::System.Threading.Tasks.Task<global::ProductService.Protos.UpdateProductResponse> UpdateProductById(global::ProductService.Protos.UpdateProductRequest request, grpc::ServerCallContext context)
       {
         throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
@@ -138,6 +152,7 @@ namespace ProductService.Protos {
       return grpc::ServerServiceDefinition.CreateBuilder()
           .AddMethod(__Method_CreateProduct, serviceImpl.CreateProduct)
           .AddMethod(__Method_GetProductById, serviceImpl.GetProductById)
+          .AddMethod(__Method_GetProductByIdAndOwnerId, serviceImpl.GetProductByIdAndOwnerId)
           .AddMethod(__Method_UpdateProductById, serviceImpl.UpdateProductById)
           .AddMethod(__Method_DeleteProductById, serviceImpl.DeleteProductById).Build();
     }
@@ -151,6 +166,7 @@ namespace ProductService.Protos {
     {
       serviceBinder.AddMethod(__Method_CreateProduct, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::ProductService.Protos.CreateProductRequest, global::ProductService.Protos.CreateProductResponse>(serviceImpl.CreateProduct));
       serviceBinder.AddMethod(__Method_GetProductById, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::ProductService.Protos.GetProductRequest, global::ProductService.Protos.GetProductResponse>(serviceImpl.GetProductById));
+      serviceBinder.AddMethod(__Method_GetProductByIdAndOwnerId, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::ProductService.Protos.GetProductRequest, global::ProductService.Protos.GetProductResponse>(serviceImpl.GetProductByIdAndOwnerId));
       serviceBinder.AddMethod(__Method_UpdateProductById, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::ProductService.Protos.UpdateProductRequest, global::ProductService.Protos.UpdateProductResponse>(serviceImpl.UpdateProductById));
       serviceBinder.AddMethod(__Method_DeleteProductById, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::ProductService.Protos.DeleteProductRequest, global::ProductService.Protos.DeleteProductResponse>(serviceImpl.DeleteProductById));
     }

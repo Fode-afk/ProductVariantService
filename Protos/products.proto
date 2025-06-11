@@ -7,6 +7,7 @@ service GrpcProducts
 {
 	rpc CreateProduct(CreateProductRequest) returns (CreateProductResponse);
 	rpc GetProductById(GetProductRequest) returns (GetProductResponse);
+	rpc GetProductByIdAndOwnerId(GetProductRequest) returns (GetProductResponse);
 	rpc UpdateProductById(UpdateProductRequest) returns (UpdateProductResponse);
 	rpc DeleteProductById(DeleteProductRequest) returns (DeleteProductResponse);
 }
@@ -40,6 +41,7 @@ message CreateProductResponse
 message GetProductRequest
 {
 	string productId = 1;
+	optional string ownerId = 2;
 }
 
 message GetProductResponse

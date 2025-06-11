@@ -31,24 +31,26 @@ namespace ProductService.Protos {
             "dHRyaWJ1dGVHcnBjEgwKBG5hbWUYASABKAkSDQoFdmFsdWUYAiABKAkiNQoU",
             "Q3JlYXRlUHJvZHVjdFJlcXVlc3QSHQoHcHJvZHVjdBgBIAEoCzIMLlByb2R1",
             "Y3RHcnBjIicKFUNyZWF0ZVByb2R1Y3RSZXNwb25zZRIOCgZzdGF0dXMYASAB",
-            "KAgiJgoRR2V0UHJvZHVjdFJlcXVlc3QSEQoJcHJvZHVjdElkGAEgASgJIkMK",
-            "EkdldFByb2R1Y3RSZXNwb25zZRIOCgZzdGF0dXMYASABKAgSHQoHcHJvZHVj",
-            "dBgCIAEoCzIMLlByb2R1Y3RHcnBjIikKFERlbGV0ZVByb2R1Y3RSZXF1ZXN0",
-            "EhEKCXByb2R1Y3RJZBgBIAEoCSInChVEZWxldGVQcm9kdWN0UmVzcG9uc2US",
-            "DgoGc3RhdHVzGAEgASgIIu0BChRVcGRhdGVQcm9kdWN0UmVxdWVzdBIRCglw",
-            "cm9kdWN0SWQYASABKAkSFAoHb3duZXJJZBgCIAEoCUgAiAEBEhEKBG5hbWUY",
-            "AyABKAlIAYgBARIYCgtkZXNjcmlwdGlvbhgEIAEoCUgCiAEBEhIKBXByaWNl",
-            "GAUgASgFSAOIAQESEQoJaW1hZ2VVUkxzGAYgAygJEikKCmF0dHJpYnV0ZXMY",
-            "ByADKAsyFS5Qcm9kdWN0QXR0cmlidXRlR3JwY0IKCghfb3duZXJJZEIHCgVf",
-            "bmFtZUIOCgxfZGVzY3JpcHRpb25CCAoGX3ByaWNlIicKFVVwZGF0ZVByb2R1",
-            "Y3RSZXNwb25zZRIOCgZzdGF0dXMYASABKAgykQIKDEdycGNQcm9kdWN0cxI+",
-            "Cg1DcmVhdGVQcm9kdWN0EhUuQ3JlYXRlUHJvZHVjdFJlcXVlc3QaFi5DcmVh",
-            "dGVQcm9kdWN0UmVzcG9uc2USOQoOR2V0UHJvZHVjdEJ5SWQSEi5HZXRQcm9k",
-            "dWN0UmVxdWVzdBoTLkdldFByb2R1Y3RSZXNwb25zZRJCChFVcGRhdGVQcm9k",
-            "dWN0QnlJZBIVLlVwZGF0ZVByb2R1Y3RSZXF1ZXN0GhYuVXBkYXRlUHJvZHVj",
-            "dFJlc3BvbnNlEkIKEURlbGV0ZVByb2R1Y3RCeUlkEhUuRGVsZXRlUHJvZHVj",
-            "dFJlcXVlc3QaFi5EZWxldGVQcm9kdWN0UmVzcG9uc2VCGKoCFVByb2R1Y3RT",
-            "ZXJ2aWNlLlByb3Rvc2IGcHJvdG8z"));
+            "KAgiSAoRR2V0UHJvZHVjdFJlcXVlc3QSEQoJcHJvZHVjdElkGAEgASgJEhQK",
+            "B293bmVySWQYAiABKAlIAIgBAUIKCghfb3duZXJJZCJDChJHZXRQcm9kdWN0",
+            "UmVzcG9uc2USDgoGc3RhdHVzGAEgASgIEh0KB3Byb2R1Y3QYAiABKAsyDC5Q",
+            "cm9kdWN0R3JwYyIpChREZWxldGVQcm9kdWN0UmVxdWVzdBIRCglwcm9kdWN0",
+            "SWQYASABKAkiJwoVRGVsZXRlUHJvZHVjdFJlc3BvbnNlEg4KBnN0YXR1cxgB",
+            "IAEoCCLtAQoUVXBkYXRlUHJvZHVjdFJlcXVlc3QSEQoJcHJvZHVjdElkGAEg",
+            "ASgJEhQKB293bmVySWQYAiABKAlIAIgBARIRCgRuYW1lGAMgASgJSAGIAQES",
+            "GAoLZGVzY3JpcHRpb24YBCABKAlIAogBARISCgVwcmljZRgFIAEoBUgDiAEB",
+            "EhEKCWltYWdlVVJMcxgGIAMoCRIpCgphdHRyaWJ1dGVzGAcgAygLMhUuUHJv",
+            "ZHVjdEF0dHJpYnV0ZUdycGNCCgoIX293bmVySWRCBwoFX25hbWVCDgoMX2Rl",
+            "c2NyaXB0aW9uQggKBl9wcmljZSInChVVcGRhdGVQcm9kdWN0UmVzcG9uc2US",
+            "DgoGc3RhdHVzGAEgASgIMtYCCgxHcnBjUHJvZHVjdHMSPgoNQ3JlYXRlUHJv",
+            "ZHVjdBIVLkNyZWF0ZVByb2R1Y3RSZXF1ZXN0GhYuQ3JlYXRlUHJvZHVjdFJl",
+            "c3BvbnNlEjkKDkdldFByb2R1Y3RCeUlkEhIuR2V0UHJvZHVjdFJlcXVlc3Qa",
+            "Ey5HZXRQcm9kdWN0UmVzcG9uc2USQwoYR2V0UHJvZHVjdEJ5SWRBbmRPd25l",
+            "cklkEhIuR2V0UHJvZHVjdFJlcXVlc3QaEy5HZXRQcm9kdWN0UmVzcG9uc2US",
+            "QgoRVXBkYXRlUHJvZHVjdEJ5SWQSFS5VcGRhdGVQcm9kdWN0UmVxdWVzdBoW",
+            "LlVwZGF0ZVByb2R1Y3RSZXNwb25zZRJCChFEZWxldGVQcm9kdWN0QnlJZBIV",
+            "LkRlbGV0ZVByb2R1Y3RSZXF1ZXN0GhYuRGVsZXRlUHJvZHVjdFJlc3BvbnNl",
+            "QhiqAhVQcm9kdWN0U2VydmljZS5Qcm90b3NiBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
@@ -56,7 +58,7 @@ namespace ProductService.Protos {
             new pbr::GeneratedClrTypeInfo(typeof(global::ProductService.Protos.ProductAttributeGrpc), global::ProductService.Protos.ProductAttributeGrpc.Parser, new[]{ "Name", "Value" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::ProductService.Protos.CreateProductRequest), global::ProductService.Protos.CreateProductRequest.Parser, new[]{ "Product" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::ProductService.Protos.CreateProductResponse), global::ProductService.Protos.CreateProductResponse.Parser, new[]{ "Status" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::ProductService.Protos.GetProductRequest), global::ProductService.Protos.GetProductRequest.Parser, new[]{ "ProductId" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::ProductService.Protos.GetProductRequest), global::ProductService.Protos.GetProductRequest.Parser, new[]{ "ProductId", "OwnerId" }, new[]{ "OwnerId" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::ProductService.Protos.GetProductResponse), global::ProductService.Protos.GetProductResponse.Parser, new[]{ "Status", "Product" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::ProductService.Protos.DeleteProductRequest), global::ProductService.Protos.DeleteProductRequest.Parser, new[]{ "ProductId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::ProductService.Protos.DeleteProductResponse), global::ProductService.Protos.DeleteProductResponse.Parser, new[]{ "Status" }, null, null, null, null),
@@ -1105,6 +1107,7 @@ namespace ProductService.Protos {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public GetProductRequest(GetProductRequest other) : this() {
       productId_ = other.productId_;
+      ownerId_ = other.ownerId_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -1126,6 +1129,32 @@ namespace ProductService.Protos {
       }
     }
 
+    /// <summary>Field number for the "ownerId" field.</summary>
+    public const int OwnerIdFieldNumber = 2;
+    private readonly static string OwnerIdDefaultValue = "";
+
+    private string ownerId_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string OwnerId {
+      get { return ownerId_ ?? OwnerIdDefaultValue; }
+      set {
+        ownerId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+    /// <summary>Gets whether the "ownerId" field is set</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool HasOwnerId {
+      get { return ownerId_ != null; }
+    }
+    /// <summary>Clears the value of the "ownerId" field</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void ClearOwnerId() {
+      ownerId_ = null;
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
@@ -1142,6 +1171,7 @@ namespace ProductService.Protos {
         return true;
       }
       if (ProductId != other.ProductId) return false;
+      if (OwnerId != other.OwnerId) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -1150,6 +1180,7 @@ namespace ProductService.Protos {
     public override int GetHashCode() {
       int hash = 1;
       if (ProductId.Length != 0) hash ^= ProductId.GetHashCode();
+      if (HasOwnerId) hash ^= OwnerId.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -1172,6 +1203,10 @@ namespace ProductService.Protos {
         output.WriteRawTag(10);
         output.WriteString(ProductId);
       }
+      if (HasOwnerId) {
+        output.WriteRawTag(18);
+        output.WriteString(OwnerId);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -1186,6 +1221,10 @@ namespace ProductService.Protos {
         output.WriteRawTag(10);
         output.WriteString(ProductId);
       }
+      if (HasOwnerId) {
+        output.WriteRawTag(18);
+        output.WriteString(OwnerId);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -1198,6 +1237,9 @@ namespace ProductService.Protos {
       int size = 0;
       if (ProductId.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(ProductId);
+      }
+      if (HasOwnerId) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(OwnerId);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -1213,6 +1255,9 @@ namespace ProductService.Protos {
       }
       if (other.ProductId.Length != 0) {
         ProductId = other.ProductId;
+      }
+      if (other.HasOwnerId) {
+        OwnerId = other.OwnerId;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -1237,6 +1282,10 @@ namespace ProductService.Protos {
             ProductId = input.ReadString();
             break;
           }
+          case 18: {
+            OwnerId = input.ReadString();
+            break;
+          }
         }
       }
     #endif
@@ -1258,6 +1307,10 @@ namespace ProductService.Protos {
             break;
           case 10: {
             ProductId = input.ReadString();
+            break;
+          }
+          case 18: {
+            OwnerId = input.ReadString();
             break;
           }
         }
