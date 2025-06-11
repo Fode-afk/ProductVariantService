@@ -4,7 +4,6 @@ using ProductService.Data;
 using ProductService.Grpc.Validators;
 using ProductService.Models;
 using ProductService.Protos;
-using System.ComponentModel.DataAnnotations;
 
 namespace ProductService.Grpc
 {

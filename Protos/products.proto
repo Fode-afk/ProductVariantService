@@ -17,10 +17,10 @@ message ProductGrpc
 	string description = 2;
 	int32 price = 3;
 	repeated string imageURLs = 4;
-	repeated ProductAttribute attributes = 5;
+	repeated ProductAttributeGrpc attributes = 5;
 }
 
-message ProductAttribute
+message ProductAttributeGrpc
 {
 	string name = 1;
 	string value = 2;
@@ -64,7 +64,7 @@ message UpdateProductRequest
 	optional string description = 3;
 	optional int32 price = 4;
 	repeated string imageURLs = 5;
-	repeated ProductAttribute attributes = 6;
+	repeated ProductAttributeGrpc attributes = 6;
 }
 
 message UpdateProductResponse

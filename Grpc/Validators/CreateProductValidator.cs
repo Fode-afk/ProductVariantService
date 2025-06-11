@@ -1,7 +1,5 @@
-﻿using Google.Protobuf;
-using Microsoft.IdentityModel.Tokens;
+﻿using Microsoft.IdentityModel.Tokens;
 using ProductService.Protos;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace ProductService.Grpc.Validators
 {

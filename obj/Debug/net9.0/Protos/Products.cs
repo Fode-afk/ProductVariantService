@@ -24,35 +24,35 @@ namespace ProductService.Protos {
     static ProductsReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "ChVQcm90b3MvcHJvZHVjdHMucHJvdG8ieQoLUHJvZHVjdEdycGMSDAoEbmFt",
+            "ChVQcm90b3MvcHJvZHVjdHMucHJvdG8ifQoLUHJvZHVjdEdycGMSDAoEbmFt",
             "ZRgBIAEoCRITCgtkZXNjcmlwdGlvbhgCIAEoCRINCgVwcmljZRgDIAEoBRIR",
-            "CglpbWFnZVVSTHMYBCADKAkSJQoKYXR0cmlidXRlcxgFIAMoCzIRLlByb2R1",
-            "Y3RBdHRyaWJ1dGUiLwoQUHJvZHVjdEF0dHJpYnV0ZRIMCgRuYW1lGAEgASgJ",
-            "Eg0KBXZhbHVlGAIgASgJIjUKFENyZWF0ZVByb2R1Y3RSZXF1ZXN0Eh0KB3By",
-            "b2R1Y3QYASABKAsyDC5Qcm9kdWN0R3JwYyInChVDcmVhdGVQcm9kdWN0UmVz",
-            "cG9uc2USDgoGc3RhdHVzGAEgASgIIiYKEUdldFByb2R1Y3RSZXF1ZXN0EhEK",
-            "CXByb2R1Y3RJZBgBIAEoCSJDChJHZXRQcm9kdWN0UmVzcG9uc2USDgoGc3Rh",
-            "dHVzGAEgASgIEh0KB3Byb2R1Y3QYAiABKAsyDC5Qcm9kdWN0R3JwYyIpChRE",
-            "ZWxldGVQcm9kdWN0UmVxdWVzdBIRCglwcm9kdWN0SWQYASABKAkiJwoVRGVs",
-            "ZXRlUHJvZHVjdFJlc3BvbnNlEg4KBnN0YXR1cxgBIAEoCCLHAQoUVXBkYXRl",
-            "UHJvZHVjdFJlcXVlc3QSEQoJcHJvZHVjdElkGAEgASgJEhEKBG5hbWUYAiAB",
-            "KAlIAIgBARIYCgtkZXNjcmlwdGlvbhgDIAEoCUgBiAEBEhIKBXByaWNlGAQg",
-            "ASgFSAKIAQESEQoJaW1hZ2VVUkxzGAUgAygJEiUKCmF0dHJpYnV0ZXMYBiAD",
-            "KAsyES5Qcm9kdWN0QXR0cmlidXRlQgcKBV9uYW1lQg4KDF9kZXNjcmlwdGlv",
-            "bkIICgZfcHJpY2UiJwoVVXBkYXRlUHJvZHVjdFJlc3BvbnNlEg4KBnN0YXR1",
-            "cxgBIAEoCDKRAgoMR3JwY1Byb2R1Y3RzEj4KDUNyZWF0ZVByb2R1Y3QSFS5D",
-            "cmVhdGVQcm9kdWN0UmVxdWVzdBoWLkNyZWF0ZVByb2R1Y3RSZXNwb25zZRI5",
-            "Cg5HZXRQcm9kdWN0QnlJZBISLkdldFByb2R1Y3RSZXF1ZXN0GhMuR2V0UHJv",
-            "ZHVjdFJlc3BvbnNlEkIKEVVwZGF0ZVByb2R1Y3RCeUlkEhUuVXBkYXRlUHJv",
-            "ZHVjdFJlcXVlc3QaFi5VcGRhdGVQcm9kdWN0UmVzcG9uc2USQgoRRGVsZXRl",
-            "UHJvZHVjdEJ5SWQSFS5EZWxldGVQcm9kdWN0UmVxdWVzdBoWLkRlbGV0ZVBy",
-            "b2R1Y3RSZXNwb25zZUIYqgIVUHJvZHVjdFNlcnZpY2UuUHJvdG9zYgZwcm90",
-            "bzM="));
+            "CglpbWFnZVVSTHMYBCADKAkSKQoKYXR0cmlidXRlcxgFIAMoCzIVLlByb2R1",
+            "Y3RBdHRyaWJ1dGVHcnBjIjMKFFByb2R1Y3RBdHRyaWJ1dGVHcnBjEgwKBG5h",
+            "bWUYASABKAkSDQoFdmFsdWUYAiABKAkiNQoUQ3JlYXRlUHJvZHVjdFJlcXVl",
+            "c3QSHQoHcHJvZHVjdBgBIAEoCzIMLlByb2R1Y3RHcnBjIicKFUNyZWF0ZVBy",
+            "b2R1Y3RSZXNwb25zZRIOCgZzdGF0dXMYASABKAgiJgoRR2V0UHJvZHVjdFJl",
+            "cXVlc3QSEQoJcHJvZHVjdElkGAEgASgJIkMKEkdldFByb2R1Y3RSZXNwb25z",
+            "ZRIOCgZzdGF0dXMYASABKAgSHQoHcHJvZHVjdBgCIAEoCzIMLlByb2R1Y3RH",
+            "cnBjIikKFERlbGV0ZVByb2R1Y3RSZXF1ZXN0EhEKCXByb2R1Y3RJZBgBIAEo",
+            "CSInChVEZWxldGVQcm9kdWN0UmVzcG9uc2USDgoGc3RhdHVzGAEgASgIIssB",
+            "ChRVcGRhdGVQcm9kdWN0UmVxdWVzdBIRCglwcm9kdWN0SWQYASABKAkSEQoE",
+            "bmFtZRgCIAEoCUgAiAEBEhgKC2Rlc2NyaXB0aW9uGAMgASgJSAGIAQESEgoF",
+            "cHJpY2UYBCABKAVIAogBARIRCglpbWFnZVVSTHMYBSADKAkSKQoKYXR0cmli",
+            "dXRlcxgGIAMoCzIVLlByb2R1Y3RBdHRyaWJ1dGVHcnBjQgcKBV9uYW1lQg4K",
+            "DF9kZXNjcmlwdGlvbkIICgZfcHJpY2UiJwoVVXBkYXRlUHJvZHVjdFJlc3Bv",
+            "bnNlEg4KBnN0YXR1cxgBIAEoCDKRAgoMR3JwY1Byb2R1Y3RzEj4KDUNyZWF0",
+            "ZVByb2R1Y3QSFS5DcmVhdGVQcm9kdWN0UmVxdWVzdBoWLkNyZWF0ZVByb2R1",
+            "Y3RSZXNwb25zZRI5Cg5HZXRQcm9kdWN0QnlJZBISLkdldFByb2R1Y3RSZXF1",
+            "ZXN0GhMuR2V0UHJvZHVjdFJlc3BvbnNlEkIKEVVwZGF0ZVByb2R1Y3RCeUlk",
+            "EhUuVXBkYXRlUHJvZHVjdFJlcXVlc3QaFi5VcGRhdGVQcm9kdWN0UmVzcG9u",
+            "c2USQgoRRGVsZXRlUHJvZHVjdEJ5SWQSFS5EZWxldGVQcm9kdWN0UmVxdWVz",
+            "dBoWLkRlbGV0ZVByb2R1Y3RSZXNwb25zZUIYqgIVUHJvZHVjdFNlcnZpY2Uu",
+            "UHJvdG9zYgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::ProductService.Protos.ProductGrpc), global::ProductService.Protos.ProductGrpc.Parser, new[]{ "Name", "Description", "Price", "ImageURLs", "Attributes" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::ProductService.Protos.ProductAttribute), global::ProductService.Protos.ProductAttribute.Parser, new[]{ "Name", "Value" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::ProductService.Protos.ProductAttributeGrpc), global::ProductService.Protos.ProductAttributeGrpc.Parser, new[]{ "Name", "Value" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::ProductService.Protos.CreateProductRequest), global::ProductService.Protos.CreateProductRequest.Parser, new[]{ "Product" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::ProductService.Protos.CreateProductResponse), global::ProductService.Protos.CreateProductResponse.Parser, new[]{ "Status" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::ProductService.Protos.GetProductRequest), global::ProductService.Protos.GetProductRequest.Parser, new[]{ "ProductId" }, null, null, null, null),
@@ -165,12 +165,12 @@ namespace ProductService.Protos {
 
     /// <summary>Field number for the "attributes" field.</summary>
     public const int AttributesFieldNumber = 5;
-    private static readonly pb::FieldCodec<global::ProductService.Protos.ProductAttribute> _repeated_attributes_codec
-        = pb::FieldCodec.ForMessage(42, global::ProductService.Protos.ProductAttribute.Parser);
-    private readonly pbc::RepeatedField<global::ProductService.Protos.ProductAttribute> attributes_ = new pbc::RepeatedField<global::ProductService.Protos.ProductAttribute>();
+    private static readonly pb::FieldCodec<global::ProductService.Protos.ProductAttributeGrpc> _repeated_attributes_codec
+        = pb::FieldCodec.ForMessage(42, global::ProductService.Protos.ProductAttributeGrpc.Parser);
+    private readonly pbc::RepeatedField<global::ProductService.Protos.ProductAttributeGrpc> attributes_ = new pbc::RepeatedField<global::ProductService.Protos.ProductAttributeGrpc>();
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public pbc::RepeatedField<global::ProductService.Protos.ProductAttribute> Attributes {
+    public pbc::RepeatedField<global::ProductService.Protos.ProductAttributeGrpc> Attributes {
       get { return attributes_; }
     }
 
@@ -392,16 +392,16 @@ namespace ProductService.Protos {
   }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
-  public sealed partial class ProductAttribute : pb::IMessage<ProductAttribute>
+  public sealed partial class ProductAttributeGrpc : pb::IMessage<ProductAttributeGrpc>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
   {
-    private static readonly pb::MessageParser<ProductAttribute> _parser = new pb::MessageParser<ProductAttribute>(() => new ProductAttribute());
+    private static readonly pb::MessageParser<ProductAttributeGrpc> _parser = new pb::MessageParser<ProductAttributeGrpc>(() => new ProductAttributeGrpc());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public static pb::MessageParser<ProductAttribute> Parser { get { return _parser; } }
+    public static pb::MessageParser<ProductAttributeGrpc> Parser { get { return _parser; } }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -417,7 +417,7 @@ namespace ProductService.Protos {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public ProductAttribute() {
+    public ProductAttributeGrpc() {
       OnConstruction();
     }
 
@@ -425,7 +425,7 @@ namespace ProductService.Protos {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public ProductAttribute(ProductAttribute other) : this() {
+    public ProductAttributeGrpc(ProductAttributeGrpc other) : this() {
       name_ = other.name_;
       value_ = other.value_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
@@ -433,8 +433,8 @@ namespace ProductService.Protos {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public ProductAttribute Clone() {
-      return new ProductAttribute(this);
+    public ProductAttributeGrpc Clone() {
+      return new ProductAttributeGrpc(this);
     }
 
     /// <summary>Field number for the "name" field.</summary>
@@ -464,12 +464,12 @@ namespace ProductService.Protos {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
-      return Equals(other as ProductAttribute);
+      return Equals(other as ProductAttributeGrpc);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public bool Equals(ProductAttribute other) {
+    public bool Equals(ProductAttributeGrpc other) {
       if (ReferenceEquals(other, null)) {
         return false;
       }
@@ -555,7 +555,7 @@ namespace ProductService.Protos {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public void MergeFrom(ProductAttribute other) {
+    public void MergeFrom(ProductAttributeGrpc other) {
       if (other == null) {
         return;
       }
@@ -2025,12 +2025,12 @@ namespace ProductService.Protos {
 
     /// <summary>Field number for the "attributes" field.</summary>
     public const int AttributesFieldNumber = 6;
-    private static readonly pb::FieldCodec<global::ProductService.Protos.ProductAttribute> _repeated_attributes_codec
-        = pb::FieldCodec.ForMessage(50, global::ProductService.Protos.ProductAttribute.Parser);
-    private readonly pbc::RepeatedField<global::ProductService.Protos.ProductAttribute> attributes_ = new pbc::RepeatedField<global::ProductService.Protos.ProductAttribute>();
+    private static readonly pb::FieldCodec<global::ProductService.Protos.ProductAttributeGrpc> _repeated_attributes_codec
+        = pb::FieldCodec.ForMessage(50, global::ProductService.Protos.ProductAttributeGrpc.Parser);
+    private readonly pbc::RepeatedField<global::ProductService.Protos.ProductAttributeGrpc> attributes_ = new pbc::RepeatedField<global::ProductService.Protos.ProductAttributeGrpc>();
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public pbc::RepeatedField<global::ProductService.Protos.ProductAttribute> Attributes {
+    public pbc::RepeatedField<global::ProductService.Protos.ProductAttributeGrpc> Attributes {
       get { return attributes_; }
     }
 
