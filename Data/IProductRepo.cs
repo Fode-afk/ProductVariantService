@@ -8,7 +8,6 @@ namespace ProductService.Data
         Task<IEnumerable<Product>> GetAllProductsByOwnerIdAsync(string ownerId);
 
         Task<Product> GetProductByIdAsync(string productId);
-        Task<Product> GetProductByIdAndOwnerIdAsync(string productId, string ownerId);
 
         Task<bool> CreateProductAsync(Product product);
         Task<bool> UpdateProductAsync(Product product);

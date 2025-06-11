@@ -6,8 +6,8 @@ option csharp_namespace = "ProductService.Protos";
 service GrpcProducts
 {
 	rpc CreateProduct(CreateProductRequest) returns (CreateProductResponse);
+	rpc GetAllProductsByOwnerId(GetAllProductsByOwnerIdRequest) returns (GetAllProductsByOwnerIdResponse);
 	rpc GetProductById(GetProductRequest) returns (GetProductResponse);
-	rpc GetProductByIdAndOwnerId(GetProductRequest) returns (GetProductResponse);
 	rpc UpdateProductById(UpdateProductRequest) returns (UpdateProductResponse);
 	rpc DeleteProductById(DeleteProductRequest) returns (DeleteProductResponse);
 }
@@ -38,10 +38,20 @@ message CreateProductResponse
 	bool status = 1;
 }
 
+message GetAllProductsByOwnerIdRequest
+{
+	string ownerId = 1;
+}
+
+message GetAllProductsByOwnerIdResponse
+{
+	bool status = 1;
+	repeated ProductGrpc products = 2;
+}
+
 message GetProductRequest
 {
 	string productId = 1;
-	optional string ownerId = 2;
 }
 
 message GetProductResponse

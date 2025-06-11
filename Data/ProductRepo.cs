@@ -32,11 +32,6 @@ namespace ProductService.Data
             return await _products.Find(p => p.OwnerId == ownerId).ToListAsync();
         }
 
-        public async Task<Product> GetProductByIdAndOwnerIdAsync(string productId, string ownerId)
-        {
-            return await _products.Find(p => p.ProductId == productId && p.OwnerId == ownerId).FirstOrDefaultAsync();
-        }
-
         public async Task<Product> GetProductByIdAsync(string productId)
         {
             return await _products.Find(p => p.ProductId == productId).FirstOrDefaultAsync();

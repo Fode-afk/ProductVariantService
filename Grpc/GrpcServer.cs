@@ -17,64 +17,32 @@ namespace ProductService.Grpc
         private readonly IValidator<UpdateProductRequest> _updateProductValidator = new UpdateProductValidator();
         private readonly IValidator<DeleteProductRequest> _deleteProductValidator = new DeleteProductValidator();
 
-        //public override async Task<GetProductResponse> GetProductById(GetProductRequest request, ServerCallContext context)
-        //{ 
-        //    var valres = _getProductValidator.Validate(request);
-
-        //    if (!valres.IsValid)
-        //    {
-        //        throw new RpcException(new Status(StatusCode.InvalidArgument, valres.ErrorMessage));     
-        //    }
-
-        //    var product = await _productRepo.GetProductByIdAsync(request.ProductId);
-
-        //    if (product == null)
-        //    {
-        //        return new GetProductResponse { Status = false };
-        //    }
-
-        //    return new GetProductResponse
-        //    {
-        //        Status = true,
-        //        Product = _mapper.Map<ProductGrpc>(product)
-        //    };
-        //}
-
-        public override Task<GetProductResponse> GetProductById(GetProductRequest request, ServerCallContext context)
+        public override async Task<GetAllProductsByOwnerIdResponse> GetAllProductsByOwnerId(GetAllProductsByOwnerIdRequest request, ServerCallContext context)
         {
-            return GetProductInternalAsync(request.ProductId);
-        }
+            var products = await _productRepo.GetAllProductsByOwnerIdAsync(request.OwnerId);
 
-        public override Task<GetProductResponse> GetProductByIdAndOwnerId(GetProductRequest request, ServerCallContext context)
-        {
-            return GetProductInternalAsync(request.ProductId, request.OwnerId);
-        }
-
-        private async Task<GetProductResponse> GetProductInternalAsync(string productId, string? ownerId = null)
-        {
-            var request = new GetProductRequest { ProductId = productId };
-
-            if (!string.IsNullOrWhiteSpace(ownerId))
+            if (products == null)
             {
-                request.OwnerId = ownerId;
+                return new GetAllProductsByOwnerIdResponse { Status = false };
             }
 
+            return new GetAllProductsByOwnerIdResponse
+            {
+                Status = true,
+                Products = { _mapper.Map<IEnumerable<ProductGrpc>>(products) }
+            };
+        }
+
+        public override async Task<GetProductResponse> GetProductById(GetProductRequest request, ServerCallContext context)
+        {
             var valres = _getProductValidator.Validate(request);
+
             if (!valres.IsValid)
             {
                 throw new RpcException(new Status(StatusCode.InvalidArgument, valres.ErrorMessage));
             }
 
-            Product? product;
-
-            if (request.HasOwnerId)
-            {
-                product = await _productRepo.GetProductByIdAndOwnerIdAsync(request.ProductId, request.OwnerId);
-            }
-            else
-            {
-                product = await _productRepo.GetProductByIdAsync(request.ProductId);
-            }
+            var product = await _productRepo.GetProductByIdAsync(request.ProductId);
 
             if (product == null)
             {
