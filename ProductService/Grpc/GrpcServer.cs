@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using Grpc.Core;
 using ProductService.Data;
+using ProductService.Grpc.Validators;
 using ProductService.Models;
 using ProductService.Protos;
+using System.ComponentModel.DataAnnotations;
 
 namespace ProductService.Grpc
 {
@@ -11,8 +13,20 @@ namespace ProductService.Grpc
         private readonly IProductRepo _productRepo = productRepo;
         private readonly IMapper _mapper = mapper;
 
+        private readonly IValidator<CreateProductRequest> _createProductValidator = new CreateProductValidator();
+        private readonly IValidator<GetProductRequest> _getProductValidator = new GetProductValidator();
+        private readonly IValidator<UpdateProductRequest> _updateProductValidator = new UpdateProductValidator();
+        private readonly IValidator<DeleteProductRequest> _deleteProductValidator = new DeleteProductValidator();
+
         public override async Task<GetProductResponse> GetProductById(GetProductRequest request, ServerCallContext context)
-        {
+        { 
+            var valres = _getProductValidator.Validate(request);
+
+            if (!valres.IsValid)
+            {
+                throw new RpcException(new Status(StatusCode.InvalidArgument, valres.ErrorMessage));     
+            }
+
             var product = await _productRepo.GetProductByIdAsync(request.ProductId);
 
             if (product == null)
@@ -29,9 +43,11 @@ namespace ProductService.Grpc
 
         public override async Task<CreateProductResponse> CreateProduct(CreateProductRequest request, ServerCallContext context)
         {
-            if (request.Product == null)
+            var valres = _createProductValidator.Validate(request);
+
+            if (!valres.IsValid)
             {
-                return new CreateProductResponse { Status = false };
+                throw new RpcException(new Status(StatusCode.InvalidArgument, valres.ErrorMessage));
             }
 
             var product = _mapper.Map<Product>(request.Product);
@@ -43,6 +59,13 @@ namespace ProductService.Grpc
 
         public override async Task<UpdateProductResponse> UpdateProductById(UpdateProductRequest request, ServerCallContext context)
         {
+            var valres = _updateProductValidator.Validate(request);
+
+            if (!valres.IsValid)
+            {
+                throw new RpcException(new Status(StatusCode.InvalidArgument, valres.ErrorMessage));
+            }
+
             var existingProduct = await _productRepo.GetProductByIdAsync(request.ProductId);
 
             if (existingProduct == null)
@@ -59,6 +82,13 @@ namespace ProductService.Grpc
 
         public override async Task<DeleteProductResponse> DeleteProductById(DeleteProductRequest request, ServerCallContext context)
         {
+            var valres = _deleteProductValidator.Validate(request);
+
+            if (!valres.IsValid)
+            {
+                throw new RpcException(new Status(StatusCode.InvalidArgument, valres.ErrorMessage));
+            }
+
             await _productRepo.DeleteProductAsync(request.ProductId);
 
             return new DeleteProductResponse { Status = true };
