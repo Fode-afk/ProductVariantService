@@ -17,7 +17,7 @@ namespace ProductService.Data
 
         public async Task<bool> DeleteProductAsync(string productId)
         {
-            await _products.DeleteOneAsync(p => p.Id == productId);
+            await _products.DeleteOneAsync(p => p.ProductId == productId);
             return true;
             //TODO Проверка на выполнение
         }
@@ -29,12 +29,12 @@ namespace ProductService.Data
 
         public async Task<Product> GetProductByIdAsync(string productId)
         {
-            return await _products.Find(p => p.Id == productId).FirstOrDefaultAsync();
+            return await _products.Find(p => p.ProductId == productId).FirstOrDefaultAsync();
         }
 
         public async Task<bool> UpdateProductAsync(Product product)
         {
-            var filter = Builders<Product>.Filter.Eq(p => p.Id, product.Id);
+            var filter = Builders<Product>.Filter.Eq(p => p.ProductId, product.ProductId);
             await _products.ReplaceOneAsync(filter, product);
             return true;
             //TODO Проверка на выполнение

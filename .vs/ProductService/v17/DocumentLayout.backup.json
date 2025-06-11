@@ -3,48 +3,28 @@
   "WorkspaceRootPath": "D:\\Projects\\HLShop\\ProductService\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{EF249D30-78E7-8691-79B8-62FDF6476A25}|ProductService.csproj|d:\\projects\\hlshop\\productservice\\grpc\\validators\\deleteproductvalidator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{EF249D30-78E7-8691-79B8-62FDF6476A25}|ProductService.csproj|solutionrelative:grpc\\validators\\deleteproductvalidator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{EF249D30-78E7-8691-79B8-62FDF6476A25}|ProductService.csproj|d:\\projects\\hlshop\\productservice\\grpc\\validators\\getproductvalidator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{EF249D30-78E7-8691-79B8-62FDF6476A25}|ProductService.csproj|solutionrelative:grpc\\validators\\getproductvalidator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{EF249D30-78E7-8691-79B8-62FDF6476A25}|ProductService.csproj|d:\\projects\\hlshop\\productservice\\grpc\\validators\\createproductvalidator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{EF249D30-78E7-8691-79B8-62FDF6476A25}|ProductService.csproj|solutionrelative:grpc\\validators\\createproductvalidator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{EF249D30-78E7-8691-79B8-62FDF6476A25}|ProductService.csproj|d:\\projects\\hlshop\\productservice\\grpc\\validators\\validationresult.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{EF249D30-78E7-8691-79B8-62FDF6476A25}|ProductService.csproj|solutionrelative:grpc\\validators\\validationresult.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{EF249D30-78E7-8691-79B8-62FDF6476A25}|ProductService.csproj|d:\\projects\\hlshop\\productservice\\profiles\\productsprofile.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{EF249D30-78E7-8691-79B8-62FDF6476A25}|ProductService.csproj|solutionrelative:profiles\\productsprofile.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{EF249D30-78E7-8691-79B8-62FDF6476A25}|ProductService.csproj|d:\\projects\\hlshop\\productservice\\protos\\products.proto||{3B902123-F8A7-4915-9F01-361F908088D0}",
-      "RelativeMoniker": "D:0:0:{EF249D30-78E7-8691-79B8-62FDF6476A25}|ProductService.csproj|solutionrelative:protos\\products.proto||{3B902123-F8A7-4915-9F01-361F908088D0}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{EF249D30-78E7-8691-79B8-62FDF6476A25}|ProductService.csproj|d:\\projects\\hlshop\\productservice\\settings\\mongosettings.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{EF249D30-78E7-8691-79B8-62FDF6476A25}|ProductService.csproj|solutionrelative:settings\\mongosettings.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{EF249D30-78E7-8691-79B8-62FDF6476A25}|ProductService.csproj|d:\\projects\\hlshop\\productservice\\grpc\\grpcserver.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{EF249D30-78E7-8691-79B8-62FDF6476A25}|ProductService.csproj|solutionrelative:grpc\\grpcserver.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{EF249D30-78E7-8691-79B8-62FDF6476A25}|ProductService.csproj|d:\\projects\\hlshop\\productservice\\dtos\\productreaddto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{EF249D30-78E7-8691-79B8-62FDF6476A25}|ProductService.csproj|solutionrelative:dtos\\productreaddto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{EF249D30-78E7-8691-79B8-62FDF6476A25}|ProductService.csproj|d:\\projects\\hlshop\\productservice\\models\\product.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EF249D30-78E7-8691-79B8-62FDF6476A25}|ProductService.csproj|solutionrelative:models\\product.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{EF249D30-78E7-8691-79B8-62FDF6476A25}|ProductService.csproj|d:\\projects\\hlshop\\productservice\\data\\productrepo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{EF249D30-78E7-8691-79B8-62FDF6476A25}|ProductService.csproj|solutionrelative:data\\productrepo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{EF249D30-78E7-8691-79B8-62FDF6476A25}|ProductService.csproj|d:\\projects\\hlshop\\productservice\\data\\iproductrepo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{EF249D30-78E7-8691-79B8-62FDF6476A25}|ProductService.csproj|solutionrelative:data\\iproductrepo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{EF249D30-78E7-8691-79B8-62FDF6476A25}|ProductService.csproj|d:\\projects\\hlshop\\productservice\\profiles\\productsprofile.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EF249D30-78E7-8691-79B8-62FDF6476A25}|ProductService.csproj|solutionrelative:profiles\\productsprofile.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EF249D30-78E7-8691-79B8-62FDF6476A25}|ProductService.csproj|d:\\projects\\hlshop\\productservice\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EF249D30-78E7-8691-79B8-62FDF6476A25}|ProductService.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EF249D30-78E7-8691-79B8-62FDF6476A25}|ProductService.csproj|d:\\projects\\hlshop\\productservice\\grpc\\grpcserver.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EF249D30-78E7-8691-79B8-62FDF6476A25}|ProductService.csproj|solutionrelative:grpc\\grpcserver.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EF249D30-78E7-8691-79B8-62FDF6476A25}|ProductService.csproj|d:\\projects\\hlshop\\productservice\\grpc\\validators\\ivalidator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EF249D30-78E7-8691-79B8-62FDF6476A25}|ProductService.csproj|solutionrelative:grpc\\validators\\ivalidator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -67,144 +47,79 @@
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "GetProductValidator.cs",
-              "DocumentMoniker": "D:\\Projects\\HLShop\\ProductService\\Grpc\\Validators\\GetProductValidator.cs",
-              "RelativeDocumentMoniker": "Grpc\\Validators\\GetProductValidator.cs",
-              "ToolTip": "D:\\Projects\\HLShop\\ProductService\\Grpc\\Validators\\GetProductValidator.cs",
-              "RelativeToolTip": "Grpc\\Validators\\GetProductValidator.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-11T05:37:08.219Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "ValidationResult.cs",
-              "DocumentMoniker": "D:\\Projects\\HLShop\\ProductService\\Grpc\\Validators\\ValidationResult.cs",
-              "RelativeDocumentMoniker": "Grpc\\Validators\\ValidationResult.cs",
-              "ToolTip": "D:\\Projects\\HLShop\\ProductService\\Grpc\\Validators\\ValidationResult.cs",
-              "RelativeToolTip": "Grpc\\Validators\\ValidationResult.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-11T05:36:51.817Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "DeleteProductValidator.cs",
-              "DocumentMoniker": "D:\\Projects\\HLShop\\ProductService\\Grpc\\Validators\\DeleteProductValidator.cs",
-              "RelativeDocumentMoniker": "Grpc\\Validators\\DeleteProductValidator.cs",
-              "ToolTip": "D:\\Projects\\HLShop\\ProductService\\Grpc\\Validators\\DeleteProductValidator.cs",
-              "RelativeToolTip": "Grpc\\Validators\\DeleteProductValidator.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-11T05:36:39.715Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "CreateProductValidator.cs",
-              "DocumentMoniker": "D:\\Projects\\HLShop\\ProductService\\Grpc\\Validators\\CreateProductValidator.cs",
-              "RelativeDocumentMoniker": "Grpc\\Validators\\CreateProductValidator.cs",
-              "ToolTip": "D:\\Projects\\HLShop\\ProductService\\Grpc\\Validators\\CreateProductValidator.cs",
-              "RelativeToolTip": "Grpc\\Validators\\CreateProductValidator.cs",
-              "ViewState": "AgIAAAYAAAAAAAAAAAAAACAAAAANAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-11T05:36:35.772Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "ProductsProfile.cs",
-              "DocumentMoniker": "D:\\Projects\\HLShop\\ProductService\\Profiles\\ProductsProfile.cs",
-              "RelativeDocumentMoniker": "Profiles\\ProductsProfile.cs",
-              "ToolTip": "D:\\Projects\\HLShop\\ProductService\\Profiles\\ProductsProfile.cs",
-              "RelativeToolTip": "Profiles\\ProductsProfile.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAABdAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-11T05:34:32.037Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "products.proto",
-              "DocumentMoniker": "D:\\Projects\\HLShop\\ProductService\\Protos\\products.proto",
-              "RelativeDocumentMoniker": "Protos\\products.proto",
-              "ToolTip": "D:\\Projects\\HLShop\\ProductService\\Protos\\products.proto",
-              "RelativeToolTip": "Protos\\products.proto",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAD8AAAAhAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003853|",
-              "WhenOpened": "2025-06-11T05:34:23.315Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "MongoSettings.cs",
-              "DocumentMoniker": "D:\\Projects\\HLShop\\ProductService\\Settings\\MongoSettings.cs",
-              "RelativeDocumentMoniker": "Settings\\MongoSettings.cs",
-              "ToolTip": "D:\\Projects\\HLShop\\ProductService\\Settings\\MongoSettings.cs",
-              "RelativeToolTip": "Settings\\MongoSettings.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-11T05:34:20.465Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 7,
-              "Title": "GrpcServer.cs",
-              "DocumentMoniker": "D:\\Projects\\HLShop\\ProductService\\Grpc\\GrpcServer.cs",
-              "RelativeDocumentMoniker": "Grpc\\GrpcServer.cs",
-              "ToolTip": "D:\\Projects\\HLShop\\ProductService\\Grpc\\GrpcServer.cs",
-              "RelativeToolTip": "Grpc\\GrpcServer.cs",
-              "ViewState": "AgIAACsAAAAAAAAAAAAgwFoAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-11T05:34:06.638Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 9,
               "Title": "ProductRepo.cs",
               "DocumentMoniker": "D:\\Projects\\HLShop\\ProductService\\Data\\ProductRepo.cs",
               "RelativeDocumentMoniker": "Data\\ProductRepo.cs",
               "ToolTip": "D:\\Projects\\HLShop\\ProductService\\Data\\ProductRepo.cs",
               "RelativeToolTip": "Data\\ProductRepo.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAYAAAAAAAAAA==",
+              "ViewState": "AgIAAA0AAAAAAAAAAAAgwBEAAAAHAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-11T05:33:54.125Z",
+              "WhenOpened": "2025-06-11T05:49:34.937Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
-              "Title": "IProductRepo.cs",
-              "DocumentMoniker": "D:\\Projects\\HLShop\\ProductService\\Data\\IProductRepo.cs",
-              "RelativeDocumentMoniker": "Data\\IProductRepo.cs",
-              "ToolTip": "D:\\Projects\\HLShop\\ProductService\\Data\\IProductRepo.cs",
-              "RelativeToolTip": "Data\\IProductRepo.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAFAAAAAAAAAA==",
+              "DocumentIndex": 2,
+              "Title": "ProductsProfile.cs",
+              "DocumentMoniker": "D:\\Projects\\HLShop\\ProductService\\Profiles\\ProductsProfile.cs",
+              "RelativeDocumentMoniker": "Profiles\\ProductsProfile.cs",
+              "ToolTip": "D:\\Projects\\HLShop\\ProductService\\Profiles\\ProductsProfile.cs",
+              "RelativeToolTip": "Profiles\\ProductsProfile.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABkAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-11T05:33:51.955Z",
+              "WhenOpened": "2025-06-11T05:49:28.452Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
-              "Title": "ProductReadDto.cs",
-              "DocumentMoniker": "D:\\Projects\\HLShop\\ProductService\\Dtos\\ProductReadDto.cs",
-              "RelativeDocumentMoniker": "Dtos\\ProductReadDto.cs",
-              "ToolTip": "D:\\Projects\\HLShop\\ProductService\\Dtos\\ProductReadDto.cs",
-              "RelativeToolTip": "Dtos\\ProductReadDto.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAzAAAAAAAAAA==",
+              "DocumentIndex": 0,
+              "Title": "Product.cs",
+              "DocumentMoniker": "D:\\Projects\\HLShop\\ProductService\\Models\\Product.cs",
+              "RelativeDocumentMoniker": "Models\\Product.cs",
+              "ToolTip": "D:\\Projects\\HLShop\\ProductService\\Models\\Product.cs",
+              "RelativeToolTip": "Models\\Product.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABYAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-11T05:33:49.18Z",
+              "WhenOpened": "2025-06-11T05:49:01.798Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "GrpcServer.cs",
+              "DocumentMoniker": "D:\\Projects\\HLShop\\ProductService\\Grpc\\GrpcServer.cs",
+              "RelativeDocumentMoniker": "Grpc\\GrpcServer.cs",
+              "ToolTip": "D:\\Projects\\HLShop\\ProductService\\Grpc\\GrpcServer.cs",
+              "RelativeToolTip": "Grpc\\GrpcServer.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABwAAABUAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-11T05:42:01.287Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "IValidator.cs",
+              "DocumentMoniker": "D:\\Projects\\HLShop\\ProductService\\Grpc\\Validators\\IValidator.cs",
+              "RelativeDocumentMoniker": "Grpc\\Validators\\IValidator.cs",
+              "ToolTip": "D:\\Projects\\HLShop\\ProductService\\Grpc\\Validators\\IValidator.cs",
+              "RelativeToolTip": "Grpc\\Validators\\IValidator.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-11T05:41:49.21Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Program.cs",
+              "DocumentMoniker": "D:\\Projects\\HLShop\\ProductService\\Program.cs",
+              "RelativeDocumentMoniker": "Program.cs",
+              "ToolTip": "D:\\Projects\\HLShop\\ProductService\\Program.cs",
+              "RelativeToolTip": "Program.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACgAAAAaAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-11T05:41:26.027Z",
               "EditorCaption": ""
             }
           ]
@@ -226,10 +141,6 @@
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{40ea2e6b-2121-4bb8-a43e-c83c04b51041}"
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{1c64b9c2-e352-428e-a56d-0ace190b99a6}"
             }
           ]
         }
