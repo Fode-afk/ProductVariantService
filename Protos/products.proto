@@ -2,86 +2,183 @@ syntax = "proto3";
 
 option csharp_namespace = "ProductService.Protos";
 
-
+/// <summary>
+/// Defines gRPC service for product management.
+/// </summary>
 service GrpcProducts
 {
-	rpc CreateProduct(CreateProductRequest) returns (CreateProductResponse);
-	rpc GetAllProductsByOwnerId(GetAllProductsByOwnerIdRequest) returns (GetAllProductsByOwnerIdResponse);
-	rpc GetProductById(GetProductRequest) returns (GetProductResponse);
-	rpc UpdateProductById(UpdateProductRequest) returns (UpdateProductResponse);
-	rpc DeleteProductById(DeleteProductRequest) returns (DeleteProductResponse);
+    /// <summary>
+    /// Creates a new product.
+    /// </summary>
+    rpc CreateProduct(CreateProductRequest) returns (CreateProductResponse);
+
+    /// <summary>
+    /// Retrieves all products by owner ID.
+    /// </summary>
+    rpc GetAllProductsByOwnerId(GetAllProductsByOwnerIdRequest) returns (GetAllProductsByOwnerIdResponse);
+
+    /// <summary>
+    /// Retrieves a product by its ID.
+    /// </summary>
+    rpc GetProductById(GetProductRequest) returns (GetProductResponse);
+
+    /// <summary>
+    /// Updates a product by its ID.
+    /// </summary>
+    rpc UpdateProductById(UpdateProductRequest) returns (UpdateProductResponse);
+
+    /// <summary>
+    /// Deletes a product by its ID.
+    /// </summary>
+    rpc DeleteProductById(DeleteProductRequest) returns (DeleteProductResponse);
 }
 
+/// <summary>
+/// Represents a product in the gRPC contract.
+/// </summary>
 message ProductGrpc
 {
-	string ownerId = 1;
-	string name = 2;
-	string description = 3;
-	int32 price = 4;
-	repeated string imageURLs = 5;
-	repeated ProductAttributeGrpc attributes = 6;
+    /// <summary>Owner ID of the product.</summary>
+    string ownerId = 1;
+
+    /// <summary>Name of the product.</summary>
+    string name = 2;
+
+    /// <summary>Description of the product.</summary>
+    string description = 3;
+
+    /// <summary>Price of the product.</summary>
+    int32 price = 4;
+
+    /// <summary>List of image URLs.</summary>
+    repeated string imageURLs = 5;
+
+    /// <summary>List of product attributes.</summary>
+    repeated ProductAttributeGrpc attributes = 6;
 }
 
+/// <summary>
+/// Represents a key-value attribute for a product.
+/// </summary>
 message ProductAttributeGrpc
 {
-	string name = 1;
-	string value = 2;
+    /// <summary>Attribute name.</summary>
+    string name = 1;
+
+    /// <summary>Attribute value.</summary>
+    string value = 2;
 }
 
+/// <summary>
+/// Request to create a product.
+/// </summary>
 message CreateProductRequest
 {
-	ProductGrpc product = 1;
+    /// <summary>Product details.</summary>
+    ProductGrpc product = 1;
 }
 
+/// <summary>
+/// Response to a product creation request.
+/// </summary>
 message CreateProductResponse
 {
-	bool status = 1;
+    /// <summary>Indicates success status.</summary>
+    bool status = 1;
 }
 
+/// <summary>
+/// Request to get all products by owner ID.
+/// </summary>
 message GetAllProductsByOwnerIdRequest
 {
-	string ownerId = 1;
+    /// <summary>Owner ID to filter products.</summary>
+    string ownerId = 1;
 }
 
+/// <summary>
+/// Response with all products by owner ID.
+/// </summary>
 message GetAllProductsByOwnerIdResponse
 {
-	bool status = 1;
-	repeated ProductGrpc products = 2;
+    /// <summary>Indicates success status.</summary>
+    bool status = 1;
+
+    /// <summary>List of products.</summary>
+    repeated ProductGrpc products = 2;
 }
 
+/// <summary>
+/// Request to get a product by ID.
+/// </summary>
 message GetProductRequest
 {
-	string productId = 1;
+    /// <summary>Product ID.</summary>
+    string productId = 1;
 }
 
+/// <summary>
+/// Response with product details.
+/// </summary>
 message GetProductResponse
 {
-	bool status = 1;
-	ProductGrpc product = 2;
+    /// <summary>Indicates success status.</summary>
+    bool status = 1;
+
+    /// <summary>Product details.</summary>
+    ProductGrpc product = 2;
 }
 
+/// <summary>
+/// Request to delete a product by ID.
+/// </summary>
 message DeleteProductRequest
 {
-	string productId = 1;
+    /// <summary>Product ID.</summary>
+    string productId = 1;
 }
 
+/// <summary>
+/// Response to a delete product request.
+/// </summary>
 message DeleteProductResponse
 {
-	bool status = 1;
+    /// <summary>Indicates success status.</summary>
+    bool status = 1;
 }
 
+/// <summary>
+/// Request to update a product by ID.
+/// </summary>
 message UpdateProductRequest
 {
-	string productId = 1;
-	optional string ownerId = 2;
-	optional string name = 3;
-	optional string description = 4;
-	optional int32 price = 5;
-	repeated string imageURLs = 6;
-	repeated ProductAttributeGrpc attributes = 7;
+    /// <summary>Product ID.</summary>
+    string productId = 1;
+
+    /// <summary>Optional updated owner ID.</summary>
+    optional string ownerId = 2;
+
+    /// <summary>Optional updated name.</summary>
+    optional string name = 3;
+
+    /// <summary>Optional updated description.</summary>
+    optional string description = 4;
+
+    /// <summary>Optional updated price.</summary>
+    optional int32 price = 5;
+
+    /// <summary>Optional updated list of image URLs.</summary>
+    repeated string imageURLs = 6;
+
+    /// <summary>Optional updated list of product attributes.</summary>
+    repeated ProductAttributeGrpc attributes = 7;
 }
 
+/// <summary>
+/// Response to an update product request.
+/// </summary>
 message UpdateProductResponse
 {
-	bool status = 1;
+    /// <summary>Indicates success status.</summary>
+    bool status = 1;
 }

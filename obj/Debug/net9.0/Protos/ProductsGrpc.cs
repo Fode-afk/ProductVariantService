@@ -8,6 +8,11 @@
 using grpc = global::Grpc.Core;
 
 namespace ProductService.Protos {
+  /// <summary>
+  ///&#x2F; &lt;summary>
+  ///&#x2F; Defines gRPC service for product management.
+  ///&#x2F; &lt;/summary>
+  /// </summary>
   public static partial class GrpcProducts
   {
     static readonly string __ServiceName = "GrpcProducts";
@@ -116,30 +121,70 @@ namespace ProductService.Protos {
     [grpc::BindServiceMethod(typeof(GrpcProducts), "BindService")]
     public abstract partial class GrpcProductsBase
     {
+      /// <summary>
+      ///&#x2F; &lt;summary>
+      ///&#x2F; Creates a new product.
+      ///&#x2F; &lt;/summary>
+      /// </summary>
+      /// <param name="request">The request received from the client.</param>
+      /// <param name="context">The context of the server-side call handler being invoked.</param>
+      /// <returns>The response to send back to the client (wrapped by a task).</returns>
       [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
       public virtual global::System.Threading.Tasks.Task<global::ProductService.Protos.CreateProductResponse> CreateProduct(global::ProductService.Protos.CreateProductRequest request, grpc::ServerCallContext context)
       {
         throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
       }
 
+      /// <summary>
+      ///&#x2F; &lt;summary>
+      ///&#x2F; Retrieves all products by owner ID.
+      ///&#x2F; &lt;/summary>
+      /// </summary>
+      /// <param name="request">The request received from the client.</param>
+      /// <param name="context">The context of the server-side call handler being invoked.</param>
+      /// <returns>The response to send back to the client (wrapped by a task).</returns>
       [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
       public virtual global::System.Threading.Tasks.Task<global::ProductService.Protos.GetAllProductsByOwnerIdResponse> GetAllProductsByOwnerId(global::ProductService.Protos.GetAllProductsByOwnerIdRequest request, grpc::ServerCallContext context)
       {
         throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
       }
 
+      /// <summary>
+      ///&#x2F; &lt;summary>
+      ///&#x2F; Retrieves a product by its ID.
+      ///&#x2F; &lt;/summary>
+      /// </summary>
+      /// <param name="request">The request received from the client.</param>
+      /// <param name="context">The context of the server-side call handler being invoked.</param>
+      /// <returns>The response to send back to the client (wrapped by a task).</returns>
       [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
       public virtual global::System.Threading.Tasks.Task<global::ProductService.Protos.GetProductResponse> GetProductById(global::ProductService.Protos.GetProductRequest request, grpc::ServerCallContext context)
       {
         throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
       }
 
+      /// <summary>
+      ///&#x2F; &lt;summary>
+      ///&#x2F; Updates a product by its ID.
+      ///&#x2F; &lt;/summary>
+      /// </summary>
+      /// <param name="request">The request received from the client.</param>
+      /// <param name="context">The context of the server-side call handler being invoked.</param>
+      /// <returns>The response to send back to the client (wrapped by a task).</returns>
       [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
       public virtual global::System.Threading.Tasks.Task<global::ProductService.Protos.UpdateProductResponse> UpdateProductById(global::ProductService.Protos.UpdateProductRequest request, grpc::ServerCallContext context)
       {
         throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
       }
 
+      /// <summary>
+      ///&#x2F; &lt;summary>
+      ///&#x2F; Deletes a product by its ID.
+      ///&#x2F; &lt;/summary>
+      /// </summary>
+      /// <param name="request">The request received from the client.</param>
+      /// <param name="context">The context of the server-side call handler being invoked.</param>
+      /// <returns>The response to send back to the client (wrapped by a task).</returns>
       [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
       public virtual global::System.Threading.Tasks.Task<global::ProductService.Protos.DeleteProductResponse> DeleteProductById(global::ProductService.Protos.DeleteProductRequest request, grpc::ServerCallContext context)
       {

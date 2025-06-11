@@ -4,6 +4,10 @@ using ProductService.Models;
 
 namespace ProductService.Data
 {
+    /// <summary>
+    /// MongoDB implementation of the IProductRepo interface.
+    /// Provides CRUD operations for products.
+    /// </summary>
     public class ProductRepo(IMongoDatabase database): IProductRepo
     {
         private readonly IMongoCollection<Product> _products = database.GetCollection<Product>("Products");

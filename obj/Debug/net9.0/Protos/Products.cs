@@ -75,6 +75,11 @@ namespace ProductService.Protos {
 
   }
   #region Messages
+  /// <summary>
+  ///&#x2F; &lt;summary>
+  ///&#x2F; Represents a product in the gRPC contract.
+  ///&#x2F; &lt;/summary>
+  /// </summary>
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class ProductGrpc : pb::IMessage<ProductGrpc>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
@@ -128,6 +133,9 @@ namespace ProductService.Protos {
     /// <summary>Field number for the "ownerId" field.</summary>
     public const int OwnerIdFieldNumber = 1;
     private string ownerId_ = "";
+    /// <summary>
+    ///&#x2F; &lt;summary>Owner ID of the product.&lt;/summary>
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string OwnerId {
@@ -140,6 +148,9 @@ namespace ProductService.Protos {
     /// <summary>Field number for the "name" field.</summary>
     public const int NameFieldNumber = 2;
     private string name_ = "";
+    /// <summary>
+    ///&#x2F; &lt;summary>Name of the product.&lt;/summary>
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string Name {
@@ -152,6 +163,9 @@ namespace ProductService.Protos {
     /// <summary>Field number for the "description" field.</summary>
     public const int DescriptionFieldNumber = 3;
     private string description_ = "";
+    /// <summary>
+    ///&#x2F; &lt;summary>Description of the product.&lt;/summary>
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string Description {
@@ -164,6 +178,9 @@ namespace ProductService.Protos {
     /// <summary>Field number for the "price" field.</summary>
     public const int PriceFieldNumber = 4;
     private int price_;
+    /// <summary>
+    ///&#x2F; &lt;summary>Price of the product.&lt;/summary>
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public int Price {
@@ -178,6 +195,9 @@ namespace ProductService.Protos {
     private static readonly pb::FieldCodec<string> _repeated_imageURLs_codec
         = pb::FieldCodec.ForString(42);
     private readonly pbc::RepeatedField<string> imageURLs_ = new pbc::RepeatedField<string>();
+    /// <summary>
+    ///&#x2F; &lt;summary>List of image URLs.&lt;/summary>
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public pbc::RepeatedField<string> ImageURLs {
@@ -189,6 +209,9 @@ namespace ProductService.Protos {
     private static readonly pb::FieldCodec<global::ProductService.Protos.ProductAttributeGrpc> _repeated_attributes_codec
         = pb::FieldCodec.ForMessage(50, global::ProductService.Protos.ProductAttributeGrpc.Parser);
     private readonly pbc::RepeatedField<global::ProductService.Protos.ProductAttributeGrpc> attributes_ = new pbc::RepeatedField<global::ProductService.Protos.ProductAttributeGrpc>();
+    /// <summary>
+    ///&#x2F; &lt;summary>List of product attributes.&lt;/summary>
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public pbc::RepeatedField<global::ProductService.Protos.ProductAttributeGrpc> Attributes {
@@ -436,6 +459,11 @@ namespace ProductService.Protos {
 
   }
 
+  /// <summary>
+  ///&#x2F; &lt;summary>
+  ///&#x2F; Represents a key-value attribute for a product.
+  ///&#x2F; &lt;/summary>
+  /// </summary>
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class ProductAttributeGrpc : pb::IMessage<ProductAttributeGrpc>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
@@ -485,6 +513,9 @@ namespace ProductService.Protos {
     /// <summary>Field number for the "name" field.</summary>
     public const int NameFieldNumber = 1;
     private string name_ = "";
+    /// <summary>
+    ///&#x2F; &lt;summary>Attribute name.&lt;/summary>
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string Name {
@@ -497,6 +528,9 @@ namespace ProductService.Protos {
     /// <summary>Field number for the "value" field.</summary>
     public const int ValueFieldNumber = 2;
     private string value_ = "";
+    /// <summary>
+    ///&#x2F; &lt;summary>Attribute value.&lt;/summary>
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string Value {
@@ -671,6 +705,11 @@ namespace ProductService.Protos {
 
   }
 
+  /// <summary>
+  ///&#x2F; &lt;summary>
+  ///&#x2F; Request to create a product.
+  ///&#x2F; &lt;/summary>
+  /// </summary>
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class CreateProductRequest : pb::IMessage<CreateProductRequest>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
@@ -719,6 +758,9 @@ namespace ProductService.Protos {
     /// <summary>Field number for the "product" field.</summary>
     public const int ProductFieldNumber = 1;
     private global::ProductService.Protos.ProductGrpc product_;
+    /// <summary>
+    ///&#x2F; &lt;summary>Product details.&lt;/summary>
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public global::ProductService.Protos.ProductGrpc Product {
@@ -878,6 +920,11 @@ namespace ProductService.Protos {
 
   }
 
+  /// <summary>
+  ///&#x2F; &lt;summary>
+  ///&#x2F; Response to a product creation request.
+  ///&#x2F; &lt;/summary>
+  /// </summary>
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class CreateProductResponse : pb::IMessage<CreateProductResponse>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
@@ -926,6 +973,9 @@ namespace ProductService.Protos {
     /// <summary>Field number for the "status" field.</summary>
     public const int StatusFieldNumber = 1;
     private bool status_;
+    /// <summary>
+    ///&#x2F; &lt;summary>Indicates success status.&lt;/summary>
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public bool Status {
@@ -1076,6 +1126,11 @@ namespace ProductService.Protos {
 
   }
 
+  /// <summary>
+  ///&#x2F; &lt;summary>
+  ///&#x2F; Request to get all products by owner ID.
+  ///&#x2F; &lt;/summary>
+  /// </summary>
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class GetAllProductsByOwnerIdRequest : pb::IMessage<GetAllProductsByOwnerIdRequest>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
@@ -1124,6 +1179,9 @@ namespace ProductService.Protos {
     /// <summary>Field number for the "ownerId" field.</summary>
     public const int OwnerIdFieldNumber = 1;
     private string ownerId_ = "";
+    /// <summary>
+    ///&#x2F; &lt;summary>Owner ID to filter products.&lt;/summary>
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string OwnerId {
@@ -1274,6 +1332,11 @@ namespace ProductService.Protos {
 
   }
 
+  /// <summary>
+  ///&#x2F; &lt;summary>
+  ///&#x2F; Response with all products by owner ID.
+  ///&#x2F; &lt;/summary>
+  /// </summary>
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class GetAllProductsByOwnerIdResponse : pb::IMessage<GetAllProductsByOwnerIdResponse>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
@@ -1323,6 +1386,9 @@ namespace ProductService.Protos {
     /// <summary>Field number for the "status" field.</summary>
     public const int StatusFieldNumber = 1;
     private bool status_;
+    /// <summary>
+    ///&#x2F; &lt;summary>Indicates success status.&lt;/summary>
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public bool Status {
@@ -1337,6 +1403,9 @@ namespace ProductService.Protos {
     private static readonly pb::FieldCodec<global::ProductService.Protos.ProductGrpc> _repeated_products_codec
         = pb::FieldCodec.ForMessage(18, global::ProductService.Protos.ProductGrpc.Parser);
     private readonly pbc::RepeatedField<global::ProductService.Protos.ProductGrpc> products_ = new pbc::RepeatedField<global::ProductService.Protos.ProductGrpc>();
+    /// <summary>
+    ///&#x2F; &lt;summary>List of products.&lt;/summary>
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public pbc::RepeatedField<global::ProductService.Protos.ProductGrpc> Products {
@@ -1498,6 +1567,11 @@ namespace ProductService.Protos {
 
   }
 
+  /// <summary>
+  ///&#x2F; &lt;summary>
+  ///&#x2F; Request to get a product by ID.
+  ///&#x2F; &lt;/summary>
+  /// </summary>
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class GetProductRequest : pb::IMessage<GetProductRequest>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
@@ -1546,6 +1620,9 @@ namespace ProductService.Protos {
     /// <summary>Field number for the "productId" field.</summary>
     public const int ProductIdFieldNumber = 1;
     private string productId_ = "";
+    /// <summary>
+    ///&#x2F; &lt;summary>Product ID.&lt;/summary>
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string ProductId {
@@ -1696,6 +1773,11 @@ namespace ProductService.Protos {
 
   }
 
+  /// <summary>
+  ///&#x2F; &lt;summary>
+  ///&#x2F; Response with product details.
+  ///&#x2F; &lt;/summary>
+  /// </summary>
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class GetProductResponse : pb::IMessage<GetProductResponse>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
@@ -1745,6 +1827,9 @@ namespace ProductService.Protos {
     /// <summary>Field number for the "status" field.</summary>
     public const int StatusFieldNumber = 1;
     private bool status_;
+    /// <summary>
+    ///&#x2F; &lt;summary>Indicates success status.&lt;/summary>
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public bool Status {
@@ -1757,6 +1842,9 @@ namespace ProductService.Protos {
     /// <summary>Field number for the "product" field.</summary>
     public const int ProductFieldNumber = 2;
     private global::ProductService.Protos.ProductGrpc product_;
+    /// <summary>
+    ///&#x2F; &lt;summary>Product details.&lt;/summary>
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public global::ProductService.Protos.ProductGrpc Product {
@@ -1940,6 +2028,11 @@ namespace ProductService.Protos {
 
   }
 
+  /// <summary>
+  ///&#x2F; &lt;summary>
+  ///&#x2F; Request to delete a product by ID.
+  ///&#x2F; &lt;/summary>
+  /// </summary>
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class DeleteProductRequest : pb::IMessage<DeleteProductRequest>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
@@ -1988,6 +2081,9 @@ namespace ProductService.Protos {
     /// <summary>Field number for the "productId" field.</summary>
     public const int ProductIdFieldNumber = 1;
     private string productId_ = "";
+    /// <summary>
+    ///&#x2F; &lt;summary>Product ID.&lt;/summary>
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string ProductId {
@@ -2138,6 +2234,11 @@ namespace ProductService.Protos {
 
   }
 
+  /// <summary>
+  ///&#x2F; &lt;summary>
+  ///&#x2F; Response to a delete product request.
+  ///&#x2F; &lt;/summary>
+  /// </summary>
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class DeleteProductResponse : pb::IMessage<DeleteProductResponse>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
@@ -2186,6 +2287,9 @@ namespace ProductService.Protos {
     /// <summary>Field number for the "status" field.</summary>
     public const int StatusFieldNumber = 1;
     private bool status_;
+    /// <summary>
+    ///&#x2F; &lt;summary>Indicates success status.&lt;/summary>
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public bool Status {
@@ -2336,6 +2440,11 @@ namespace ProductService.Protos {
 
   }
 
+  /// <summary>
+  ///&#x2F; &lt;summary>
+  ///&#x2F; Request to update a product by ID.
+  ///&#x2F; &lt;/summary>
+  /// </summary>
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class UpdateProductRequest : pb::IMessage<UpdateProductRequest>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
@@ -2392,6 +2501,9 @@ namespace ProductService.Protos {
     /// <summary>Field number for the "productId" field.</summary>
     public const int ProductIdFieldNumber = 1;
     private string productId_ = "";
+    /// <summary>
+    ///&#x2F; &lt;summary>Product ID.&lt;/summary>
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string ProductId {
@@ -2406,6 +2518,9 @@ namespace ProductService.Protos {
     private readonly static string OwnerIdDefaultValue = "";
 
     private string ownerId_;
+    /// <summary>
+    ///&#x2F; &lt;summary>Optional updated owner ID.&lt;/summary>
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string OwnerId {
@@ -2432,6 +2547,9 @@ namespace ProductService.Protos {
     private readonly static string NameDefaultValue = "";
 
     private string name_;
+    /// <summary>
+    ///&#x2F; &lt;summary>Optional updated name.&lt;/summary>
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string Name {
@@ -2458,6 +2576,9 @@ namespace ProductService.Protos {
     private readonly static string DescriptionDefaultValue = "";
 
     private string description_;
+    /// <summary>
+    ///&#x2F; &lt;summary>Optional updated description.&lt;/summary>
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string Description {
@@ -2484,6 +2605,9 @@ namespace ProductService.Protos {
     private readonly static int PriceDefaultValue = 0;
 
     private int price_;
+    /// <summary>
+    ///&#x2F; &lt;summary>Optional updated price.&lt;/summary>
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public int Price {
@@ -2511,6 +2635,9 @@ namespace ProductService.Protos {
     private static readonly pb::FieldCodec<string> _repeated_imageURLs_codec
         = pb::FieldCodec.ForString(50);
     private readonly pbc::RepeatedField<string> imageURLs_ = new pbc::RepeatedField<string>();
+    /// <summary>
+    ///&#x2F; &lt;summary>Optional updated list of image URLs.&lt;/summary>
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public pbc::RepeatedField<string> ImageURLs {
@@ -2522,6 +2649,9 @@ namespace ProductService.Protos {
     private static readonly pb::FieldCodec<global::ProductService.Protos.ProductAttributeGrpc> _repeated_attributes_codec
         = pb::FieldCodec.ForMessage(58, global::ProductService.Protos.ProductAttributeGrpc.Parser);
     private readonly pbc::RepeatedField<global::ProductService.Protos.ProductAttributeGrpc> attributes_ = new pbc::RepeatedField<global::ProductService.Protos.ProductAttributeGrpc>();
+    /// <summary>
+    ///&#x2F; &lt;summary>Optional updated list of product attributes.&lt;/summary>
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public pbc::RepeatedField<global::ProductService.Protos.ProductAttributeGrpc> Attributes {
@@ -2793,6 +2923,11 @@ namespace ProductService.Protos {
 
   }
 
+  /// <summary>
+  ///&#x2F; &lt;summary>
+  ///&#x2F; Response to an update product request.
+  ///&#x2F; &lt;/summary>
+  /// </summary>
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class UpdateProductResponse : pb::IMessage<UpdateProductResponse>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
@@ -2841,6 +2976,9 @@ namespace ProductService.Protos {
     /// <summary>Field number for the "status" field.</summary>
     public const int StatusFieldNumber = 1;
     private bool status_;
+    /// <summary>
+    ///&#x2F; &lt;summary>Indicates success status.&lt;/summary>
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public bool Status {
