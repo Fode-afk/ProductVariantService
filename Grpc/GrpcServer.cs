@@ -1,9 +1,12 @@
 ﻿using AutoMapper;
 using Grpc.Core;
 using ProductService.Data;
+using ProductService.Data.Images;
 using ProductService.Grpc.Validators;
 using ProductService.Models;
 using ProductService.Protos;
+using System.Text;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace ProductService.Grpc
 {
@@ -11,10 +14,12 @@ namespace ProductService.Grpc
     /// gRPC server responsible for handling product-related operations such as retrieval, creation, update, and deletion.
     /// Utilizes validation and AutoMapper for clean architecture and data transformation.
     /// </summary>
-    public class GrpcServer(IProductRepo productRepo, IMapper mapper) : GrpcProducts.GrpcProductsBase
+    public class GrpcServer(IProductRepo productRepo, IMapper mapper, IWebHostEnvironment environment, IImageProcessor imageProcessor) : GrpcProducts.GrpcProductsBase
     {
         private readonly IProductRepo _productRepo = productRepo;
         private readonly IMapper _mapper = mapper;
+        private readonly IWebHostEnvironment _env = environment;
+        private readonly IImageProcessor _imageProcessor = imageProcessor;
 
         private readonly IValidator<CreateProductRequest> _createProductValidator = new CreateProductValidator();
         private readonly IValidator<GetProductRequest> _getProductValidator = new GetProductValidator();
@@ -149,6 +154,52 @@ namespace ProductService.Grpc
             await _productRepo.DeleteProductAsync(request.ProductId);
 
             return new DeleteProductResponse { Status = true };
+        }
+
+        public override async Task<UploadImageResponse> UploadImage(UploadImageRequest request, ServerCallContext context)
+        {
+            var product = await _productRepo.GetProductByIdAsync(request.ProductId);
+
+            if (product == null)
+                return new UploadImageResponse { Status = false };
+
+           var result =  await _imageProcessor.ProcessImageAsync(request.Base64Data, request.ProductId, request.FileName);
+          
+           return new UploadImageResponse { Status = result };           
+        }
+
+        public override async Task<GetImageResponse> GetImage(GetImageRequest request, ServerCallContext context)
+        {
+            if(!File.Exists(request.ImageURL))
+                return new GetImageResponse { Status = false };
+
+            byte[] imageBytes;
+
+            try
+            {
+                imageBytes = File.ReadAllBytes(request.ImageURL);
+            }
+            catch
+            {
+                return new GetImageResponse { Status = false };
+            }
+
+            var base64 = await _imageProcessor.ConvertImageAsync(imageBytes);
+
+            if (base64 == null)
+                return new GetImageResponse { Status = false };
+            else
+                return new GetImageResponse { Status = true, Base64Data = base64 };
+        }
+
+        public override async Task<DeleteImageResponse> DeleteImage(DeleteImageRequest request, ServerCallContext context)
+        {
+            if (!File.Exists(request.ImageURL))
+                return new DeleteImageResponse { Status = false };
+
+            var result = await _imageProcessor.DeleteImageAsync(request.ImageURL);
+
+            return new DeleteImageResponse { Status = result };
         }
     }
 }
