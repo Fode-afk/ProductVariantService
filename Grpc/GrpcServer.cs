@@ -4,33 +4,21 @@ using ProductService.Data;
 using ProductService.Grpc.Validators;
 using ProductService.Models;
 using ProductService.Protos;
-using System.Text;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace ProductService.Grpc
 {
-    /// <summary>
-    /// gRPC server responsible for handling product-related operations such as retrieval, creation, update, and deletion.
-    /// Utilizes validation and AutoMapper for clean architecture and data transformation.
-    /// </summary>
-    public class GrpcServer(IProductRepo productRepo, IMapper mapper, IWebHostEnvironment environment) : GrpcProducts.GrpcProductsBase
+    public class GrpcServer(IProductRepo productRepo, IMapper mapper) : GrpcProducts.GrpcProductsBase
     {
         private readonly IProductRepo _productRepo = productRepo;
         private readonly IMapper _mapper = mapper;
-        private readonly IWebHostEnvironment _env = environment;
 
         private readonly IValidator<CreateProductRequest> _createProductValidator = new CreateProductValidator();
         private readonly IValidator<GetProductRequest> _getProductValidator = new GetProductValidator();
         private readonly IValidator<GetAllProductsByOwnerIdRequest> _getAllProductsValidator = new GetAllProductsValidator();
-        private readonly IValidator<ReplaceProductRequest> _updateProductValidator = new ReplaceProductValidator();
+        private readonly IValidator<ReplaceProductRequest> _replaceProductValidator = new ReplaceProductValidator();
+        private readonly IValidator<UpdateProductRequest> _updateProductValidator = new UpdateProductValidator();
         private readonly IValidator<DeleteProductRequest> _deleteProductValidator = new DeleteProductValidator();
 
-        /// <summary>
-        /// Retrieves all products that belong to a specific owner.
-        /// </summary>
-        /// <param name="request">The request containing the owner ID.</param>
-        /// <param name="context">The server call context.</param>
-        /// <returns>A response with the list of products or failure status.</returns>
         public override async Task<GetAllProductsByOwnerIdResponse> GetAllProductsByOwnerId(GetAllProductsByOwnerIdRequest request, ServerCallContext context)
         {
             var valres = _getAllProductsValidator.Validate(request);
@@ -54,12 +42,6 @@ namespace ProductService.Grpc
             };
         }
 
-        /// <summary>
-        /// Retrieves a product by its ID.
-        /// </summary>
-        /// <param name="request">The request containing the product ID.</param>
-        /// <param name="context">The server call context.</param>
-        /// <returns>A response with the product details or failure status.</returns>
         public override async Task<GetProductResponse> GetProductById(GetProductRequest request, ServerCallContext context)
         {
             var valres = _getProductValidator.Validate(request);
@@ -83,12 +65,6 @@ namespace ProductService.Grpc
             };
         }
 
-        /// <summary>
-        /// Creates a new product.
-        /// </summary>
-        /// <param name="request">The request containing the product to be created.</param>
-        /// <param name="context">The server call context.</param>
-        /// <returns>A response indicating whether the product was successfully created.</returns>
         public override async Task<CreateProductResponse> CreateProduct(CreateProductRequest request, ServerCallContext context)
         {
             var valres = _createProductValidator.Validate(request);
@@ -105,15 +81,9 @@ namespace ProductService.Grpc
             return new CreateProductResponse { Status = true };
         }
 
-        /// <summary>
-        /// Updates an existing product by its ID.
-        /// </summary>
-        /// <param name="request">The request containing updated product data and the product ID.</param>
-        /// <param name="context">The server call context.</param>
-        /// <returns>A response indicating whether the update was successful.</returns>
         public override async Task<ReplaceProductResponse> ReplaceProductById(ReplaceProductRequest request, ServerCallContext context)
         {
-            var valres = _updateProductValidator.Validate(request);
+            var valres = _replaceProductValidator.Validate(request);
 
             if (!valres.IsValid)
             {
@@ -136,17 +106,18 @@ namespace ProductService.Grpc
 
         public override async Task<UpdateProductResponse> UpdateProductById(UpdateProductRequest request, ServerCallContext context)
         {
+            var valres = _updateProductValidator.Validate(request);
+
+            if (!valres.IsValid)
+            {
+                throw new RpcException(new Status(StatusCode.InvalidArgument, valres.ErrorMessage));
+            }
+
             var result = await _productRepo.UpdateProductAsync(_mapper.Map<Product>(request));
 
             return new UpdateProductResponse { Status = result };
         }
 
-        /// <summary>
-        /// Deletes a product by its ID.
-        /// </summary>
-        /// <param name="request">The request containing the product ID to be deleted.</param>
-        /// <param name="context">The server call context.</param>
-        /// <returns>A response indicating whether the deletion was successful.</returns>
         public override async Task<DeleteProductResponse> DeleteProductById(DeleteProductRequest request, ServerCallContext context)
         {
             var valres = _deleteProductValidator.Validate(request);

@@ -5,10 +5,6 @@ using ProductService.Models;
 
 namespace ProductService.Data
 {
-    /// <summary>
-    /// MongoDB implementation of the IProductRepo interface.
-    /// Provides CRUD operations for products.
-    /// </summary>
     public class ProductRepo(IMongoDatabase database): IProductRepo
     {
         private readonly IMongoCollection<Product> _products = database.GetCollection<Product>("Products");
@@ -45,9 +41,32 @@ namespace ProductService.Data
         public async Task<bool> ReplaceProductAsync(Product product)
         {
             var filter = Builders<Product>.Filter.Eq(p => p.ProductId, product.ProductId);
-            await _products.ReplaceOneAsync(filter, product);
-            return true;
-            //TODO Проверка на выполнение
+
+            var updateBuilder = Builders<Product>.Update;
+            var updates = new List<UpdateDefinition<Product>>();
+
+            if (!product.Name.IsNullOrEmpty())
+                updates.Add(updateBuilder.Set(p => p.Name, product.Name));
+
+            if (product.Price != 0)
+                updates.Add(updateBuilder.Set(p => p.Price, product.Price));
+
+            if (!product.Description.IsNullOrEmpty())
+                updates.Add(updateBuilder.Set(p => p.Description, product.Description));
+
+            if (product.Attributes != null && product.Attributes.Count != 0)
+                updates.Add(updateBuilder.Set(p => p.Attributes, product.Attributes));
+
+            if (product.ImageURLs != null && product.ImageURLs.Count != 0)
+                updates.Add(updateBuilder.Set(p => p.ImageURLs, product.ImageURLs));
+
+            if (updates.Count == 0)
+                return false;
+
+            var update = updateBuilder.Combine(updates);
+            var result = await _products.UpdateOneAsync(filter, update);
+
+            return result.ModifiedCount > 0;
         }
 
         public async Task<bool> UpdateProductAsync(Product product)
@@ -66,10 +85,10 @@ namespace ProductService.Data
             if (!product.Description.IsNullOrEmpty())
                 updates.Add(updateBuilder.Set(p => p.Description, product.Description));
 
-            if (product.Attributes != null)
-                updates.Add(updateBuilder.Set(p => p.Attributes, product.Attributes));
+            if (product.Attributes != null && product.Attributes.Count != 0)
+                updates.Add(updateBuilder.AddToSetEach(p => p.Attributes, product.Attributes));
 
-            if (product.ImageURLs != null && product.ImageURLs.Any())
+            if (product.ImageURLs != null && product.ImageURLs.Count != 0)
                 updates.Add(updateBuilder.AddToSetEach(p => p.ImageURLs, product.ImageURLs));
 
             if (updates.Count == 0)
