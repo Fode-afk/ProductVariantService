@@ -36,8 +36,12 @@ namespace ProductService.Profiles
             /// <summary>
             /// Maps update requests to product model, ignoring null values to allow partial updates.
             /// </summary>
-            CreateMap<UpdateProductRequest, Product>()
+            CreateMap<ReplaceProductRequest, Product>()
                .ForAllMembers(opt => opt.Condition((src, dest, srcMember) => srcMember != null));
+
+
+            CreateMap<UpdateProductRequest, Product>()
+                .ForAllMembers(opt => opt.Condition((src, dest, srcMember) => srcMember != null));
         }
     }
 }

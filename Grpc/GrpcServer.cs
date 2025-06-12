@@ -22,7 +22,7 @@ namespace ProductService.Grpc
         private readonly IValidator<CreateProductRequest> _createProductValidator = new CreateProductValidator();
         private readonly IValidator<GetProductRequest> _getProductValidator = new GetProductValidator();
         private readonly IValidator<GetAllProductsByOwnerIdRequest> _getAllProductsValidator = new GetAllProductsValidator();
-        private readonly IValidator<UpdateProductRequest> _updateProductValidator = new UpdateProductValidator();
+        private readonly IValidator<ReplaceProductRequest> _updateProductValidator = new ReplaceProductValidator();
         private readonly IValidator<DeleteProductRequest> _deleteProductValidator = new DeleteProductValidator();
 
         /// <summary>
@@ -111,7 +111,7 @@ namespace ProductService.Grpc
         /// <param name="request">The request containing updated product data and the product ID.</param>
         /// <param name="context">The server call context.</param>
         /// <returns>A response indicating whether the update was successful.</returns>
-        public override async Task<UpdateProductResponse> UpdateProductById(UpdateProductRequest request, ServerCallContext context)
+        public override async Task<ReplaceProductResponse> ReplaceProductById(ReplaceProductRequest request, ServerCallContext context)
         {
             var valres = _updateProductValidator.Validate(request);
 
@@ -124,14 +124,21 @@ namespace ProductService.Grpc
 
             if (existingProduct == null)
             {
-                return new UpdateProductResponse { Status = false };
+                return new ReplaceProductResponse { Status = false };
             }
 
             _mapper.Map(request, existingProduct);
 
-            await _productRepo.UpdateProductAsync(existingProduct);
+            await _productRepo.ReplaceProductAsync(existingProduct);
 
-            return new UpdateProductResponse { Status = true };
+            return new ReplaceProductResponse { Status = true };
+        }
+
+        public override async Task<UpdateProductResponse> UpdateProductById(UpdateProductRequest request, ServerCallContext context)
+        {
+            var result = await _productRepo.UpdateProductAsync(_mapper.Map<Product>(request));
+
+            return new UpdateProductResponse { Status = result };
         }
 
         /// <summary>

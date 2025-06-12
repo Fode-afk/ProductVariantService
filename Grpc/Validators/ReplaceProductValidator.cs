@@ -3,9 +3,9 @@ using ProductService.Protos;
 
 namespace ProductService.Grpc.Validators
 {
-    public class UpdateProductValidator : IValidator<UpdateProductRequest>
+    public class ReplaceProductValidator : IValidator<ReplaceProductRequest>
     {
-        public ValidationResult Validate(UpdateProductRequest request)
+        public ValidationResult Validate(ReplaceProductRequest request)
         {
             if (request.ProductId.IsNullOrEmpty())
             {

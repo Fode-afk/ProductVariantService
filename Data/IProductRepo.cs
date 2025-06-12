@@ -36,12 +36,21 @@ namespace ProductService.Data
         Task<bool> CreateProductAsync(Product product);
 
         /// <summary>
+        /// Asynchronously replaces an existing product in the data store with the specified product.
+        /// </summary>
+        /// <param name="product">The product entity containing the updated data. Must include a valid ID.</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation.
+        /// The task result contains <c>true</c> if the replacement was successful; otherwise, <c>false</c>.
+        /// </returns>
+        Task<bool> ReplaceProductAsync(Product product);
+
+        /// <summary>
         /// Updates an existing product in the database.
         /// </summary>
         /// <param name="product">The product with updated values.</param>
         /// <returns>True if the update was successful; otherwise, false.</returns>
         Task<bool> UpdateProductAsync(Product product);
-
         /// <summary>
         /// Deletes a product from the database by its ID.
         /// </summary>

@@ -1,6 +1,7 @@
 using MongoDB.Driver;
 using ProductService.AsyncDataServices;
 using ProductService.Data;
+using ProductService.EventProcessing;
 using ProductService.Grpc;
 using ProductService.Settings;
 
@@ -42,6 +43,15 @@ var mongoSettings = builder.Configuration
 var client = new MongoClient(mongoSettings.ConnectionString);
 var database = client.GetDatabase(mongoSettings.DatabaseName);
 builder.Services.AddSingleton(database);
+
+/// <summary>
+/// Registers a singleton service for processing events received from the message bus.
+/// </summary>
+/// <remarks>
+/// The <see cref="EventProcessor"/> handles the business logic for each event and is reused across the application's lifetime.
+/// This is typically used by background services like <see cref="MessageBusSubscriber"/>.
+/// </remarks>
+builder.Services.AddSingleton<IEventProcessor, EventProcessor>();
 
 /// <summary>
 /// Registers a hosted background service that listens for messages from the message bus.

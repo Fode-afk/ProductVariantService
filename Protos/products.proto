@@ -25,6 +25,8 @@ service GrpcProducts
     /// <summary>
     /// Updates a product by its ID.
     /// </summary>
+    rpc ReplaceProductById(ReplaceProductRequest) returns (ReplaceProductResponse);
+
     rpc UpdateProductById(UpdateProductRequest) returns (UpdateProductResponse);
 
     /// <summary>
@@ -153,7 +155,7 @@ message DeleteProductResponse
 /// <summary>
 /// Request to update a product by ID.
 /// </summary>
-message UpdateProductRequest
+message ReplaceProductRequest
 {
     /// <summary>Product ID.</summary>
     string productId = 1;
@@ -177,8 +179,23 @@ message UpdateProductRequest
 /// <summary>
 /// Response to an update product request.
 /// </summary>
-message UpdateProductResponse
+message ReplaceProductResponse
 {
     /// <summary>Indicates success status.</summary>
+    bool status = 1;
+}
+
+message UpdateProductRequest
+{
+  string productId = 1;
+  string name = 2;              
+  int32 price = 3;            
+  string description = 4;        
+  repeated string imageURLs = 5;
+  repeated ProductAttributeGrpc attributes = 6;
+}
+
+message UpdateProductResponse
+{
     bool status = 1;
 }

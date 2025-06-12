@@ -1,12 +1,14 @@
-﻿using RabbitMQ.Client;
+﻿using ProductService.EventProcessing;
+using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System.Text;
 
 namespace ProductService.AsyncDataServices
 {
-    public class MessageBusSubscriber(IConfiguration configuration) : BackgroundService
+    public class MessageBusSubscriber(IConfiguration configuration, IEventProcessor eventProcessor) : BackgroundService
     {
         private readonly IConfiguration _config = configuration;
+        private readonly IEventProcessor _eventProcessor = eventProcessor;
         private IConnection _connection;
         private IChannel _channel;
         private string _queueName;
@@ -23,6 +25,7 @@ namespace ProductService.AsyncDataServices
                 var message = Encoding.UTF8.GetString(body);
 
                 Console.WriteLine($"--> Event received: {message}");
+                await _eventProcessor.ProcessEventAsync(message);
             };
 
             await _channel.BasicConsumeAsync(queue: _queueName, autoAck: true, consumer: consumer, cancellationToken: stoppingToken);
