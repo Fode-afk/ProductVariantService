@@ -5,8 +5,6 @@ using ProductService.Data.Images;
 using ProductService.Grpc.Validators;
 using ProductService.Models;
 using ProductService.Protos;
-using System.Text;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace ProductService.Grpc
 {
@@ -14,12 +12,12 @@ namespace ProductService.Grpc
     /// gRPC server responsible for handling product-related operations such as retrieval, creation, update, and deletion.
     /// Utilizes validation and AutoMapper for clean architecture and data transformation.
     /// </summary>
-    public class GrpcServer(IProductRepo productRepo, IMapper mapper, IWebHostEnvironment environment, IImageProcessor imageProcessor) : GrpcProducts.GrpcProductsBase
+    public class GrpcServer(IProductRepo productRepo, IMapper mapper, IWebHostEnvironment environment) : GrpcProducts.GrpcProductsBase
     {
         private readonly IProductRepo _productRepo = productRepo;
         private readonly IMapper _mapper = mapper;
         private readonly IWebHostEnvironment _env = environment;
-        private readonly IImageProcessor _imageProcessor = imageProcessor;
+        private readonly IImageProcessor _imageProcessor = null;
 
         private readonly IValidator<CreateProductRequest> _createProductValidator = new CreateProductValidator();
         private readonly IValidator<GetProductRequest> _getProductValidator = new GetProductValidator();
