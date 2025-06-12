@@ -18,9 +18,8 @@ namespace ProductService.Data
 
         public async Task<bool> DeleteProductAsync(string productId)
         {
-            await _products.DeleteOneAsync(p => p.ProductId == productId);
-            return true;
-            //TODO Проверка на выполнение
+            var res = await _products.DeleteOneAsync(p => p.ProductId == productId);
+            return res.DeletedCount > 0;
         }
 
         public async Task<IEnumerable<Product>> GetAllProductsAsync()
