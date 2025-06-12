@@ -7,38 +7,14 @@ namespace ProductService.Grpc.Validators
     {
         public ValidationResult Validate(CreateProductRequest request)
         {
-            if (request.Product == null)
-            {
-                return ValidationResult.Invalid("Product cannot be null");
-            }
-            else if (request.Product.Name.IsNullOrEmpty())
+            if (request.Name.IsNullOrEmpty())
             {
                 return ValidationResult.Invalid("Product name cannot be null or empty");
             }
-            else if (request.Product.Description.IsNullOrEmpty())
+            else if (request.OwnerId.IsNullOrEmpty())
             {
-                return ValidationResult.Invalid("Description cannot be null or empty");
-            }
-            else if (request.Product.Price <= 0)
-            {
-                return ValidationResult.Invalid("Price cannot be zero or negative");
-            }
-            else if (request.Product.ImageURLs == null || !request.Product.ImageURLs.Any())
-            {
-                return ValidationResult.Invalid("ImageURLs cannot be null or empty");
-            }
-            else if (request.Product.ImageURLs.Any(url => string.IsNullOrWhiteSpace(url)))
-            {
-                return ValidationResult.Invalid("All ImageURLs must be non-empty");
-            }
-            else if (request.Product.Attributes == null || !request.Product.Attributes.Any())
-            {
-                return ValidationResult.Invalid("Product should contain at least one attribute");
-            }
-            else if (request.Product.Attributes.Any(attr => attr.Name.IsNullOrEmpty() || attr.Value.IsNullOrEmpty()))
-            {
-                return ValidationResult.Invalid("All attribute names and values must be non-empty");
-            }
+                return ValidationResult.Invalid("Owner Id cannot be null or empty");
+            }          
 
             return ValidationResult.Valid();
         }

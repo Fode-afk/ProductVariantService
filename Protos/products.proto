@@ -31,47 +31,6 @@ service GrpcProducts
     /// Deletes a product by its ID.
     /// </summary>
     rpc DeleteProductById(DeleteProductRequest) returns (DeleteProductResponse);
-
-    rpc UploadImage(UploadImageRequest) returns (UploadImageResponse);
-
-    rpc GetImage(GetImageRequest) returns (GetImageResponse);
-
-    rpc DeleteImage(DeleteImageRequest) returns (DeleteImageResponse);
-}
-
-message UploadImageRequest
-{
-    string productId = 1;
-    string fileName = 2;
-    string base64Data = 3;
-}
-
-message UploadImageResponse
-{
-    bool status = 1;
-}
-
-message GetImageRequest
-{
-    string productId = 1;
-    string imageURL = 2;
-}
-
-message GetImageResponse
-{
-    bool status = 1;
-    string base64Data = 2;
-}
-
-message DeleteImageRequest
-{
-    string productId = 1;
-    string imageURL = 2;
-}
-
-message DeleteImageResponse
-{
-    bool status = 1;
 }
 
 /// <summary>
@@ -115,8 +74,11 @@ message ProductAttributeGrpc
 /// </summary>
 message CreateProductRequest
 {
-    /// <summary>Product details.</summary>
-    ProductGrpc product = 1;
+    /// <summary>Product owner id.</summary>
+    string ownerId = 1;
+
+    /// <summary>Name of the product.</summary>
+    string name = 2;
 }
 
 /// <summary>
