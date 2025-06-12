@@ -1,4 +1,5 @@
 using MongoDB.Driver;
+using ProductService.AsyncDataServices;
 using ProductService.Data;
 using ProductService.Grpc;
 using ProductService.Settings;
@@ -41,6 +42,15 @@ var mongoSettings = builder.Configuration
 var client = new MongoClient(mongoSettings.ConnectionString);
 var database = client.GetDatabase(mongoSettings.DatabaseName);
 builder.Services.AddSingleton(database);
+
+/// <summary>
+/// Registers a hosted background service that listens for messages from the message bus.
+/// </summary>
+/// <remarks>
+/// The <see cref="MessageBusSubscriber" /> is started when the application starts and stops when the application shuts down.
+/// Typically used for asynchronous integration via pub/sub messaging.
+/// </remarks>
+builder.Services.AddHostedService<MessageBusSubscriber>();
 
 /// <summary>
 /// Registers OpenAPI (Swagger) services.

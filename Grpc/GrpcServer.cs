@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Grpc.Core;
 using ProductService.Data;
-using ProductService.Data.Images;
 using ProductService.Grpc.Validators;
 using ProductService.Models;
 using ProductService.Protos;
