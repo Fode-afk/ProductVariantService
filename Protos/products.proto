@@ -187,12 +187,12 @@ message ReplaceProductResponse
 
 message UpdateProductRequest
 {
-  string productId = 1;
-  string name = 2;              
-  int32 price = 3;            
-  string description = 4;        
-  repeated string imageURLs = 5;
-  repeated ProductAttributeGrpc attributes = 6;
+    string productId = 1;
+    string name = 2;              
+    int32 price = 3;            
+    string description = 4;        
+    repeated string imageURLs = 5;
+    repeated ProductAttributeGrpc attributes = 6;
 }
 
 message UpdateProductResponse
