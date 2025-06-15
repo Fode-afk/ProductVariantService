@@ -20,8 +20,10 @@ message ProductGrpc
     string name = 3;
     string description = 4;    
     int32 price = 5;  
-    repeated string imageURLs = 6;
-    repeated ProductAttributeGrpc attributes = 7;
+    string createdAt = 6;
+    string updatedAt = 7;
+    repeated string imageURLs = 8;
+    repeated ProductAttributeGrpc attributes = 9;
 }
 
 message ProductAttributeGrpc
@@ -75,7 +77,12 @@ message DeleteProductResponse
 
 message ReplaceProductRequest
 {
-    ProductGrpc product = 1;
+    string productId = 1;   
+    string name = 2;
+    string description = 3;    
+    int32 price = 4;  
+    repeated string imageURLs = 5;
+    repeated ProductAttributeGrpc attributes = 6;
 }
 
 message ReplaceProductResponse
@@ -85,7 +92,12 @@ message ReplaceProductResponse
 
 message UpdateProductRequest
 {
-    ProductGrpc product = 1;
+    string productId = 1;   
+    string name = 2;
+    string description = 3;    
+    int32 price = 4;  
+    repeated string imageURLs = 5;
+    repeated ProductAttributeGrpc attributes = 6;
 }
 
 message UpdateProductResponse

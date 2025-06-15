@@ -7,10 +7,11 @@ using ProductService.Protos;
 
 namespace ProductService.Grpc
 {
-    public class GrpcServer(IProductRepo productRepo, IMapper mapper) : GrpcProducts.GrpcProductsBase
+    public class GrpcServer(IProductRepo productRepo, IMapper mapper, IConfiguration config) : GrpcProducts.GrpcProductsBase
     {
         private readonly IProductRepo _productRepo = productRepo;
         private readonly IMapper _mapper = mapper;
+        private readonly IConfiguration _config = config;
 
         private readonly IValidator<CreateProductRequest> _createProductValidator = new CreateProductValidator();
         private readonly IValidator<GetProductRequest> _getProductValidator = new GetProductValidator();
@@ -76,6 +77,13 @@ namespace ProductService.Grpc
 
             var product = _mapper.Map<Product>(new ProductGrpc() { Name = request.Name, OwnerId = request.OwnerId });
 
+            TimeZoneInfo timeZone = TimeZoneInfo.FindSystemTimeZoneById(_config["Time"]);
+            DateTime localDateTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, timeZone);
+            DateTimeOffset localDateTimeOffset = new DateTimeOffset(localDateTime, timeZone.GetUtcOffset(localDateTime));
+
+            product.CreatedAt = localDateTimeOffset;
+            product.UpdatedAt = localDateTimeOffset;
+
             await _productRepo.CreateProductAsync(product);
 
             return new CreateProductResponse { Status = true };
@@ -90,14 +98,20 @@ namespace ProductService.Grpc
                 throw new RpcException(new Status(StatusCode.InvalidArgument, valres.ErrorMessage));
             }
 
-            var existingProduct = await _productRepo.GetProductByIdAsync(request.Product.ProductId);
+            var existingProduct = await _productRepo.GetProductByIdAsync(request.ProductId);
 
             if (existingProduct == null)
             {
                 return new ReplaceProductResponse { Status = false };
             }
 
-            _mapper.Map(request.Product, existingProduct);
+            _mapper.Map(request, existingProduct);
+
+            TimeZoneInfo timeZone = TimeZoneInfo.FindSystemTimeZoneById(_config["Time"]);
+            DateTime localDateTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, timeZone);
+            DateTimeOffset localDateTimeOffset = new DateTimeOffset(localDateTime, timeZone.GetUtcOffset(localDateTime));
+
+            existingProduct.UpdatedAt = localDateTimeOffset;
 
             await _productRepo.ReplaceProductAsync(existingProduct);
 
@@ -113,7 +127,15 @@ namespace ProductService.Grpc
                 throw new RpcException(new Status(StatusCode.InvalidArgument, valres.ErrorMessage));
             }
 
-            var result = await _productRepo.UpdateProductAsync(_mapper.Map<Product>(request.Product));
+            var product = _mapper.Map<Product>(request);
+
+            TimeZoneInfo timeZone = TimeZoneInfo.FindSystemTimeZoneById(_config["Time"]);
+            DateTime localDateTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, timeZone);
+            DateTimeOffset localDateTimeOffset = new DateTimeOffset(localDateTime, timeZone.GetUtcOffset(localDateTime));
+
+            product.UpdatedAt = localDateTimeOffset;
+
+            var result = await _productRepo.UpdateProductAsync(product);
 
             return new UpdateProductResponse { Status = result };
         }

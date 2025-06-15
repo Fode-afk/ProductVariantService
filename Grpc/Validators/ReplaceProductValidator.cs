@@ -7,15 +7,15 @@ namespace ProductService.Grpc.Validators
     {
         public ValidationResult Validate(ReplaceProductRequest request)
         {
-            if (request.Product.ProductId.IsNullOrEmpty())
+            if (request.ProductId.IsNullOrEmpty())
             {
                 return ValidationResult.Invalid("ProductId cannot be null or empty");
             }  
-            else if (request.Product.ImageURLs != null && request.Product.ImageURLs.Any(url => string.IsNullOrWhiteSpace(url)))
+            else if (request.ImageURLs != null && request.ImageURLs.Any(url => string.IsNullOrWhiteSpace(url)))
             {
                 return ValidationResult.Invalid("All ImageURLs must be non-empty");
             }
-            else if (request.Product.Attributes != null && request.Product.Attributes.Any(attr => attr.Name.IsNullOrEmpty() || attr.Value.IsNullOrEmpty()))
+            else if (request.Attributes != null && request.Attributes.Any(attr => attr.Name.IsNullOrEmpty() || attr.Value.IsNullOrEmpty()))
             {
                 return ValidationResult.Invalid("All attribute names and values must be non-empty");
             }
