@@ -10,6 +10,7 @@ service GrpcProducts
     rpc ReplaceProductById(ReplaceProductRequest) returns (ReplaceProductResponse);
     rpc UpdateProductById(UpdateProductRequest) returns (UpdateProductResponse);
     rpc DeleteProductById(DeleteProductRequest) returns (DeleteProductResponse);
+    rpc ProductExists(ProductExistsRequest) returns (ProductExistsResponse);
 }
 
 message ProductGrpc
@@ -88,6 +89,15 @@ message UpdateProductRequest
 }
 
 message UpdateProductResponse
+{
+    bool status = 1;
+}
+
+message ProductExistsRequest
+{
+    string productId = 1;
+}
+message ProductExistsResponse
 {
     bool status = 1;
 }

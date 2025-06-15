@@ -17,5 +17,7 @@ namespace ProductService.Data
         Task<bool> UpdateProductAsync(Product product);
 
         Task<bool> DeleteProductAsync(string productId);
+
+        Task<bool> ProductExistsAsync(string productId);
     }
 }

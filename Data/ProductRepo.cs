@@ -37,6 +37,12 @@ namespace ProductService.Data
             return await _products.Find(p => p.ProductId == productId).FirstOrDefaultAsync();
         }
 
+        public async Task<bool> ProductExistsAsync(string productId)
+        {
+            var filter = Builders<Product>.Filter.Eq(p => p.ProductId, productId);
+            return await _products.Find(filter).Limit(1).AnyAsync();
+        }
+
         public async Task<bool> ReplaceProductAsync(Product product)
         {
             var filter = Builders<Product>.Filter.Eq(p => p.ProductId, product.ProductId);

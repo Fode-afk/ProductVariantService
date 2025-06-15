@@ -131,5 +131,13 @@ namespace ProductService.Grpc
 
             return new DeleteProductResponse { Status = true };
         }
+
+        public override async Task<ProductExistsResponse> ProductExists(ProductExistsRequest request, ServerCallContext context)
+        {
+            return new ProductExistsResponse
+            {
+                Status = await _productRepo.ProductExistsAsync(request.ProductId)
+            };
+        }
     }
 }
