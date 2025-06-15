@@ -90,14 +90,14 @@ namespace ProductService.Grpc
                 throw new RpcException(new Status(StatusCode.InvalidArgument, valres.ErrorMessage));
             }
 
-            var existingProduct = await _productRepo.GetProductByIdAsync(request.ProductId);
+            var existingProduct = await _productRepo.GetProductByIdAsync(request.Product.ProductId);
 
             if (existingProduct == null)
             {
                 return new ReplaceProductResponse { Status = false };
             }
 
-            _mapper.Map(request, existingProduct);
+            _mapper.Map(request.Product, existingProduct);
 
             await _productRepo.ReplaceProductAsync(existingProduct);
 
@@ -113,7 +113,7 @@ namespace ProductService.Grpc
                 throw new RpcException(new Status(StatusCode.InvalidArgument, valres.ErrorMessage));
             }
 
-            var result = await _productRepo.UpdateProductAsync(_mapper.Map<Product>(request));
+            var result = await _productRepo.UpdateProductAsync(_mapper.Map<Product>(request.Product));
 
             return new UpdateProductResponse { Status = result };
         }

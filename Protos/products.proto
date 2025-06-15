@@ -40,23 +40,24 @@ service GrpcProducts
 /// </summary>
 message ProductGrpc
 {
+    string productId = 1;
     /// <summary>Owner ID of the product.</summary>
-    string ownerId = 1;
+    string ownerId = 2;
 
     /// <summary>Name of the product.</summary>
-    string name = 2;
+    string name = 3;
 
     /// <summary>Description of the product.</summary>
-    string description = 3;
+    string description = 4;
 
     /// <summary>Price of the product.</summary>
-    int32 price = 4;
+    int32 price = 5;
 
     /// <summary>List of image URLs.</summary>
-    repeated string imageURLs = 5;
+    repeated string imageURLs = 6;
 
     /// <summary>List of product attributes.</summary>
-    repeated ProductAttributeGrpc attributes = 6;
+    repeated ProductAttributeGrpc attributes = 7;
 }
 
 /// <summary>
@@ -157,23 +158,7 @@ message DeleteProductResponse
 /// </summary>
 message ReplaceProductRequest
 {
-    /// <summary>Product ID.</summary>
-    string productId = 1;
-
-    /// <summary>Optional updated name.</summary>
-    optional string name = 3;
-
-    /// <summary>Optional updated description.</summary>
-    optional string description = 4;
-
-    /// <summary>Optional updated price.</summary>
-    optional int32 price = 5;
-
-    /// <summary>Optional updated list of image URLs.</summary>
-    repeated string imageURLs = 6;
-
-    /// <summary>Optional updated list of product attributes.</summary>
-    repeated ProductAttributeGrpc attributes = 7;
+    ProductGrpc product = 1;
 }
 
 /// <summary>
@@ -187,12 +172,7 @@ message ReplaceProductResponse
 
 message UpdateProductRequest
 {
-    string productId = 1;
-    string name = 2;              
-    int32 price = 3;            
-    string description = 4;        
-    repeated string imageURLs = 5;
-    repeated ProductAttributeGrpc attributes = 6;
+    ProductGrpc product = 1;
 }
 
 message UpdateProductResponse
