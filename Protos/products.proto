@@ -2,171 +2,83 @@ syntax = "proto3";
 
 option csharp_namespace = "ProductService.Protos";
 
-/// <summary>
-/// Defines gRPC service for product management.
-/// </summary>
 service GrpcProducts
 {
-    /// <summary>
-    /// Creates a new product.
-    /// </summary>
     rpc CreateProduct(CreateProductRequest) returns (CreateProductResponse);
-
-    /// <summary>
-    /// Retrieves all products by owner ID.
-    /// </summary>
     rpc GetAllProductsByOwnerId(GetAllProductsByOwnerIdRequest) returns (GetAllProductsByOwnerIdResponse);
-
-    /// <summary>
-    /// Retrieves a product by its ID.
-    /// </summary>
     rpc GetProductById(GetProductRequest) returns (GetProductResponse);
-
-    /// <summary>
-    /// Updates a product by its ID.
-    /// </summary>
     rpc ReplaceProductById(ReplaceProductRequest) returns (ReplaceProductResponse);
-
     rpc UpdateProductById(UpdateProductRequest) returns (UpdateProductResponse);
-
-    /// <summary>
-    /// Deletes a product by its ID.
-    /// </summary>
     rpc DeleteProductById(DeleteProductRequest) returns (DeleteProductResponse);
 }
 
-/// <summary>
-/// Represents a product in the gRPC contract.
-/// </summary>
 message ProductGrpc
 {
-    string productId = 1;
-    /// <summary>Owner ID of the product.</summary>
+    string productId = 1;   
     string ownerId = 2;
-
-    /// <summary>Name of the product.</summary>
     string name = 3;
-
-    /// <summary>Description of the product.</summary>
-    string description = 4;
-
-    /// <summary>Price of the product.</summary>
-    int32 price = 5;
-
-    /// <summary>List of image URLs.</summary>
+    string description = 4;    
+    int32 price = 5;  
     repeated string imageURLs = 6;
-
-    /// <summary>List of product attributes.</summary>
     repeated ProductAttributeGrpc attributes = 7;
 }
 
-/// <summary>
-/// Represents a key-value attribute for a product.
-/// </summary>
 message ProductAttributeGrpc
-{
-    /// <summary>Attribute name.</summary>
-    string name = 1;
-
-    /// <summary>Attribute value.</summary>
+{ 
+    string name = 1; 
     string value = 2;
 }
 
-/// <summary>
-/// Request to create a product.
-/// </summary>
 message CreateProductRequest
-{
-    /// <summary>Product owner id.</summary>
-    string ownerId = 1;
-
-    /// <summary>Name of the product.</summary>
+{    
+    string ownerId = 1;   
     string name = 2;
 }
 
-/// <summary>
-/// Response to a product creation request.
-/// </summary>
 message CreateProductResponse
-{
-    /// <summary>Indicates success status.</summary>
+{  
     bool status = 1;
 }
 
-/// <summary>
-/// Request to get all products by owner ID.
-/// </summary>
 message GetAllProductsByOwnerIdRequest
 {
-    /// <summary>Owner ID to filter products.</summary>
     string ownerId = 1;
 }
 
-/// <summary>
-/// Response with all products by owner ID.
-/// </summary>
 message GetAllProductsByOwnerIdResponse
-{
-    /// <summary>Indicates success status.</summary>
-    bool status = 1;
-
-    /// <summary>List of products.</summary>
+{  
+    bool status = 1;  
     repeated ProductGrpc products = 2;
 }
 
-/// <summary>
-/// Request to get a product by ID.
-/// </summary>
 message GetProductRequest
 {
-    /// <summary>Product ID.</summary>
     string productId = 1;
 }
 
-/// <summary>
-/// Response with product details.
-/// </summary>
 message GetProductResponse
 {
-    /// <summary>Indicates success status.</summary>
     bool status = 1;
-
-    /// <summary>Product details.</summary>
     ProductGrpc product = 2;
 }
 
-/// <summary>
-/// Request to delete a product by ID.
-/// </summary>
 message DeleteProductRequest
 {
-    /// <summary>Product ID.</summary>
     string productId = 1;
 }
 
-/// <summary>
-/// Response to a delete product request.
-/// </summary>
 message DeleteProductResponse
 {
-    /// <summary>Indicates success status.</summary>
     bool status = 1;
 }
 
-/// <summary>
-/// Request to update a product by ID.
-/// </summary>
 message ReplaceProductRequest
 {
     ProductGrpc product = 1;
 }
 
-/// <summary>
-/// Response to an update product request.
-/// </summary>
 message ReplaceProductResponse
 {
-    /// <summary>Indicates success status.</summary>
     bool status = 1;
 }
 
