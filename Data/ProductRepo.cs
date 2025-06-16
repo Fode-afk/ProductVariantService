@@ -65,6 +65,8 @@ namespace ProductService.Data
             if (product.ImageURLs != null && product.ImageURLs.Count != 0)
                 updates.Add(updateBuilder.Set(p => p.ImageURLs, product.ImageURLs));
 
+            updates.Add(updateBuilder.Set(p => p.UpdatedAt, product.UpdatedAt));
+
             if (updates.Count == 0)
                 return false;
 
@@ -95,6 +97,8 @@ namespace ProductService.Data
 
             if (product.ImageURLs != null && product.ImageURLs.Count != 0)
                 updates.Add(updateBuilder.AddToSetEach(p => p.ImageURLs, product.ImageURLs));
+
+            updates.Add(updateBuilder.Set(p => p.UpdatedAt, product.UpdatedAt));
 
             if (updates.Count == 0)
                 return false;
