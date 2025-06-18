@@ -17,6 +17,8 @@ namespace ProductService.Models
 
         public int Price { get; set; }
 
+        public int MaxAvailable { get; set; }
+
         public List<string> ImageURLs { get; set; }
 
         public List<ProductAttribute> Attributes { get; set; }

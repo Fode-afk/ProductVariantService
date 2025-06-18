@@ -19,11 +19,12 @@ message ProductGrpc
     string ownerId = 2;
     string name = 3;
     string description = 4;    
-    int32 price = 5;  
-    string createdAt = 6;
-    string updatedAt = 7;
-    repeated string imageURLs = 8;
-    repeated ProductAttributeGrpc attributes = 9;
+    int32 price = 5;
+    int32 maxAvailable = 6;
+    string createdAt = 7;
+    string updatedAt = 8;
+    repeated string imageURLs = 9;
+    repeated ProductAttributeGrpc attributes = 10;
 }
 
 message ProductAttributeGrpc
@@ -80,9 +81,10 @@ message ReplaceProductRequest
     string productId = 1;   
     string name = 2;
     string description = 3;    
-    int32 price = 4;  
-    repeated string imageURLs = 5;
-    repeated ProductAttributeGrpc attributes = 6;
+    int32 price = 4;
+    int32 maxAvailable = 5;
+    repeated string imageURLs = 6;
+    repeated ProductAttributeGrpc attributes = 7;
 }
 
 message ReplaceProductResponse
@@ -95,9 +97,10 @@ message UpdateProductRequest
     string productId = 1;   
     string name = 2;
     string description = 3;    
-    int32 price = 4;  
-    repeated string imageURLs = 5;
-    repeated ProductAttributeGrpc attributes = 6;
+    int32 price = 4; 
+    int32 maxAvailable = 5;
+    repeated string imageURLs = 6;
+    repeated ProductAttributeGrpc attributes = 7;
 }
 
 message UpdateProductResponse

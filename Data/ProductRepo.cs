@@ -59,6 +59,9 @@ namespace ProductService.Data
             if (!product.Description.IsNullOrEmpty())
                 updates.Add(updateBuilder.Set(p => p.Description, product.Description));
 
+            if (product.MaxAvailable != 0)
+                updates.Add(updateBuilder.Set(p => p.MaxAvailable, product.MaxAvailable));
+
             if (product.Attributes != null && product.Attributes.Count != 0)
                 updates.Add(updateBuilder.Set(p => p.Attributes, product.Attributes));
 
@@ -91,6 +94,9 @@ namespace ProductService.Data
 
             if (!product.Description.IsNullOrEmpty())
                 updates.Add(updateBuilder.Set(p => p.Description, product.Description));
+
+            if (product.MaxAvailable != 0)
+                updates.Add(updateBuilder.Set(p => p.MaxAvailable, product.MaxAvailable));
 
             if (product.Attributes != null && product.Attributes.Count != 0)
                 updates.Add(updateBuilder.AddToSetEach(p => p.Attributes, product.Attributes));
