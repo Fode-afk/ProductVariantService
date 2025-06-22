@@ -31,7 +31,7 @@ namespace ProductService.Grpc
 
             var products = await _productRepo.GetAllProductsByOwnerIdAsync(request.OwnerId);
 
-            if (products == null)
+            if (!products.Any())
             {
                 return new GetAllProductsByOwnerIdResponse { Status = false };
             }

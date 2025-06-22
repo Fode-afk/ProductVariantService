@@ -15,7 +15,7 @@ namespace ProductService.Grpc.Validators
             {
                 return ValidationResult.Invalid("All ImageURLs must be non-empty");
             }
-            else if (request.Attributes != null && request.Attributes.Any(attr => attr.Name.IsNullOrEmpty() || attr.Value.IsNullOrEmpty()))
+            else if (request.Attributes != null && request.Attributes.Any(attr => attr.Value.IsNullOrEmpty()))
             {
                 return ValidationResult.Invalid("All attribute names and values must be non-empty");
             }

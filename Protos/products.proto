@@ -17,19 +17,32 @@ message ProductGrpc
 {
     string productId = 1;   
     string ownerId = 2;
-    string name = 3;
-    string description = 4;    
-    int32 price = 5;
-    int32 maxAvailable = 6;
-    string createdAt = 7;
-    string updatedAt = 8;
-    repeated string imageURLs = 9;
-    repeated ProductAttributeGrpc attributes = 10;
+    ProductType type = 3;
+    string name = 4;
+    string description = 5;    
+    int32 price = 6;
+    int32 stockQuantity = 7;
+    string createdAt = 8;
+    string updatedAt = 9;
+    repeated string imageURLs = 10;
+    repeated ProductAttributeGrpc attributes = 11;
+}
+
+enum ProductType{
+    UNKNOWN_TYPE = 0;
+    VAPE = 1;
+    LIQUID = 2;
+}
+
+enum AttributeKey{  
+    UNKNOWN_KEY = 0;
+    BRAND = 1;
+    VOLUME = 2;
 }
 
 message ProductAttributeGrpc
 { 
-    string name = 1; 
+    AttributeKey key = 1; 
     string value = 2;
 }
 
@@ -80,11 +93,12 @@ message ReplaceProductRequest
 {
     string productId = 1;   
     string name = 2;
-    string description = 3;    
-    int32 price = 4;
-    int32 maxAvailable = 5;
-    repeated string imageURLs = 6;
-    repeated ProductAttributeGrpc attributes = 7;
+    ProductType type = 3;
+    string description = 4;    
+    int32 price = 5;
+    int32 stockQuantity = 6;
+    repeated string imageURLs = 7;
+    repeated ProductAttributeGrpc attributes = 8;  
 }
 
 message ReplaceProductResponse
@@ -96,11 +110,12 @@ message UpdateProductRequest
 {
     string productId = 1;   
     string name = 2;
-    string description = 3;    
-    int32 price = 4; 
-    int32 maxAvailable = 5;
-    repeated string imageURLs = 6;
-    repeated ProductAttributeGrpc attributes = 7;
+    ProductType type = 3;
+    string description = 4;    
+    int32 price = 5; 
+    int32 stockQuantity = 6;
+    repeated string imageURLs = 7;
+    repeated ProductAttributeGrpc attributes = 8;
 }
 
 message UpdateProductResponse

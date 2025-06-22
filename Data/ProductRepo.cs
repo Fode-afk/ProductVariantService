@@ -53,14 +53,17 @@ namespace ProductService.Data
             if (!product.Name.IsNullOrEmpty())
                 updates.Add(updateBuilder.Set(p => p.Name, product.Name));
 
+            if (product.Type != Protos.ProductType.UnknownType)
+                updates.Add(updateBuilder.Set(p => p.Type, product.Type));
+
             if (product.Price != 0)
                 updates.Add(updateBuilder.Set(p => p.Price, product.Price));
 
             if (!product.Description.IsNullOrEmpty())
                 updates.Add(updateBuilder.Set(p => p.Description, product.Description));
 
-            if (product.MaxAvailable != 0)
-                updates.Add(updateBuilder.Set(p => p.MaxAvailable, product.MaxAvailable));
+            if (product.StockQuantity != 0)
+                updates.Add(updateBuilder.Set(p => p.StockQuantity, product.StockQuantity));
 
             if (product.Attributes != null && product.Attributes.Count != 0)
                 updates.Add(updateBuilder.Set(p => p.Attributes, product.Attributes));
@@ -89,14 +92,17 @@ namespace ProductService.Data
             if (!product.Name.IsNullOrEmpty())
                 updates.Add(updateBuilder.Set(p => p.Name, product.Name));
 
+            if (product.Type != Protos.ProductType.UnknownType)
+                updates.Add(updateBuilder.Set(p => p.Type, product.Type));
+
             if (product.Price != 0)
                 updates.Add(updateBuilder.Set(p => p.Price, product.Price));
 
             if (!product.Description.IsNullOrEmpty())
                 updates.Add(updateBuilder.Set(p => p.Description, product.Description));
 
-            if (product.MaxAvailable != 0)
-                updates.Add(updateBuilder.Set(p => p.MaxAvailable, product.MaxAvailable));
+            if (product.StockQuantity != 0)
+                updates.Add(updateBuilder.Set(p => p.StockQuantity, product.StockQuantity));
 
             if (product.Attributes != null && product.Attributes.Count != 0)
                 updates.Add(updateBuilder.AddToSetEach(p => p.Attributes, product.Attributes));
