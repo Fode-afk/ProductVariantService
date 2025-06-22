@@ -12,12 +12,19 @@ namespace ProductService.EventProcessing
         public async Task ProcessEventAsync(string message)
         {
 
-            var eventType = DetermineEvent(message);
+            var imagePublishedDto = JsonSerializer.Deserialize<ImagePublishedDto>(message);
 
-            switch (eventType)
+            if(imagePublishedDto.Service != ServicesEnum.PRODUCT_SERVICE)
+            {
+                Console.WriteLine($"--> Ignoring event for service: {imagePublishedDto.Service}");
+                return;
+            }
+
+
+            switch (imagePublishedDto.Event)
             {
                 case EventType.ImageUrlPublished:
-                    await UpdateProduct(message);
+                    await UpdateProduct(imagePublishedDto);
                     break;
                 default:
                     break;
@@ -25,33 +32,16 @@ namespace ProductService.EventProcessing
 
             return;
         }
-        private EventType DetermineEvent(string notifcationMessage)
-        {
-            Console.WriteLine("--> Determining Event...");
 
-            var eventType = JsonSerializer.Deserialize<GenericEventDto>(notifcationMessage);
-
-            switch (eventType?.Event)
-            {
-                case "ImageUrlPublished":
-                    Console.WriteLine("--> Platform Published Event Detected");
-                    return EventType.ImageUrlPublished;
-                default:
-                    Console.WriteLine("--> Could not determine the event type");
-                    return EventType.Undetermined;
-            }
-        }
-
-        private async Task UpdateProduct(string platformPublishedMessage)
+        private async Task UpdateProduct(ImagePublishedDto publishedDto)
         {
             using var scope = _scopeFactory.CreateScope();
             var repo = scope.ServiceProvider.GetRequiredService<IProductRepo>();
-            var imagePublishedDto = JsonSerializer.Deserialize<ImagePublishedDto>(platformPublishedMessage);
 
             var product = new Product
             {
-                ProductId = imagePublishedDto.ProductId,
-                ImageURLs = [imagePublishedDto.Url]
+                ProductId = publishedDto.Id,
+                ImageURLs = [publishedDto.Url]
             };
 
             await repo.UpdateProductAsync(product);
