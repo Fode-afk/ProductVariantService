@@ -21,6 +21,17 @@ namespace ProductService.Grpc
         private readonly IValidator<UpdateProductRequest> _updateProductValidator = new UpdateProductValidator();
         private readonly IValidator<DeleteProductRequest> _deleteProductValidator = new DeleteProductValidator();
 
+        public async override Task<GetProductsByIdsResponse> GetProductsByIds(GetProductsByIdsRequest request, ServerCallContext context)
+        {
+            var products = await _productRepo.GetProductsByIdsAsync([.. request.ProductIds]);
+
+            if (products == null)
+            {
+                return new GetProductsByIdsResponse { Status = false };
+            }
+            return new GetProductsByIdsResponse { Status = true, Products = { _mapper.Map<IEnumerable<ProductGrpc>>(products) } };
+        }
+
         public override async Task<GetAllProductsByOwnerIdResponse> GetAllProductsByOwnerId(GetAllProductsByOwnerIdRequest request, ServerCallContext context)
         {
             var valres = _getAllProductsValidator.Validate(request);

@@ -4,6 +4,8 @@ namespace ProductService.Data
 {
     public interface IProductRepo
     {
+        Task<IEnumerable<Product>> GetProductsByIdsAsync(string[] productIds);
+
         Task<IEnumerable<Product>> GetAllProductsAsync();
 
         Task<IEnumerable<Product>> GetAllProductsByOwnerIdAsync(string ownerId);

@@ -11,9 +11,16 @@ namespace ProductService.Data
 
         public async Task<bool> CreateProductAsync(Product product)
         {
-            await _products.InsertOneAsync(product);
+            try
+            {
+                await _products.InsertOneAsync(product);
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+
             return true;
-            //TODO Проверка на выполнение
         }
 
         public async Task<bool> DeleteProductAsync(string productId)
@@ -35,6 +42,11 @@ namespace ProductService.Data
         public async Task<Product> GetProductByIdAsync(string productId)
         {
             return await _products.Find(p => p.ProductId == productId).FirstOrDefaultAsync();
+        }
+
+        public async Task<IEnumerable<Product>> GetProductsByIdsAsync(string[] productIds)
+        {
+            return await _products.Find(p => productIds.Contains(p.ProductId)).ToListAsync();
         }
 
         public async Task<bool> ProductExistsAsync(string productId)
