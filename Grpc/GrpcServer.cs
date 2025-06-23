@@ -4,6 +4,7 @@ using ProductService.Data;
 using ProductService.Grpc.Validators;
 using ProductService.Models;
 using ProductService.Protos;
+using ProductService.Utils;
 
 namespace ProductService.Grpc
 {
@@ -77,12 +78,10 @@ namespace ProductService.Grpc
 
             var product = _mapper.Map<Product>(new ProductGrpc() { Name = request.Name, OwnerId = request.OwnerId });
 
-            TimeZoneInfo timeZone = TimeZoneInfo.FindSystemTimeZoneById(_config["Time"]);
-            DateTime localDateTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, timeZone);
-            DateTimeOffset localDateTimeOffset = new DateTimeOffset(localDateTime, timeZone.GetUtcOffset(localDateTime));
+            var localTime = DateTimeUtil.GetCurrentTimeFormatted(_config);
 
-            product.CreatedAt = localDateTimeOffset;
-            product.UpdatedAt = localDateTimeOffset;
+            product.CreatedAt = localTime;
+            product.UpdatedAt = localTime;
 
             await _productRepo.CreateProductAsync(product);
 
@@ -107,11 +106,9 @@ namespace ProductService.Grpc
 
             _mapper.Map(request, existingProduct);
 
-            TimeZoneInfo timeZone = TimeZoneInfo.FindSystemTimeZoneById(_config["Time"]);
-            DateTime localDateTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, timeZone);
-            DateTimeOffset localDateTimeOffset = new DateTimeOffset(localDateTime, timeZone.GetUtcOffset(localDateTime));
+            var localTime = DateTimeUtil.GetCurrentTimeFormatted(_config);
 
-            existingProduct.UpdatedAt = localDateTimeOffset;
+            existingProduct.UpdatedAt = localTime;
 
             await _productRepo.ReplaceProductAsync(existingProduct);
 
@@ -129,11 +126,9 @@ namespace ProductService.Grpc
 
             var product = _mapper.Map<Product>(request);
 
-            TimeZoneInfo timeZone = TimeZoneInfo.FindSystemTimeZoneById(_config["Time"]);
-            DateTime localDateTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, timeZone);
-            DateTimeOffset localDateTimeOffset = new DateTimeOffset(localDateTime, timeZone.GetUtcOffset(localDateTime));
+            var localTime = DateTimeUtil.GetCurrentTimeFormatted(_config);
 
-            product.UpdatedAt = localDateTimeOffset;
+            product.UpdatedAt = localTime;
 
             var result = await _productRepo.UpdateProductAsync(product);
 
