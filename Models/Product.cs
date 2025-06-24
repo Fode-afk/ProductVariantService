@@ -10,6 +10,7 @@ namespace ProductService.Models
         [BsonRepresentation(BsonType.ObjectId)]
         public string ProductId { get; set; }
         public string OwnerId { get; set; }
+        public string ParentCardId { get; set; }
 
         public ProductType Type { get; set; }
 

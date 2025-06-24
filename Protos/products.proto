@@ -12,21 +12,23 @@ service GrpcProducts
     rpc UpdateProductById(UpdateProductRequest) returns (UpdateProductResponse);
     rpc DeleteProductById(DeleteProductRequest) returns (DeleteProductResponse);
     rpc ProductExists(ProductExistsRequest) returns (ProductExistsResponse);
+    rpc GetParentCardId(GetParentCardIdRequest) returns (GetParentCardIdResponse);
 }
 
 message ProductGrpc
 {
     string productId = 1;   
     string ownerId = 2;
-    ProductType type = 3;
-    string name = 4;
-    string description = 5;    
-    int32 price = 6;
-    int32 stockQuantity = 7;
-    string createdAt = 8;
-    string updatedAt = 9;
-    repeated string imageURLs = 10;
-    repeated ProductAttributeGrpc attributes = 11;
+    string parentCardId = 3;
+    ProductType type = 4;
+    string name = 5;
+    string description = 6;    
+    int32 price = 7;
+    int32 stockQuantity = 8;
+    string createdAt = 9;
+    string updatedAt = 10;
+    repeated string imageURLs = 11;
+    repeated ProductAttributeGrpc attributes = 12;
 }
 
 enum ProductType{
@@ -101,7 +103,7 @@ message DeleteProductResponse
     bool status = 1;
 }
 
-message ReplaceProductRequest
+message ReplaceProductRequest // Удалить потом нахуй
 {
     string productId = 1;   
     string name = 2;
@@ -121,13 +123,14 @@ message ReplaceProductResponse
 message UpdateProductRequest
 {
     string productId = 1;   
-    string name = 2;
-    ProductType type = 3;
-    string description = 4;    
-    int32 price = 5; 
-    int32 stockQuantity = 6;
-    repeated string imageURLs = 7;
-    repeated ProductAttributeGrpc attributes = 8;
+    string parentCardId = 2;
+    string name = 3;
+    ProductType type = 4;
+    string description = 5;    
+    int32 price = 6; 
+    int32 stockQuantity = 7;
+    repeated string imageURLs = 8;
+    repeated ProductAttributeGrpc attributes = 9;
 }
 
 message UpdateProductResponse
@@ -142,4 +145,14 @@ message ProductExistsRequest
 message ProductExistsResponse
 {
     bool status = 1;
+}
+
+message GetParentCardIdRequest
+{
+    string productId = 1;
+}
+message GetParentCardIdResponse
+{
+    bool status = 1;
+    string parentCardId = 2;
 }

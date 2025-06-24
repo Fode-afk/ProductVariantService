@@ -21,5 +21,7 @@ namespace ProductService.Data
         Task<bool> DeleteProductAsync(string productId);
 
         Task<bool> ProductExistsAsync(string productId);
+
+        Task<string> GetParentCardIdAsync(string productId);
     }
 }

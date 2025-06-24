@@ -77,6 +77,9 @@ namespace ProductService.Data
             if (product.StockQuantity != 0)
                 updates.Add(updateBuilder.Set(p => p.StockQuantity, product.StockQuantity));
 
+            if (!product.ParentCardId.IsNullOrEmpty())
+                updates.Add(updateBuilder.Set(p => p.ParentCardId, product.ParentCardId));
+
             if (product.Attributes != null && product.Attributes.Count != 0)
                 updates.Add(updateBuilder.Set(p => p.Attributes, product.Attributes));
 
@@ -116,6 +119,9 @@ namespace ProductService.Data
             if (product.StockQuantity != 0)
                 updates.Add(updateBuilder.Set(p => p.StockQuantity, product.StockQuantity));
 
+            if (!product.ParentCardId.IsNullOrEmpty())
+                updates.Add(updateBuilder.Set(p => p.ParentCardId, product.ParentCardId));
+
             if (product.Attributes != null && product.Attributes.Count != 0)
                 updates.Add(updateBuilder.AddToSetEach(p => p.Attributes, product.Attributes));
 
@@ -131,6 +137,16 @@ namespace ProductService.Data
             var result = await _products.UpdateOneAsync(filter, update);
 
             return result.ModifiedCount > 0;
+        }
+
+
+        public async Task<string> GetParentCardIdAsync(string productId)
+        {
+            var result = await _products.Find(p => p.ProductId == productId).FirstOrDefaultAsync();
+            if(result == null)
+                return string.Empty;
+
+            return result.ParentCardId;
         }
     }
 }
