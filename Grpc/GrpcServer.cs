@@ -167,5 +167,17 @@ namespace ProductService.Grpc
                 Status = await _productRepo.ProductExistsAsync(request.ProductId)
             };
         }
+
+        public override async Task<GetParentCardIdResponse> GetParentCardId(GetParentCardIdRequest request, ServerCallContext context)
+        {
+            var cardId = await _productRepo.GetParentCardIdAsync(request.ProductId);
+
+            if (cardId == "")
+            { 
+                return new GetParentCardIdResponse { Status = false };
+            }
+
+            return new GetParentCardIdResponse { Status = true, ParentCardId = cardId };
+        }
     }
 }
