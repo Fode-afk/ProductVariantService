@@ -23,10 +23,10 @@ namespace ProductService.Profiles
 
             CreateMap<ProductAttributeGrpc, ProductAttribute>().ReverseMap();
 
-            CreateMap<ReplaceProductRequest, Product>()
+            CreateMap<UpdateProductRequest, Product>()
                 .ForAllMembers(opt => opt.Condition((src, dest, srcMember) => srcMember != null));
 
-            CreateMap<UpdateProductRequest, Product>()
+            CreateMap<UpdateParentCardIdRequest, Product>()
                 .ForAllMembers(opt => opt.Condition((src, dest, srcMember) => srcMember != null));
         }
     }

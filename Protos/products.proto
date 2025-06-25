@@ -8,11 +8,11 @@ service GrpcProducts
     rpc GetProductsByIds(GetProductsByIdsRequest) returns (GetProductsByIdsResponse);
     rpc GetAllProductsByOwnerId(GetAllProductsByOwnerIdRequest) returns (GetAllProductsByOwnerIdResponse);
     rpc GetProductById(GetProductRequest) returns (GetProductResponse);
-    rpc ReplaceProductById(ReplaceProductRequest) returns (ReplaceProductResponse);
     rpc UpdateProductById(UpdateProductRequest) returns (UpdateProductResponse);
     rpc DeleteProductById(DeleteProductRequest) returns (DeleteProductResponse);
     rpc ProductExists(ProductExistsRequest) returns (ProductExistsResponse);
     rpc GetParentCardId(GetParentCardIdRequest) returns (GetParentCardIdResponse);
+    rpc UpdateParentCardId(UpdateParentCardIdRequest) returns (UpdateParentCardIdResponse);
 }
 
 message ProductGrpc
@@ -103,34 +103,16 @@ message DeleteProductResponse
     bool status = 1;
 }
 
-message ReplaceProductRequest // Удалить потом нахуй
+message UpdateProductRequest
 {
     string productId = 1;   
     string name = 2;
     ProductType type = 3;
     string description = 4;    
-    int32 price = 5;
+    int32 price = 5; 
     int32 stockQuantity = 6;
     repeated string imageURLs = 7;
-    repeated ProductAttributeGrpc attributes = 8;  
-}
-
-message ReplaceProductResponse
-{
-    bool status = 1;
-}
-
-message UpdateProductRequest
-{
-    string productId = 1;   
-    string parentCardId = 2;
-    string name = 3;
-    ProductType type = 4;
-    string description = 5;    
-    int32 price = 6; 
-    int32 stockQuantity = 7;
-    repeated string imageURLs = 8;
-    repeated ProductAttributeGrpc attributes = 9;
+    repeated ProductAttributeGrpc attributes = 8;
 }
 
 message UpdateProductResponse
@@ -155,4 +137,15 @@ message GetParentCardIdResponse
 {
     bool status = 1;
     string parentCardId = 2;
+}
+
+message UpdateParentCardIdRequest
+{
+    string productId = 1;
+    string parentCardId = 2;
+}
+
+message UpdateParentCardIdResponse
+{
+    bool status = 1;
 }

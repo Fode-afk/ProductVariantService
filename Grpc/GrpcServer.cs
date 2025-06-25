@@ -17,7 +17,6 @@ namespace ProductService.Grpc
         private readonly IValidator<CreateProductRequest> _createProductValidator = new CreateProductValidator();
         private readonly IValidator<GetProductRequest> _getProductValidator = new GetProductValidator();
         private readonly IValidator<GetAllProductsByOwnerIdRequest> _getAllProductsValidator = new GetAllProductsValidator();
-        private readonly IValidator<ReplaceProductRequest> _replaceProductValidator = new ReplaceProductValidator();
         private readonly IValidator<UpdateProductRequest> _updateProductValidator = new UpdateProductValidator();
         private readonly IValidator<DeleteProductRequest> _deleteProductValidator = new DeleteProductValidator();
 
@@ -99,33 +98,6 @@ namespace ProductService.Grpc
             return new CreateProductResponse { Status = true };
         }
 
-        public override async Task<ReplaceProductResponse> ReplaceProductById(ReplaceProductRequest request, ServerCallContext context)
-        {
-            var valres = _replaceProductValidator.Validate(request);
-
-            if (!valres.IsValid)
-            {
-                throw new RpcException(new Status(StatusCode.InvalidArgument, valres.ErrorMessage));
-            }
-
-            var existingProduct = await _productRepo.GetProductByIdAsync(request.ProductId);
-
-            if (existingProduct == null)
-            {
-                return new ReplaceProductResponse { Status = false };
-            }
-
-            _mapper.Map(request, existingProduct);
-
-            var localTime = DateTimeUtil.GetCurrentTimeFormatted(_config);
-
-            existingProduct.UpdatedAt = localTime;
-
-            await _productRepo.ReplaceProductAsync(existingProduct);
-
-            return new ReplaceProductResponse { Status = true };
-        }
-
         public override async Task<UpdateProductResponse> UpdateProductById(UpdateProductRequest request, ServerCallContext context)
         {
             var valres = _updateProductValidator.Validate(request);
@@ -178,6 +150,19 @@ namespace ProductService.Grpc
             }
 
             return new GetParentCardIdResponse { Status = true, ParentCardId = cardId };
+        }
+
+        public override async Task<UpdateParentCardIdResponse> UpdateParentCardId(UpdateParentCardIdRequest request, ServerCallContext context)
+        {
+            var product = _mapper.Map<Product>(request);
+
+            var localTime = DateTimeUtil.GetCurrentTimeFormatted(_config);
+
+            product.UpdatedAt = localTime;
+
+            var result = await _productRepo.UpdateParentCardId(product);
+
+            return new UpdateParentCardIdResponse { Status = result };
         }
     }
 }

@@ -14,9 +14,9 @@ namespace ProductService.Data
 
         Task<bool> CreateProductAsync(Product product);
 
-        Task<bool> ReplaceProductAsync(Product product);
-
         Task<bool> UpdateProductAsync(Product product);
+
+        Task<bool> UpdateParentCardId(Product product);
 
         Task<bool> DeleteProductAsync(string productId);
 
