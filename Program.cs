@@ -32,6 +32,12 @@ builder.Services.AddHostedService<MessageBusSubscriber>();
 
 builder.Services.AddOpenApi();
 
+builder.Services.AddSingleton<ILogger>(provider =>
+{
+    var logPath = Path.Combine("Logs", $"{DateTime.UtcNow:yyyy-MM-dd HH-mm-ss}.log");
+    return new Logger(logPath);
+});
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Grpc.Core;
+using MongoDB.Bson;
 using ProductService.Data;
 using ProductService.Grpc.Validators;
 using ProductService.Models;
@@ -8,11 +9,12 @@ using ProductService.Utils;
 
 namespace ProductService.Grpc
 {
-    public class GrpcServer(IProductRepo productRepo, IMapper mapper, IConfiguration config) : GrpcProducts.GrpcProductsBase
+    public class GrpcServer(IProductRepo productRepo, IMapper mapper, IConfiguration config, ILogger logger) : GrpcProducts.GrpcProductsBase
     {
         private readonly IProductRepo _productRepo = productRepo;
         private readonly IMapper _mapper = mapper;
         private readonly IConfiguration _config = config;
+        private readonly ILogger _logger = logger;
 
         private readonly IValidator<CreateProductRequest> _createProductValidator = new CreateProductValidator();
         private readonly IValidator<GetProductRequest> _getProductValidator = new GetProductValidator();
@@ -22,6 +24,8 @@ namespace ProductService.Grpc
 
         public async override Task<GetProductsByIdsResponse> GetProductsByIds(GetProductsByIdsRequest request, ServerCallContext context)
         {
+            _logger.Log($"\"GetProductsByIdsResponse\" with params {request.ToJson()} has noticed. Caller: {context.Peer}");
+
             var products = await _productRepo.GetProductsByIdsAsync([.. request.ProductIds]);
 
             if (products == null)
@@ -33,6 +37,8 @@ namespace ProductService.Grpc
 
         public override async Task<GetAllProductsByOwnerIdResponse> GetAllProductsByOwnerId(GetAllProductsByOwnerIdRequest request, ServerCallContext context)
         {
+            _logger.Log($"\"GetAllProductsByOwnerIdResponse\" with params {request.ToJson()} has noticed. Caller: {context.Peer}");
+
             var valres = _getAllProductsValidator.Validate(request);
 
             if (!valres.IsValid)
@@ -56,6 +62,8 @@ namespace ProductService.Grpc
 
         public override async Task<GetProductResponse> GetProductById(GetProductRequest request, ServerCallContext context)
         {
+            _logger.Log($"\"GetProductResponse\" with params {request.ToJson()} has noticed. Caller: {context.Peer}");
+
             var valres = _getProductValidator.Validate(request);
 
             if (!valres.IsValid)
@@ -79,6 +87,8 @@ namespace ProductService.Grpc
 
         public override async Task<CreateProductResponse> CreateProduct(CreateProductRequest request, ServerCallContext context)
         {
+            _logger.Log($"\"CreateProductResponse\" with params {request.ToJson()} has noticed. Caller: {context.Peer}");
+
             var valres = _createProductValidator.Validate(request);
 
             if (!valres.IsValid)
@@ -100,6 +110,8 @@ namespace ProductService.Grpc
 
         public override async Task<UpdateProductResponse> UpdateProductById(UpdateProductRequest request, ServerCallContext context)
         {
+            _logger.Log($"\"UpdateProductResponse\" with params {request.ToJson()} has noticed. Caller: {context.Peer}");
+
             var valres = _updateProductValidator.Validate(request);
 
             if (!valres.IsValid)
@@ -120,6 +132,8 @@ namespace ProductService.Grpc
 
         public override async Task<DeleteProductResponse> DeleteProductById(DeleteProductRequest request, ServerCallContext context)
         {
+            _logger.Log($"\"DeleteProductResponse\" with params {request.ToJson()} has noticed. Caller: {context.Peer}");
+
             var valres = _deleteProductValidator.Validate(request);
 
             if (!valres.IsValid)
@@ -134,6 +148,8 @@ namespace ProductService.Grpc
 
         public override async Task<ProductExistsResponse> ProductExists(ProductExistsRequest request, ServerCallContext context)
         {
+            _logger.Log($"\"ProductExistsResponse\" with params {request.ToJson()} has noticed. Caller: {context.Peer}");
+
             return new ProductExistsResponse
             {
                 Status = await _productRepo.ProductExistsAsync(request.ProductId)
@@ -142,6 +158,8 @@ namespace ProductService.Grpc
 
         public override async Task<GetParentCardIdResponse> GetParentCardId(GetParentCardIdRequest request, ServerCallContext context)
         {
+            _logger.Log($"\"GetParentCardIdResponse\" with params {request.ToJson()} has noticed. Caller: {context.Peer}");
+
             var cardId = await _productRepo.GetParentCardIdAsync(request.ProductId);
 
             if (cardId == "")
@@ -154,6 +172,8 @@ namespace ProductService.Grpc
 
         public override async Task<UpdateParentCardIdResponse> UpdateParentCardId(UpdateParentCardIdRequest request, ServerCallContext context)
         {
+            _logger.Log($"\"UpdateParentCardIdResponse\" with params {request.ToJson()} has noticed. Caller: {context.Peer}");
+
             var product = _mapper.Map<Product>(request);
 
             var localTime = DateTimeUtil.GetCurrentTimeFormatted(_config);
@@ -167,6 +187,8 @@ namespace ProductService.Grpc
 
         public override async Task<AddImagesToProductResponse> AddImagesToProduct(AddImagesToProductRequest request, ServerCallContext context)
         {
+            _logger.Log($"\"AddImagesToProductResponse\" with params {request.ToJson()} has noticed. Caller: {context.Peer}");
+
             var product = _mapper.Map<Product>(request);
 
             var localTime = DateTimeUtil.GetCurrentTimeFormatted(_config);
@@ -180,6 +202,8 @@ namespace ProductService.Grpc
 
         public override async Task<DeleteImagesFromProductResponse> DeleteImagesFromProduct(DeleteImagesFromProductRequest request, ServerCallContext context)
         {
+            _logger.Log($"\"DeleteImagesFromProductResponse\" with params {request.ToJson()} has noticed. Caller: {context.Peer}");
+
             var product = _mapper.Map<Product>(request);
 
             var localTime = DateTimeUtil.GetCurrentTimeFormatted(_config);
@@ -193,6 +217,8 @@ namespace ProductService.Grpc
 
         public override async Task<AddAttributesToProductResponse> AddAttributesToProduct(AddAttributesToProductRequest request, ServerCallContext context)
         {
+            _logger.Log($"\"AddAttributesToProductResponse\" with params {request.ToJson()} has noticed. Caller: {context.Peer}");
+
             var product = _mapper.Map<Product>(request);
 
             var localTime = DateTimeUtil.GetCurrentTimeFormatted(_config);
@@ -206,6 +232,8 @@ namespace ProductService.Grpc
 
         public override async Task<DeleteAttributesFromProductResponse> DeleteAttributesFromProduct(DeleteAttributesFromProductRequest request, ServerCallContext context)
         {
+            _logger.Log($"\"DeleteAttributesFromProductResponse\" with params {request.ToJson()} has noticed. Caller: {context.Peer}");
+
             var product = _mapper.Map<Product>(request);
 
             var localTime = DateTimeUtil.GetCurrentTimeFormatted(_config);
