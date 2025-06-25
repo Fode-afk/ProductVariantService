@@ -164,5 +164,57 @@ namespace ProductService.Grpc
 
             return new UpdateParentCardIdResponse { Status = result };
         }
+
+        public override async Task<AddImagesToProductResponse> AddImagesToProduct(AddImagesToProductRequest request, ServerCallContext context)
+        {
+            var product = _mapper.Map<Product>(request);
+
+            var localTime = DateTimeUtil.GetCurrentTimeFormatted(_config);
+
+            product.UpdatedAt = localTime;
+
+            var result = await _productRepo.AddImagesToProductAsync(product);
+
+            return new AddImagesToProductResponse { Status = result };
+        }
+
+        public override async Task<DeleteImagesFromProductResponse> DeleteImagesFromProduct(DeleteImagesFromProductRequest request, ServerCallContext context)
+        {
+            var product = _mapper.Map<Product>(request);
+
+            var localTime = DateTimeUtil.GetCurrentTimeFormatted(_config);
+
+            product.UpdatedAt = localTime;
+
+            var result = await _productRepo.DeleteImagesFromProductAsync(product);
+
+            return new DeleteImagesFromProductResponse { Status = result };
+        }
+
+        public override async Task<AddAttributesToProductResponse> AddAttributesToProduct(AddAttributesToProductRequest request, ServerCallContext context)
+        {
+            var product = _mapper.Map<Product>(request);
+
+            var localTime = DateTimeUtil.GetCurrentTimeFormatted(_config);
+
+            product.UpdatedAt = localTime;
+
+            var result = await _productRepo.AddAttributesToProductAsync(product);
+
+            return new AddAttributesToProductResponse { Status = result };
+        }
+
+        public override async Task<DeleteAttributesFromProductResponse> DeleteAttributesFromProduct(DeleteAttributesFromProductRequest request, ServerCallContext context)
+        {
+            var product = _mapper.Map<Product>(request);
+
+            var localTime = DateTimeUtil.GetCurrentTimeFormatted(_config);
+
+            product.UpdatedAt = localTime;
+
+            var result = await _productRepo.DeleteAttributesFromProductAsync(product);
+
+            return new DeleteAttributesFromProductResponse { Status = result };
+        }
     }
 }

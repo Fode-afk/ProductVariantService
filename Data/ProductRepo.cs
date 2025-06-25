@@ -77,12 +77,6 @@ namespace ProductService.Data
             if (product.StockQuantity != 0)
                 updates.Add(updateBuilder.Set(p => p.StockQuantity, product.StockQuantity));
 
-            if (product.Attributes != null && product.Attributes.Count != 0)
-                updates.Add(updateBuilder.AddToSetEach(p => p.Attributes, product.Attributes));
-
-            if (product.ImageURLs != null && product.ImageURLs.Count != 0)
-                updates.Add(updateBuilder.AddToSetEach(p => p.ImageURLs, product.ImageURLs));
-
             updates.Add(updateBuilder.Set(p => p.UpdatedAt, product.UpdatedAt));
 
             if (updates.Count == 0)
@@ -113,6 +107,95 @@ namespace ProductService.Data
 
             if (!product.ParentCardId.IsNullOrEmpty())
                 updates.Add(updateBuilder.Set(p => p.ParentCardId, product.ParentCardId));
+
+            updates.Add(updateBuilder.Set(p => p.UpdatedAt, product.UpdatedAt));
+
+            if (updates.Count == 0)
+                return false;
+
+            var update = updateBuilder.Combine(updates);
+            var result = await _products.UpdateOneAsync(filter, update);
+
+            return result.ModifiedCount > 0;
+        }
+
+        public async Task<bool> AddImagesToProductAsync(Product product)
+        {
+            var filter = Builders<Product>.Filter.Eq(p => p.ProductId, product.ProductId);
+
+            var updateBuilder = Builders<Product>.Update;
+            var updates = new List<UpdateDefinition<Product>>();
+
+            if (product.ImageURLs != null && product.ImageURLs.Count != 0)
+                updates.Add(updateBuilder.AddToSetEach(p => p.ImageURLs, product.ImageURLs));
+
+            updates.Add(updateBuilder.Set(p => p.UpdatedAt, product.UpdatedAt));
+
+            if (updates.Count == 0)
+                return false;
+
+            var update = updateBuilder.Combine(updates);
+            var result = await _products.UpdateOneAsync(filter, update);
+
+            return result.ModifiedCount > 0;
+        }
+
+        public async Task<bool> DeleteImagesFromProductAsync(Product product)
+        {
+            var filter = Builders<Product>.Filter.Eq(p => p.ProductId, product.ProductId);
+
+            var updateBuilder = Builders<Product>.Update;
+            var updates = new List<UpdateDefinition<Product>>();
+            
+            if (product.ImageURLs != null && product.ImageURLs.Count != 0)
+                updates.Add(updateBuilder.PullAll(p => p.ImageURLs, product.ImageURLs));
+
+            updates.Add(updateBuilder.Set(p => p.UpdatedAt, product.UpdatedAt));
+
+            if (updates.Count == 0)
+                return false;
+
+            var update = updateBuilder.Combine(updates);
+            var result = await _products.UpdateOneAsync(filter, update);
+
+            return result.ModifiedCount > 0;
+        }
+
+        public async Task<bool> AddAttributesToProductAsync(Product product)
+        {
+            var filter = Builders<Product>.Filter.Eq(p => p.ProductId, product.ProductId);
+
+            var updateBuilder = Builders<Product>.Update;
+            var updates = new List<UpdateDefinition<Product>>();
+          
+            if (product.Attributes != null && product.Attributes.Count != 0)
+                updates.Add(updateBuilder.AddToSetEach(p => p.Attributes, product.Attributes));
+            
+            updates.Add(updateBuilder.Set(p => p.UpdatedAt, product.UpdatedAt));
+
+            if (updates.Count == 0)
+                return false;
+
+            var update = updateBuilder.Combine(updates);
+            var result = await _products.UpdateOneAsync(filter, update);
+
+            return result.ModifiedCount > 0;
+        }
+
+        public async Task<bool> DeleteAttributesFromProductAsync(Product product)
+        {
+            var filter = Builders<Product>.Filter.Eq(p => p.ProductId, product.ProductId);
+
+            var updateBuilder = Builders<Product>.Update;
+            var updates = new List<UpdateDefinition<Product>>();
+
+            if (product.Attributes != null && product.Attributes.Count > 0)
+            {
+                var keysToRemove = product.Attributes.Select(a => a.Key).ToList();
+
+                updates.Add(updateBuilder.PullFilter(p => p.Attributes,
+                    attr => keysToRemove.Contains(attr.Key)));
+            }
 
             updates.Add(updateBuilder.Set(p => p.UpdatedAt, product.UpdatedAt));
 

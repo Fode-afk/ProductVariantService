@@ -1,4 +1,5 @@
 ﻿using ProductService.Models;
+using ProductService.Protos;
 
 namespace ProductService.Data
 {
@@ -23,5 +24,13 @@ namespace ProductService.Data
         Task<bool> ProductExistsAsync(string productId);
 
         Task<string> GetParentCardIdAsync(string productId);
+
+        Task<bool> AddImagesToProductAsync(Product product);
+
+        Task<bool> DeleteImagesFromProductAsync(Product product);
+
+        Task<bool> AddAttributesToProductAsync(Product product);
+
+        Task<bool> DeleteAttributesFromProductAsync(Product product);
     }
 }

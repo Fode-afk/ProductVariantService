@@ -13,6 +13,11 @@ service GrpcProducts
     rpc ProductExists(ProductExistsRequest) returns (ProductExistsResponse);
     rpc GetParentCardId(GetParentCardIdRequest) returns (GetParentCardIdResponse);
     rpc UpdateParentCardId(UpdateParentCardIdRequest) returns (UpdateParentCardIdResponse);
+
+    rpc AddImagesToProduct(AddImagesToProductRequest) returns (AddImagesToProductResponse);
+    rpc DeleteImagesFromProduct(DeleteImagesFromProductRequest) returns (DeleteImagesFromProductResponse);
+    rpc AddAttributesToProduct(AddAttributesToProductRequest) returns (AddAttributesToProductResponse);
+    rpc DeleteAttributesFromProduct(DeleteAttributesFromProductRequest) returns (DeleteAttributesFromProductResponse);
 }
 
 message ProductGrpc
@@ -111,11 +116,53 @@ message UpdateProductRequest
     string description = 4;    
     int32 price = 5; 
     int32 stockQuantity = 6;
-    repeated string imageURLs = 7;
-    repeated ProductAttributeGrpc attributes = 8;
 }
 
 message UpdateProductResponse
+{
+    bool status = 1;
+}
+
+message AddImagesToProductRequest
+{
+    string productId = 1;
+    repeated string imageURLs = 2;
+}
+
+message AddImagesToProductResponse
+{
+    bool status = 1;
+}
+
+message DeleteImagesFromProductRequest
+{
+    string productId = 1;
+    repeated string imageURLs = 2;
+}
+
+message DeleteImagesFromProductResponse
+{
+    bool status = 1;
+}
+
+message AddAttributesToProductRequest
+{
+    string productId = 1;
+    repeated ProductAttributeGrpc attributes = 2;
+}
+
+message AddAttributesToProductResponse
+{
+    bool status = 1;
+}
+
+message DeleteAttributesFromProductRequest
+{
+    string productId = 1;
+    repeated AttributeKey key = 2; 
+}
+
+message DeleteAttributesFromProductResponse
 {
     bool status = 1;
 }
