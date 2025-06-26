@@ -3,6 +3,8 @@
     public enum ServicesEnum
     {
         PRODUCT_SERVICE,
-        CARD_SERVICE
+        CARD_SERVICE,
+        USER_SERVICE,
+        VENDOR_SERVICE
     }
 }

@@ -44,7 +44,7 @@ namespace ProductService.EventProcessing
                 ImageURLs = [publishedDto.Url]
             };
 
-            await repo.UpdateProductAsync(product);
+            await repo.AddImagesToProductAsync(product);
         }
     }
 }
