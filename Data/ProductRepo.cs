@@ -1,211 +1,342 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using MongoDB.Driver;
 using ProductService.Models;
 
 namespace ProductService.Data
 {
-    public class ProductRepo(IMongoDatabase database): IProductRepo
+    public class ProductRepo(IMongoDatabase database, ILogger logger) : IProductRepo
     {
         private readonly IMongoCollection<Product> _products = database.GetCollection<Product>("Products");
+        private readonly ILogger _logger = logger;
 
-        public async Task<bool> CreateProductAsync(Product product)
+        public async Task<ExecutionResult> CreateProductAsync(Product product)
         {
             try
             {
                 await _products.InsertOneAsync(product);
+
+                return new ExecutionResult(true, string.Empty);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return false;
+                _logger.Log(ex.Message, LogLevel.Error);
+                return new ExecutionResult(false, ex.Message);
             }
-
-            return true;
         }
 
-        public async Task<bool> DeleteProductAsync(string productId)
+        public async Task<ExecutionResult> DeleteProductAsync(string productId)
         {
-            var res = await _products.DeleteOneAsync(p => p.ProductId == productId);
-            return res.DeletedCount > 0;
-        }
-
-        public async Task<IEnumerable<Product>> GetAllProductsAsync()
-        {
-            return await _products.Find(_ => true).ToListAsync();
-        }
-
-        public async Task<IEnumerable<Product>> GetAllProductsByOwnerIdAsync(string ownerId)
-        {
-            return await _products.Find(p => p.OwnerId == ownerId).ToListAsync();
-        }
-
-        public async Task<Product> GetProductByIdAsync(string productId)
-        {
-            return await _products.Find(p => p.ProductId == productId).FirstOrDefaultAsync();
-        }
-
-        public async Task<IEnumerable<Product>> GetProductsByIdsAsync(string[] productIds)
-        {
-            return await _products.Find(p => productIds.Contains(p.ProductId)).ToListAsync();
-        }
-
-        public async Task<bool> ProductExistsAsync(string productId)
-        {
-            var filter = Builders<Product>.Filter.Eq(p => p.ProductId, productId);
-            return await _products.Find(filter).Limit(1).AnyAsync();
-        }
-
-        public async Task<bool> UpdateProductAsync(Product product)
-        {
-            var filter = Builders<Product>.Filter.Eq(p => p.ProductId, product.ProductId);
-
-            var updateBuilder = Builders<Product>.Update;
-            var updates = new List<UpdateDefinition<Product>>();
-
-            if (!product.Name.IsNullOrEmpty())
-                updates.Add(updateBuilder.Set(p => p.Name, product.Name));
-
-            if (product.Type != Protos.ProductType.UnknownType)
-                updates.Add(updateBuilder.Set(p => p.Type, product.Type));
-
-            if (product.Price != 0)
-                updates.Add(updateBuilder.Set(p => p.Price, product.Price));
-
-            if (!product.Description.IsNullOrEmpty())
-                updates.Add(updateBuilder.Set(p => p.Description, product.Description));
-
-            if (product.StockQuantity != 0)
-                updates.Add(updateBuilder.Set(p => p.StockQuantity, product.StockQuantity));
-
-            updates.Add(updateBuilder.Set(p => p.UpdatedAt, product.UpdatedAt));
-
-            if (updates.Count == 0)
-                return false;
-
-            var update = updateBuilder.Combine(updates);
-            var result = await _products.UpdateOneAsync(filter, update);
-
-            return result.ModifiedCount > 0;
-        }
-
-
-        public async Task<string> GetParentCardIdAsync(string productId)
-        {
-            var result = await _products.Find(p => p.ProductId == productId).FirstOrDefaultAsync();
-            if(result == null)
-                return string.Empty;
-
-            return result.ParentCardId;
-        }
-
-        public async Task<bool> UpdateParentCardId(Product product)
-        {
-            var filter = Builders<Product>.Filter.Eq(p => p.ProductId, product.ProductId);
-
-            var updateBuilder = Builders<Product>.Update;
-            var updates = new List<UpdateDefinition<Product>>();
-
-            if (!product.ParentCardId.IsNullOrEmpty())
-                updates.Add(updateBuilder.Set(p => p.ParentCardId, product.ParentCardId));
-
-            updates.Add(updateBuilder.Set(p => p.UpdatedAt, product.UpdatedAt));
-
-            if (updates.Count == 0)
-                return false;
-
-            var update = updateBuilder.Combine(updates);
-            var result = await _products.UpdateOneAsync(filter, update);
-
-            return result.ModifiedCount > 0;
-        }
-
-        public async Task<bool> AddImagesToProductAsync(Product product)
-        {
-            var filter = Builders<Product>.Filter.Eq(p => p.ProductId, product.ProductId);
-
-            var updateBuilder = Builders<Product>.Update;
-            var updates = new List<UpdateDefinition<Product>>();
-
-            if (product.ImageURLs != null && product.ImageURLs.Count != 0)
-                updates.Add(updateBuilder.AddToSetEach(p => p.ImageURLs, product.ImageURLs));
-
-            updates.Add(updateBuilder.Set(p => p.UpdatedAt, product.UpdatedAt));
-
-            if (updates.Count == 0)
-                return false;
-
-            var update = updateBuilder.Combine(updates);
-            var result = await _products.UpdateOneAsync(filter, update);
-
-            return result.ModifiedCount > 0;
-        }
-
-        public async Task<bool> DeleteImagesFromProductAsync(Product product)
-        {
-            var filter = Builders<Product>.Filter.Eq(p => p.ProductId, product.ProductId);
-
-            var updateBuilder = Builders<Product>.Update;
-            var updates = new List<UpdateDefinition<Product>>();
-            
-            if (product.ImageURLs != null && product.ImageURLs.Count != 0)
-                updates.Add(updateBuilder.PullAll(p => p.ImageURLs, product.ImageURLs));
-
-            updates.Add(updateBuilder.Set(p => p.UpdatedAt, product.UpdatedAt));
-
-            if (updates.Count == 0)
-                return false;
-
-            var update = updateBuilder.Combine(updates);
-            var result = await _products.UpdateOneAsync(filter, update);
-
-            return result.ModifiedCount > 0;
-        }
-
-        public async Task<bool> AddAttributesToProductAsync(Product product)
-        {
-            var filter = Builders<Product>.Filter.Eq(p => p.ProductId, product.ProductId);
-
-            var updateBuilder = Builders<Product>.Update;
-            var updates = new List<UpdateDefinition<Product>>();
-          
-            if (product.Attributes != null && product.Attributes.Count != 0)
-                updates.Add(updateBuilder.AddToSetEach(p => p.Attributes, product.Attributes));
-            
-            updates.Add(updateBuilder.Set(p => p.UpdatedAt, product.UpdatedAt));
-
-            if (updates.Count == 0)
-                return false;
-
-            var update = updateBuilder.Combine(updates);
-            var result = await _products.UpdateOneAsync(filter, update);
-
-            return result.ModifiedCount > 0;
-        }
-
-        public async Task<bool> DeleteAttributesFromProductAsync(Product product)
-        {
-            var filter = Builders<Product>.Filter.Eq(p => p.ProductId, product.ProductId);
-
-            var updateBuilder = Builders<Product>.Update;
-            var updates = new List<UpdateDefinition<Product>>();
-
-            if (product.Attributes != null && product.Attributes.Count > 0)
+            try
             {
-                var keysToRemove = product.Attributes.Select(a => a.Key).ToList();
+                var res = await _products.DeleteOneAsync(p => p.ProductId == productId);
+                return new ExecutionResult(res.DeletedCount > 0, string.Empty);
+            }
+            catch (Exception ex)
+            {
+                _logger.Log(ex.Message, LogLevel.Error);
+                return new ExecutionResult(false, ex.Message);
+            }
+        }
 
-                updates.Add(updateBuilder.PullFilter(p => p.Attributes,
-                    attr => keysToRemove.Contains(attr.Key)));
+        public async Task<ExecutionResult<IEnumerable<Product>>> GetAllProductsAsync()
+        {
+            try
+            {
+                var res = await _products.Find(_ => true).ToListAsync();
+                return new ExecutionResult<IEnumerable<Product>>(res.Count > 0, string.Empty, res);
+            }
+            catch (Exception ex)
+            {
+                _logger.Log(ex.Message, LogLevel.Error);
+                return new ExecutionResult<IEnumerable<Product>>(false, ex.Message, null);
+            }
+        }
+
+        public async Task<ExecutionResult<IEnumerable<Product>>> GetAllProductsByOwnerIdAsync(string ownerId)
+        {
+            try
+            {
+                var res = await _products.Find(p => p.OwnerId == ownerId).ToListAsync();
+                if(res.Count == 0)
+                    return new ExecutionResult<IEnumerable<Product>>(false, "Products not found", null);
+
+                return new ExecutionResult<IEnumerable<Product>>(true, string.Empty, res);
+            }
+            catch (Exception ex)
+            {
+                _logger.Log(ex.Message, LogLevel.Error);
+                return new ExecutionResult<IEnumerable<Product>>(false, ex.Message, null);
+            }
+        }
+
+        public async Task<ExecutionResult<Product>> GetProductByIdAsync(string productId)
+        {
+            try
+            {
+                var res = await _products.Find(p => p.ProductId == productId).FirstOrDefaultAsync();
+
+                if(res == null)
+                    return new ExecutionResult<Product>(false, "Product not found", null);
+
+                return new ExecutionResult<Product>(true, string.Empty, res);
+            }
+            catch (Exception ex)
+            {
+                _logger.Log(ex.Message, LogLevel.Error);
+                return new ExecutionResult<Product>(false, ex.Message, null);
+            }
+        }
+
+        public async Task<ExecutionResult<IEnumerable<Product>>> GetProductsByIdsAsync(string[] productIds)
+        {
+            try
+            {
+                var res = await _products.Find(p => productIds.Contains(p.ProductId)).ToListAsync();
+
+                if (res.Count == 0)
+                    return new ExecutionResult<IEnumerable<Product>>(false, "Products not found", null);
+
+                return new ExecutionResult<IEnumerable<Product>>(true, string.Empty, res);
+            }
+            catch (Exception ex)
+            {
+                _logger.Log(ex.Message, LogLevel.Error);
+                return new ExecutionResult<IEnumerable<Product>>(false, ex.Message, null);
+            }
+        }
+
+        public async Task<ExecutionResult> ProductExistsAsync(string productId)
+        {
+            try
+            {
+                var filter = Builders<Product>.Filter.Eq(p => p.ProductId, productId);
+                var res = await _products.Find(filter).Limit(1).AnyAsync();
+
+                return new ExecutionResult(res, string.Empty);
+            }
+            catch (Exception ex)
+            {
+                _logger.Log(ex.Message, LogLevel.Error);
+                return new ExecutionResult(false, ex.Message);
             }
 
-            updates.Add(updateBuilder.Set(p => p.UpdatedAt, product.UpdatedAt));
 
-            if (updates.Count == 0)
-                return false;
+            
+        }
 
-            var update = updateBuilder.Combine(updates);
-            var result = await _products.UpdateOneAsync(filter, update);
+        public async Task<ExecutionResult> UpdateProductAsync(Product product)
+        {
+            try
+            {
+                var filter = Builders<Product>.Filter.Eq(p => p.ProductId, product.ProductId);
 
-            return result.ModifiedCount > 0;
+                var updateBuilder = Builders<Product>.Update;
+                var updates = new List<UpdateDefinition<Product>>();
+
+                if (!product.Name.IsNullOrEmpty())
+                    updates.Add(updateBuilder.Set(p => p.Name, product.Name));
+
+                if (product.Type != Protos.ProductType.UnknownType)
+                    updates.Add(updateBuilder.Set(p => p.Type, product.Type));
+
+                if (product.Price != 0)
+                    updates.Add(updateBuilder.Set(p => p.Price, product.Price));
+
+                if (!product.Description.IsNullOrEmpty())
+                    updates.Add(updateBuilder.Set(p => p.Description, product.Description));
+
+                if (product.StockQuantity != 0)
+                    updates.Add(updateBuilder.Set(p => p.StockQuantity, product.StockQuantity));
+
+                updates.Add(updateBuilder.Set(p => p.UpdatedAt, product.UpdatedAt));
+
+                if (updates.Count == 0)
+                    return new ExecutionResult(false, string.Empty);
+
+                var update = updateBuilder.Combine(updates);
+                var result = await _products.UpdateOneAsync(filter, update);
+
+                return new ExecutionResult(result.ModifiedCount > 0, string.Empty);
+            }
+            catch (Exception ex)
+            {
+                _logger.Log(ex.Message, LogLevel.Error);
+                return new ExecutionResult(false, ex.Message);
+            }
+        }
+
+
+        public async Task<ExecutionResult<string>> GetParentCardIdAsync(string productId)
+        {
+            try
+            {
+                var result = await _products.Find(p => p.ProductId == productId).FirstOrDefaultAsync();
+                if (result == null)
+                    return new ExecutionResult<string>(false, "Product not found", string.Empty);
+
+                return new ExecutionResult<string>(true, string.Empty, result.ParentCardId);
+
+            }
+            catch (Exception ex)
+            {
+                _logger.Log(ex.Message, LogLevel.Error);
+                return new ExecutionResult<string>(false, ex.Message, string.Empty);
+            }
+        }
+
+        public async Task<ExecutionResult> UpdateParentCardId(Product product)
+        {
+            try
+            {
+                var filter = Builders<Product>.Filter.Eq(p => p.ProductId, product.ProductId);
+
+                var updateBuilder = Builders<Product>.Update;
+                var updates = new List<UpdateDefinition<Product>>();
+
+                if (!product.ParentCardId.IsNullOrEmpty())
+                    updates.Add(updateBuilder.Set(p => p.ParentCardId, product.ParentCardId));
+
+                updates.Add(updateBuilder.Set(p => p.UpdatedAt, product.UpdatedAt));
+
+                if (updates.Count == 0)
+                    return new ExecutionResult(false, "Nothing to update");
+
+                var update = updateBuilder.Combine(updates);
+                var result = await _products.UpdateOneAsync(filter, update);
+
+                return new ExecutionResult(result.ModifiedCount > 0, string.Empty);
+            }
+            catch (Exception ex)
+            {
+                _logger.Log(ex.Message, LogLevel.Error);
+                return new ExecutionResult(false, ex.Message);
+            }
+
+
+            
+        }
+
+        public async Task<ExecutionResult> AddImagesToProductAsync(Product product)
+        {
+            try
+            {
+                var filter = Builders<Product>.Filter.Eq(p => p.ProductId, product.ProductId);
+
+                var updateBuilder = Builders<Product>.Update;
+                var updates = new List<UpdateDefinition<Product>>();
+
+                if (product.ImageURLs != null && product.ImageURLs.Count != 0)
+                    updates.Add(updateBuilder.AddToSetEach(p => p.ImageURLs, product.ImageURLs));
+
+                updates.Add(updateBuilder.Set(p => p.UpdatedAt, product.UpdatedAt));
+
+                if (updates.Count == 0)
+                    return new ExecutionResult(false, "Nothing to update");
+
+                var update = updateBuilder.Combine(updates);
+                var result = await _products.UpdateOneAsync(filter, update);
+
+                return new ExecutionResult(result.ModifiedCount > 0, string.Empty);
+            }
+            catch (Exception ex)
+            {
+                _logger.Log(ex.Message, LogLevel.Error);
+                return new ExecutionResult(false, ex.Message);
+            }   
+        }
+
+        public async Task<ExecutionResult> DeleteImagesFromProductAsync(Product product)
+        {
+            try
+            {
+                var filter = Builders<Product>.Filter.Eq(p => p.ProductId, product.ProductId);
+
+                var updateBuilder = Builders<Product>.Update;
+                var updates = new List<UpdateDefinition<Product>>();
+
+                if (product.ImageURLs != null && product.ImageURLs.Count != 0)
+                    updates.Add(updateBuilder.PullAll(p => p.ImageURLs, product.ImageURLs));
+
+                updates.Add(updateBuilder.Set(p => p.UpdatedAt, product.UpdatedAt));
+
+                if (updates.Count == 0)
+                    return new ExecutionResult(false, "Nothing to update");
+
+                var update = updateBuilder.Combine(updates);
+                var result = await _products.UpdateOneAsync(filter, update);
+
+                return new ExecutionResult(result.ModifiedCount > 0, string.Empty);
+            }
+            catch (Exception ex)
+            {
+                _logger.Log(ex.Message, LogLevel.Error);
+                return new ExecutionResult(false, ex.Message);
+            }
+        }
+
+        public async Task<ExecutionResult> AddAttributesToProductAsync(Product product)
+        {
+            try
+            {
+                var filter = Builders<Product>.Filter.Eq(p => p.ProductId, product.ProductId);
+
+                var updateBuilder = Builders<Product>.Update;
+                var updates = new List<UpdateDefinition<Product>>();
+
+                if (product.Attributes != null && product.Attributes.Count != 0)
+                    updates.Add(updateBuilder.AddToSetEach(p => p.Attributes, product.Attributes));
+
+                updates.Add(updateBuilder.Set(p => p.UpdatedAt, product.UpdatedAt));
+
+                if (updates.Count == 0)
+                    return new ExecutionResult(false, "Nothing to update");
+
+                var update = updateBuilder.Combine(updates);
+                var result = await _products.UpdateOneAsync(filter, update);
+
+                return new ExecutionResult(result.ModifiedCount > 0, string.Empty);
+            }
+            catch (Exception ex)
+            {
+                _logger.Log(ex.Message, LogLevel.Error);
+                return new ExecutionResult(false, ex.Message);
+            }
+        }
+
+        public async Task<ExecutionResult> DeleteAttributesFromProductAsync(Product product)
+        {
+            try
+            {
+                var filter = Builders<Product>.Filter.Eq(p => p.ProductId, product.ProductId);
+
+                var updateBuilder = Builders<Product>.Update;
+                var updates = new List<UpdateDefinition<Product>>();
+
+                if (product.Attributes != null && product.Attributes.Count > 0)
+                {
+                    var keysToRemove = product.Attributes.Select(a => a.Key).ToList();
+
+                    updates.Add(updateBuilder.PullFilter(p => p.Attributes,
+                        attr => keysToRemove.Contains(attr.Key)));
+                }
+
+                updates.Add(updateBuilder.Set(p => p.UpdatedAt, product.UpdatedAt));
+
+                if (updates.Count == 0)
+                    return new ExecutionResult(false, "Nothing to update");
+
+                var update = updateBuilder.Combine(updates);
+                var result = await _products.UpdateOneAsync(filter, update);
+
+                return new ExecutionResult(result.ModifiedCount > 0, string.Empty);
+            }
+            catch (Exception ex)
+            {
+                _logger.Log(ex.Message, LogLevel.Error);
+                return new ExecutionResult(false, ex.Message);
+            }
         }
     }
 }

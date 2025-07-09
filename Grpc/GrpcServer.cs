@@ -24,20 +24,20 @@ namespace ProductService.Grpc
 
         public async override Task<GetProductsByIdsResponse> GetProductsByIds(GetProductsByIdsRequest request, ServerCallContext context)
         {
-            _logger.Log($"\"GetProductsByIdsResponse\" with params {request.ToJson()} has noticed. Caller: {context.Peer}");
+            _logger.Log($"\"GetProductsByIds\" with params {request.ToJson()} has noticed. Caller: {context.Peer}");
 
-            var products = await _productRepo.GetProductsByIdsAsync([.. request.ProductIds]);
+            var res = await _productRepo.GetProductsByIdsAsync([.. request.ProductIds]);
 
-            if (products == null)
+            if (res == null)
             {
-                return new GetProductsByIdsResponse { Status = false };
+                return new GetProductsByIdsResponse { Status = res.success, Reason = res.message };
             }
-            return new GetProductsByIdsResponse { Status = true, Products = { _mapper.Map<IEnumerable<ProductGrpc>>(products) } };
+            return new GetProductsByIdsResponse { Status = res.success, Products = { _mapper.Map<IEnumerable<ProductGrpc>>(res.Value) } };
         }
 
         public override async Task<GetAllProductsByOwnerIdResponse> GetAllProductsByOwnerId(GetAllProductsByOwnerIdRequest request, ServerCallContext context)
         {
-            _logger.Log($"\"GetAllProductsByOwnerIdResponse\" with params {request.ToJson()} has noticed. Caller: {context.Peer}");
+            _logger.Log($"\"GetAllProductsByOwnerId\" with params {request.ToJson()} has noticed. Caller: {context.Peer}");
 
             var valres = _getAllProductsValidator.Validate(request);
 
@@ -46,23 +46,23 @@ namespace ProductService.Grpc
                 throw new RpcException(new Status(StatusCode.InvalidArgument, valres.ErrorMessage));
             }
 
-            var products = await _productRepo.GetAllProductsByOwnerIdAsync(request.OwnerId);
+            var res = await _productRepo.GetAllProductsByOwnerIdAsync(request.OwnerId);
 
-            if (!products.Any())
+            if (!res.Value.Any())
             {
-                return new GetAllProductsByOwnerIdResponse { Status = false };
+                return new GetAllProductsByOwnerIdResponse { Status = res.success, Reason = res.message };
             }
 
             return new GetAllProductsByOwnerIdResponse
             {
-                Status = true,
-                Products = { _mapper.Map<IEnumerable<ProductGrpc>>(products) }
+                Status = res.success,
+                Products = { _mapper.Map<IEnumerable<ProductGrpc>>(res.Value) }
             };
         }
 
         public override async Task<GetProductResponse> GetProductById(GetProductRequest request, ServerCallContext context)
         {
-            _logger.Log($"\"GetProductResponse\" with params {request.ToJson()} has noticed. Caller: {context.Peer}");
+            _logger.Log($"\"GetProductById\" with params {request.ToJson()} has noticed. Caller: {context.Peer}");
 
             var valres = _getProductValidator.Validate(request);
 
@@ -71,23 +71,23 @@ namespace ProductService.Grpc
                 throw new RpcException(new Status(StatusCode.InvalidArgument, valres.ErrorMessage));
             }
 
-            var product = await _productRepo.GetProductByIdAsync(request.ProductId);
+            var res = await _productRepo.GetProductByIdAsync(request.ProductId);
 
-            if (product == null)
+            if (!res.success)
             {
-                return new GetProductResponse { Status = false };
+                return new GetProductResponse { Status = res.success, Reason = res.message };
             }
 
             return new GetProductResponse
             {
-                Status = true,
-                Product = _mapper.Map<ProductGrpc>(product)
+                Status = res.success,
+                Product = _mapper.Map<ProductGrpc>(res.Value)
             };
         }
 
         public override async Task<CreateProductResponse> CreateProduct(CreateProductRequest request, ServerCallContext context)
         {
-            _logger.Log($"\"CreateProductResponse\" with params {request.ToJson()} has noticed. Caller: {context.Peer}");
+            _logger.Log($"\"CreateProduct\" with params {request.ToJson()} has noticed. Caller: {context.Peer}");
 
             var valres = _createProductValidator.Validate(request);
 
@@ -103,14 +103,14 @@ namespace ProductService.Grpc
             product.CreatedAt = localTime;
             product.UpdatedAt = localTime;
 
-            await _productRepo.CreateProductAsync(product);
+            var res = await _productRepo.CreateProductAsync(product);
 
-            return new CreateProductResponse { Status = true };
+            return new CreateProductResponse { Status = res.success, Reason = res.message };
         }
 
         public override async Task<UpdateProductResponse> UpdateProductById(UpdateProductRequest request, ServerCallContext context)
         {
-            _logger.Log($"\"UpdateProductResponse\" with params {request.ToJson()} has noticed. Caller: {context.Peer}");
+            _logger.Log($"\"UpdateProductById\" with params {request.ToJson()} has noticed. Caller: {context.Peer}");
 
             var valres = _updateProductValidator.Validate(request);
 
@@ -125,14 +125,14 @@ namespace ProductService.Grpc
 
             product.UpdatedAt = localTime;
 
-            var result = await _productRepo.UpdateProductAsync(product);
+            var res = await _productRepo.UpdateProductAsync(product);
 
-            return new UpdateProductResponse { Status = result };
+            return new UpdateProductResponse { Status = res.success, Reason = res.message };
         }
 
         public override async Task<DeleteProductResponse> DeleteProductById(DeleteProductRequest request, ServerCallContext context)
         {
-            _logger.Log($"\"DeleteProductResponse\" with params {request.ToJson()} has noticed. Caller: {context.Peer}");
+            _logger.Log($"\"DeleteProductById\" with params {request.ToJson()} has noticed. Caller: {context.Peer}");
 
             var valres = _deleteProductValidator.Validate(request);
 
@@ -141,38 +141,36 @@ namespace ProductService.Grpc
                 throw new RpcException(new Status(StatusCode.InvalidArgument, valres.ErrorMessage));
             }
 
-            await _productRepo.DeleteProductAsync(request.ProductId);
+            var res = await _productRepo.DeleteProductAsync(request.ProductId);
 
-            return new DeleteProductResponse { Status = true };
+            return new DeleteProductResponse { Status = res.success, Reason = res.message };
         }
 
         public override async Task<ProductExistsResponse> ProductExists(ProductExistsRequest request, ServerCallContext context)
         {
-            _logger.Log($"\"ProductExistsResponse\" with params {request.ToJson()} has noticed. Caller: {context.Peer}");
+            _logger.Log($"\"ProductExists\" with params {request.ToJson()} has noticed. Caller: {context.Peer}");
 
-            return new ProductExistsResponse
-            {
-                Status = await _productRepo.ProductExistsAsync(request.ProductId)
-            };
+            var res = await _productRepo.ProductExistsAsync(request.ProductId);
+            return new ProductExistsResponse { Status = res.success, Reason = res.message };
         }
 
         public override async Task<GetParentCardIdResponse> GetParentCardId(GetParentCardIdRequest request, ServerCallContext context)
         {
-            _logger.Log($"\"GetParentCardIdResponse\" with params {request.ToJson()} has noticed. Caller: {context.Peer}");
+            _logger.Log($"\"GetParentCardId\" with params {request.ToJson()} has noticed. Caller: {context.Peer}");
 
-            var cardId = await _productRepo.GetParentCardIdAsync(request.ProductId);
+            var res = await _productRepo.GetParentCardIdAsync(request.ProductId);
 
-            if (cardId == "")
+            if (res.Value == "")
             { 
-                return new GetParentCardIdResponse { Status = false };
+                return new GetParentCardIdResponse { Status = res.success, Reason = res.message };
             }
 
-            return new GetParentCardIdResponse { Status = true, ParentCardId = cardId };
+            return new GetParentCardIdResponse { Status = res.success, Reason = res.message, ParentCardId = res.Value };
         }
 
         public override async Task<UpdateParentCardIdResponse> UpdateParentCardId(UpdateParentCardIdRequest request, ServerCallContext context)
         {
-            _logger.Log($"\"UpdateParentCardIdResponse\" with params {request.ToJson()} has noticed. Caller: {context.Peer}");
+            _logger.Log($"\"UpdateParentCardId\" with params {request.ToJson()} has noticed. Caller: {context.Peer}");
 
             var product = _mapper.Map<Product>(request);
 
@@ -180,14 +178,14 @@ namespace ProductService.Grpc
 
             product.UpdatedAt = localTime;
 
-            var result = await _productRepo.UpdateParentCardId(product);
+            var res = await _productRepo.UpdateParentCardId(product);
 
-            return new UpdateParentCardIdResponse { Status = result };
+            return new UpdateParentCardIdResponse { Status = res.success, Reason = res.message };
         }
 
         public override async Task<AddImagesToProductResponse> AddImagesToProduct(AddImagesToProductRequest request, ServerCallContext context)
         {
-            _logger.Log($"\"AddImagesToProductResponse\" with params {request.ToJson()} has noticed. Caller: {context.Peer}");
+            _logger.Log($"\"AddImagesToProduct\" with params {request.ToJson()} has noticed. Caller: {context.Peer}");
 
             var product = _mapper.Map<Product>(request);
 
@@ -195,14 +193,14 @@ namespace ProductService.Grpc
 
             product.UpdatedAt = localTime;
 
-            var result = await _productRepo.AddImagesToProductAsync(product);
+            var res = await _productRepo.AddImagesToProductAsync(product);
 
-            return new AddImagesToProductResponse { Status = result };
+            return new AddImagesToProductResponse { Status = res.success, Reason = res.message };
         }
 
         public override async Task<DeleteImagesFromProductResponse> DeleteImagesFromProduct(DeleteImagesFromProductRequest request, ServerCallContext context)
         {
-            _logger.Log($"\"DeleteImagesFromProductResponse\" with params {request.ToJson()} has noticed. Caller: {context.Peer}");
+            _logger.Log($"\"DeleteImagesFromProduct\" with params {request.ToJson()} has noticed. Caller: {context.Peer}");
 
             var product = _mapper.Map<Product>(request);
 
@@ -210,14 +208,14 @@ namespace ProductService.Grpc
 
             product.UpdatedAt = localTime;
 
-            var result = await _productRepo.DeleteImagesFromProductAsync(product);
+            var res = await _productRepo.DeleteImagesFromProductAsync(product);
 
-            return new DeleteImagesFromProductResponse { Status = result };
+            return new DeleteImagesFromProductResponse { Status = res.success, Reason = res.message };
         }
 
         public override async Task<AddAttributesToProductResponse> AddAttributesToProduct(AddAttributesToProductRequest request, ServerCallContext context)
         {
-            _logger.Log($"\"AddAttributesToProductResponse\" with params {request.ToJson()} has noticed. Caller: {context.Peer}");
+            _logger.Log($"\"AddAttributesToProduct\" with params {request.ToJson()} has noticed. Caller: {context.Peer}");
 
             var product = _mapper.Map<Product>(request);
 
@@ -225,14 +223,14 @@ namespace ProductService.Grpc
 
             product.UpdatedAt = localTime;
 
-            var result = await _productRepo.AddAttributesToProductAsync(product);
+            var res = await _productRepo.AddAttributesToProductAsync(product);
 
-            return new AddAttributesToProductResponse { Status = result };
+            return new AddAttributesToProductResponse { Status = res.success, Reason = res.message };
         }
 
         public override async Task<DeleteAttributesFromProductResponse> DeleteAttributesFromProduct(DeleteAttributesFromProductRequest request, ServerCallContext context)
         {
-            _logger.Log($"\"DeleteAttributesFromProductResponse\" with params {request.ToJson()} has noticed. Caller: {context.Peer}");
+            _logger.Log($"\"DeleteAttributesFromProduct\" with params {request.ToJson()} has noticed. Caller: {context.Peer}");
 
             var product = _mapper.Map<Product>(request);
 
@@ -240,9 +238,9 @@ namespace ProductService.Grpc
 
             product.UpdatedAt = localTime;
 
-            var result = await _productRepo.DeleteAttributesFromProductAsync(product);
+            var res = await _productRepo.DeleteAttributesFromProductAsync(product);
 
-            return new DeleteAttributesFromProductResponse { Status = result };
+            return new DeleteAttributesFromProductResponse { Status = res.success, Reason = res.message };
         }
     }
 }

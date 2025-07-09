@@ -1,36 +1,35 @@
 ﻿using ProductService.Models;
-using ProductService.Protos;
 
 namespace ProductService.Data
 {
     public interface IProductRepo
     {
-        Task<IEnumerable<Product>> GetProductsByIdsAsync(string[] productIds);
+        Task<ExecutionResult<IEnumerable<Product>>> GetProductsByIdsAsync(string[] productIds);
 
-        Task<IEnumerable<Product>> GetAllProductsAsync();
+        Task<ExecutionResult<IEnumerable<Product>>> GetAllProductsAsync();
 
-        Task<IEnumerable<Product>> GetAllProductsByOwnerIdAsync(string ownerId);
+        Task<ExecutionResult<IEnumerable<Product>>> GetAllProductsByOwnerIdAsync(string ownerId);
 
-        Task<Product> GetProductByIdAsync(string productId);
+        Task<ExecutionResult<Product>> GetProductByIdAsync(string productId);
 
-        Task<bool> CreateProductAsync(Product product);
+        Task<ExecutionResult> CreateProductAsync(Product product);
 
-        Task<bool> UpdateProductAsync(Product product);
+        Task<ExecutionResult> UpdateProductAsync(Product product);
 
-        Task<bool> UpdateParentCardId(Product product);
+        Task<ExecutionResult> UpdateParentCardId(Product product);
 
-        Task<bool> DeleteProductAsync(string productId);
+        Task<ExecutionResult> DeleteProductAsync(string productId);
 
-        Task<bool> ProductExistsAsync(string productId);
+        Task<ExecutionResult> ProductExistsAsync(string productId);
 
-        Task<string> GetParentCardIdAsync(string productId);
+        Task<ExecutionResult<string>> GetParentCardIdAsync(string productId);
 
-        Task<bool> AddImagesToProductAsync(Product product);
+        Task<ExecutionResult> AddImagesToProductAsync(Product product);
 
-        Task<bool> DeleteImagesFromProductAsync(Product product);
+        Task<ExecutionResult> DeleteImagesFromProductAsync(Product product);
 
-        Task<bool> AddAttributesToProductAsync(Product product);
+        Task<ExecutionResult> AddAttributesToProductAsync(Product product);
 
-        Task<bool> DeleteAttributesFromProductAsync(Product product);
+        Task<ExecutionResult> DeleteAttributesFromProductAsync(Product product);
     }
 }
