@@ -26,6 +26,9 @@ var client = new MongoClient(mongoSettings.ConnectionString);
 var database = client.GetDatabase(mongoSettings.DatabaseName);
 builder.Services.AddSingleton(database);
 
+builder.Services.AddSingleton<IMessageBusClient, MessageBusClient>();
+builder.Services.AddHostedService<MessageBusClientInitializer>();
+
 builder.Services.AddSingleton<IEventProcessor, EventProcessor>();
 
 builder.Services.AddHostedService<MessageBusSubscriber>();
