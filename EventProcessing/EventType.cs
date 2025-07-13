@@ -4,6 +4,8 @@
     {
         ImageUrlPublished,
         ProductPublished,
+        ProductUpdatePublished,
+        ProductDeletePublished,
         Undetermined
     }
 }
