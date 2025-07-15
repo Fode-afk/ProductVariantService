@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using ProductService.Dtos;
 using ProductService.Models;
 using ProductService.Protos;
 using ProductService.Utils;
@@ -10,10 +11,10 @@ namespace ProductService.Profiles
         public ProductsProfile()
         {
             CreateMap<ProductGrpc, Product>()
-             .ForMember(dest => dest.Attributes, opt => opt.MapFrom(src => src.Attributes.ToList()))
-             .ForMember(dest => dest.ImageURLs, opt => opt.MapFrom(src => src.ImageURLs.ToList()))
-             .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(src => DateTimeUtil.ParseDate(src.CreatedAt)))
-             .ForMember(dest => dest.UpdatedAt, opt => opt.MapFrom(src => DateTimeUtil.ParseDate(src.UpdatedAt)));
+                .ForMember(dest => dest.Attributes, opt => opt.MapFrom(src => src.Attributes.ToList()))
+                .ForMember(dest => dest.ImageURLs, opt => opt.MapFrom(src => src.ImageURLs.ToList()))
+                .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(src => DateTimeUtil.ParseDate(src.CreatedAt)))
+                .ForMember(dest => dest.UpdatedAt, opt => opt.MapFrom(src => DateTimeUtil.ParseDate(src.UpdatedAt)));
 
             CreateMap<Product, ProductGrpc>()
                 .ForMember(dest => dest.Attributes, opt => opt.MapFrom(src => src.Attributes))
@@ -22,6 +23,11 @@ namespace ProductService.Profiles
                 .ForMember(dest => dest.UpdatedAt, opt => opt.MapFrom(src => src.UpdatedAt.ToString("o")));
 
             CreateMap<ProductAttributeGrpc, ProductAttribute>().ReverseMap();
+
+            CreateMap<Product, ProductPublishedDto>()
+                .ForMember(dest => dest.Attributes, opt => opt.MapFrom(src => src.Attributes))
+                .ForMember(dest => dest.ImageURLs, opt => opt.MapFrom(src => src.ImageURLs))
+                .ForAllMembers(opt => opt.Condition((src, dest, srcMember) => srcMember != null));
 
             CreateMap<UpdateProductRequest, Product>()
                 .ForAllMembers(opt => opt.Condition((src, dest, srcMember) => srcMember != null));

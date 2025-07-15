@@ -6,6 +6,7 @@
         PRODUCT_SERVICE,
         CARD_SERVICE,
         USER_SERVICE,
-        VENDOR_SERVICE
+        VENDOR_SERVICE,
+        SEARCH_SERVICE
     }
 }

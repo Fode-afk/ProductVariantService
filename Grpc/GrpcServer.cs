@@ -1,7 +1,10 @@
 ﻿using AutoMapper;
 using Grpc.Core;
 using MongoDB.Bson;
+using ProductService.AsyncDataServices;
 using ProductService.Data;
+using ProductService.Dtos;
+using ProductService.EventProcessing;
 using ProductService.Grpc.Validators;
 using ProductService.Models;
 using ProductService.Protos;
@@ -9,10 +12,12 @@ using ProductService.Utils;
 
 namespace ProductService.Grpc
 {
-    public class GrpcServer(IProductRepo productRepo, IMapper mapper, IConfiguration config, ILogger logger) : GrpcProducts.GrpcProductsBase
+    public class GrpcServer(IProductRepo productRepo, IMapper mapper, IMessageBusClient messageBusClient,
+        IConfiguration config, ILogger logger) : GrpcProducts.GrpcProductsBase
     {
         private readonly IProductRepo _productRepo = productRepo;
         private readonly IMapper _mapper = mapper;
+        private readonly IMessageBusClient _messageBusClient = messageBusClient;
         private readonly IConfiguration _config = config;
         private readonly ILogger _logger = logger;
 
@@ -105,6 +110,18 @@ namespace ProductService.Grpc
 
             var res = await _productRepo.CreateProductAsync(product);
 
+            //TODO: Тут ебасть сложно нужно подумать потому что
+            //при обновлении тоже нужно вызывать но возможно публиковать только то что поменялось а не весь продукт
+            if (res.success)
+            {
+                var productPub = _mapper.Map<ProductPublishedDto>(product);
+
+                productPub.Event = EventType.ProductPublished;
+                productPub.Service = ServicesEnum.SEARCH_SERVICE;
+
+                await _messageBusClient.PublishNewProduct(productPub);
+            }
+
             return new StatusResponse { Status = res.success, Reason = res.message };
         }
 
@@ -126,6 +143,17 @@ namespace ProductService.Grpc
             product.UpdatedAt = localTime;
 
             var res = await _productRepo.UpdateProductAsync(product);
+            
+            //TODO: Тут тоже подумать
+            if (res.success)
+            {
+                var productPub = _mapper.Map<ProductPublishedDto>(product);
+
+                productPub.Event = EventType.ProductUpdatePublished;
+                productPub.Service = ServicesEnum.SEARCH_SERVICE;
+
+                await _messageBusClient.PublishNewProduct(productPub);
+            }
 
             return new StatusResponse { Status = res.success, Reason = res.message };
         }
@@ -142,6 +170,16 @@ namespace ProductService.Grpc
             }
 
             var res = await _productRepo.DeleteProductAsync(request.ProductId);
+
+            if (res.success)
+            {
+                var productPub = _mapper.Map<ProductPublishedDto>(new Product { ProductId = request.ProductId });
+
+                productPub.Event = EventType.ProductDeletePublished;
+                productPub.Service = ServicesEnum.SEARCH_SERVICE;
+
+                await _messageBusClient.PublishNewProduct(productPub);
+            }
 
             return new StatusResponse { Status = res.success, Reason = res.message };
         }
@@ -180,6 +218,17 @@ namespace ProductService.Grpc
 
             var res = await _productRepo.UpdateParentCardId(product);
 
+            ////////
+            if (res.success)
+            {
+                var productPub = _mapper.Map<ProductPublishedDto>(product);
+
+                productPub.Event = EventType.ProductUpdatePublished;
+                productPub.Service = ServicesEnum.SEARCH_SERVICE;
+
+                await _messageBusClient.PublishNewProduct(productPub);
+            }
+
             return new StatusResponse { Status = res.success, Reason = res.message };
         }
 
@@ -194,6 +243,17 @@ namespace ProductService.Grpc
             product.UpdatedAt = localTime;
 
             var res = await _productRepo.AddImagesToProductAsync(product);
+
+            ////////
+            if (res.success)
+            {
+                var productPub = _mapper.Map<ProductPublishedDto>(product);
+
+                productPub.Event = EventType.ProductUpdatePublished;
+                productPub.Service = ServicesEnum.SEARCH_SERVICE;
+
+                await _messageBusClient.PublishNewProduct(productPub);
+            }
 
             return new StatusResponse { Status = res.success, Reason = res.message };
         }
@@ -210,6 +270,17 @@ namespace ProductService.Grpc
 
             var res = await _productRepo.DeleteImagesFromProductAsync(product);
 
+            ////////
+            if (res.success)
+            {
+                var productPub = _mapper.Map<ProductPublishedDto>(product);
+
+                productPub.Event = EventType.ProductUpdatePublished;
+                productPub.Service = ServicesEnum.SEARCH_SERVICE;
+
+                await _messageBusClient.PublishNewProduct(productPub);
+            }
+
             return new StatusResponse { Status = res.success, Reason = res.message };
         }
 
@@ -225,6 +296,17 @@ namespace ProductService.Grpc
 
             var res = await _productRepo.AddAttributesToProductAsync(product);
 
+            ////////
+            if (res.success)
+            {
+                var productPub = _mapper.Map<ProductPublishedDto>(product);
+
+                productPub.Event = EventType.ProductUpdatePublished;
+                productPub.Service = ServicesEnum.SEARCH_SERVICE;
+
+                await _messageBusClient.PublishNewProduct(productPub);
+            }
+
             return new StatusResponse { Status = res.success, Reason = res.message };
         }
 
@@ -239,6 +321,17 @@ namespace ProductService.Grpc
             product.UpdatedAt = localTime;
 
             var res = await _productRepo.DeleteAttributesFromProductAsync(product);
+
+            ////////
+            if (res.success)
+            {
+                var productPub = _mapper.Map<ProductPublishedDto>(product);
+
+                productPub.Event = EventType.ProductUpdatePublished;
+                productPub.Service = ServicesEnum.SEARCH_SERVICE;
+
+                await _messageBusClient.PublishNewProduct(productPub);
+            }
 
             return new StatusResponse { Status = res.success, Reason = res.message };
         }
