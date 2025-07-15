@@ -150,6 +150,8 @@ namespace ProductService.Data
                 if (product.StockQuantity != 0)
                     updates.Add(updateBuilder.Set(p => p.StockQuantity, product.StockQuantity));
 
+                updates.Add(updateBuilder.Set(p => p.CanBeOrdered, product.CanBeOrdered));
+
                 updates.Add(updateBuilder.Set(p => p.UpdatedAt, product.UpdatedAt));
 
                 if (updates.Count == 0)

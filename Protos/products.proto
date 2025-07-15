@@ -34,6 +34,7 @@ message ProductGrpc
     string updatedAt = 10;
     repeated string imageURLs = 11;
     repeated ProductAttributeGrpc attributes = 12;
+    bool canBeOrdered = 13;
 }
 
 enum ProductType{
@@ -111,6 +112,7 @@ message UpdateProductRequest
     string description = 4;    
     int32 price = 5; 
     int32 stockQuantity = 6;
+    bool canBeOrdered = 7;
 }
 
 message AddImagesToProductRequest

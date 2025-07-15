@@ -19,6 +19,8 @@ namespace ProductService.Models
 
         public int Price { get; set; }
 
+        public bool CanBeOrdered { get; set; }
+
         public int StockQuantity { get; set; }
 
         public List<string> ImageURLs { get; set; }
