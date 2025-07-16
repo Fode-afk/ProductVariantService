@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using MongoDB.Driver;
 using ProductService.Models;
@@ -197,7 +196,7 @@ namespace ProductService.Data
                 var updateBuilder = Builders<Product>.Update;
                 var updates = new List<UpdateDefinition<Product>>();
 
-                if (!product.ParentCardId.IsNullOrEmpty())
+                if (!product.ParentCardId.IsNullOrEmpty()) //Разве мы можем удалить ParentCardId???
                     updates.Add(updateBuilder.Set(p => p.ParentCardId, product.ParentCardId));
 
                 updates.Add(updateBuilder.Set(p => p.UpdatedAt, product.UpdatedAt));
