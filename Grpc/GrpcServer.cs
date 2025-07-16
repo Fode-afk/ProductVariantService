@@ -53,7 +53,7 @@ namespace ProductService.Grpc
 
             var res = await _productRepo.GetAllProductsByOwnerIdAsync(request.OwnerId);
 
-            if (!res.Value.Any())
+            if (!res.success)
             {
                 return new GetAllProductsByOwnerIdResponse { Status = new StatusResponse { Status = res.success, Reason = res.message} };
             }
