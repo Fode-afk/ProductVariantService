@@ -196,7 +196,7 @@ namespace ProductService.Data
                 var updateBuilder = Builders<Product>.Update;
                 var updates = new List<UpdateDefinition<Product>>();
 
-                if (!product.ParentCardId.IsNullOrEmpty()) //Разве мы можем удалить ParentCardId???
+                if (product.ParentCardId != null)
                     updates.Add(updateBuilder.Set(p => p.ParentCardId, product.ParentCardId));
 
                 updates.Add(updateBuilder.Set(p => p.UpdatedAt, product.UpdatedAt));
