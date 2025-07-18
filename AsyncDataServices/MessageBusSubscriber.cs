@@ -11,7 +11,7 @@ namespace ProductService.AsyncDataServices
         private readonly IEventProcessor _eventProcessor = eventProcessor;
         private IConnection _connection;
         private IChannel _channel;
-        private string _queueName;
+        private readonly string _queueName = configuration["RabbitMQQueueName"];
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
@@ -26,9 +26,11 @@ namespace ProductService.AsyncDataServices
 
                 Console.WriteLine($"--> Event received: {message}");
                 await _eventProcessor.ProcessEventAsync(message);
+
+                await _channel.BasicAckAsync(deliveryTag: ea.DeliveryTag, multiple: false);
             };
 
-            await _channel.BasicConsumeAsync(queue: _queueName, autoAck: true, consumer: consumer, cancellationToken: stoppingToken);
+            await _channel.BasicConsumeAsync(queue: _queueName, autoAck: false, consumer: consumer, cancellationToken: stoppingToken);
 
             Console.WriteLine("--> Listening for messages...");
 
@@ -46,10 +48,14 @@ namespace ProductService.AsyncDataServices
             _connection = await factory.CreateConnectionAsync();
             _channel = await _connection.CreateChannelAsync();
 
-            await _channel.ExchangeDeclareAsync(exchange: "trigger", type: ExchangeType.Fanout);
+            await _channel.ExchangeDeclareAsync(exchange: "trigger", type: ExchangeType.Fanout, durable: true);
 
-            var queueDeclareOk = await _channel.QueueDeclareAsync();
-            _queueName = queueDeclareOk.QueueName;
+            await _channel.QueueDeclareAsync(
+                queue: _queueName,
+                durable: true,
+                exclusive: false,
+                autoDelete: false
+            );
 
             await _channel.QueueBindAsync(queue: _queueName, exchange: "trigger", routingKey: "");
 

@@ -25,7 +25,25 @@ namespace ProductService.AsyncDataServices
                 _connection = await factory.CreateConnectionAsync();
                 _channel = await _connection.CreateChannelAsync();
 
-                await _channel.ExchangeDeclareAsync(exchange: "trigger", type: ExchangeType.Fanout);
+                await _channel.ExchangeDeclareAsync(
+                    exchange: "trigger",
+                    type: ExchangeType.Fanout,
+                    durable: true
+                );
+
+                string queueName = "productService-queue";
+                await _channel.QueueDeclareAsync(
+                    queue: queueName,
+                    durable: true,
+                    exclusive: false,
+                    autoDelete: false
+                );
+
+                await _channel.QueueBindAsync(
+                    queue: queueName,
+                    exchange: "trigger",
+                    routingKey: ""
+                );
 
                 _connection.ConnectionShutdownAsync += RabbitMQ_ConnectionShutdown;
 
@@ -66,7 +84,7 @@ namespace ProductService.AsyncDataServices
                 exchange: "trigger",
                 routingKey: "",
                 mandatory: true,
-                basicProperties: new BasicProperties(),
+                basicProperties: new BasicProperties() { Persistent = true },
                 body: body);
 
             Console.WriteLine($"--> Message sent: {message}");
