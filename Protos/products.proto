@@ -9,6 +9,7 @@ service GrpcProducts
     rpc GetAllProductsByOwnerId(GetAllProductsByOwnerIdRequest) returns (GetAllProductsByOwnerIdResponse);
     rpc GetProductById(GetProductRequest) returns (GetProductResponse);
     rpc UpdateProductById(UpdateProductRequest) returns (StatusResponse);
+    rpc SetCanBeOrdered(SetCanBeOrderedRequest) returns (StatusResponse);
     rpc DeleteProductById(DeleteProductRequest) returns (StatusResponse);
     rpc ProductExists(ProductExistsRequest) returns (StatusResponse);
     rpc GetParentCardId(GetParentCardIdRequest) returns (GetParentCardIdResponse);
@@ -111,8 +112,13 @@ message UpdateProductRequest
     ProductType type = 3;
     string description = 4;    
     int32 price = 5; 
-    int32 stockQuantity = 6;
-    bool canBeOrdered = 7;
+    int32 stockQuantity = 6;   
+}
+
+message SetCanBeOrderedRequest
+{
+    string productId = 1;
+    bool canBeOrdered = 2;
 }
 
 message AddImagesToProductRequest

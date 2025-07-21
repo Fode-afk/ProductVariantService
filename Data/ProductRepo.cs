@@ -120,12 +120,9 @@ namespace ProductService.Data
                 _logger.Log(ex.Message, LogLevel.Error);
                 return new ExecutionResult(false, ex.Message);
             }
-
-
-            
         }
 
-        public async Task<ExecutionResult> UpdateProductAsync(Product product)
+        public async Task<ExecutionResult<Product>> UpdateProductAsync(Product product)
         {
             try
             {
@@ -147,27 +144,74 @@ namespace ProductService.Data
                     updates.Add(updateBuilder.Set(p => p.Description, product.Description));
 
                 if (product.StockQuantity != 0)
-                    updates.Add(updateBuilder.Set(p => p.StockQuantity, product.StockQuantity));
-
-                updates.Add(updateBuilder.Set(p => p.CanBeOrdered, product.CanBeOrdered));
+                    updates.Add(updateBuilder.Set(p => p.StockQuantity, product.StockQuantity));        
+              
+                if (updates.Count == 0)
+                    return new ExecutionResult<Product>(false, string.Empty, null);
 
                 updates.Add(updateBuilder.Set(p => p.UpdatedAt, product.UpdatedAt));
 
-                if (updates.Count == 0)
-                    return new ExecutionResult(false, string.Empty);
-
                 var update = updateBuilder.Combine(updates);
-                var result = await _products.UpdateOneAsync(filter, update);
+                var updatedProduct = await _products.FindOneAndUpdateAsync(
+                    filter,
+                    update,
+                    new FindOneAndUpdateOptions<Product>
+                    {
+                        ReturnDocument = ReturnDocument.After
+                    });
 
-                return new ExecutionResult(result.ModifiedCount > 0, string.Empty);
+                return new ExecutionResult<Product>(updatedProduct != null, string.Empty, updatedProduct);
             }
             catch (Exception ex)
             {
                 _logger.Log(ex.Message, LogLevel.Error);
-                return new ExecutionResult(false, ex.Message);
+                return new ExecutionResult<Product>(false, ex.Message, null);
             }
         }
 
+
+        public async Task<ExecutionResult<Product>> SetCanBeOrderedAsync(string productId, bool canBeOrdered, DateTimeOffset updatedAt)
+        {
+            try
+            {
+                var filter = Builders<Product>.Filter.Eq(p => p.ProductId, productId);
+
+                var updateBuilder = Builders<Product>.Update;
+                var updates = new List<UpdateDefinition<Product>>();              
+
+                if (!await HasParentCard(productId))
+                    return new ExecutionResult<Product>(false, "Product must have a parentCardId", null);
+
+                updates.Add(updateBuilder.Set(p => p.CanBeOrdered, canBeOrdered));
+
+                if (updates.Count == 0)
+                    return new ExecutionResult<Product>(false, string.Empty, null);
+
+                updates.Add(updateBuilder.Set(p => p.UpdatedAt, updatedAt));
+
+                var update = updateBuilder.Combine(updates);
+                var updatedProduct = await _products.FindOneAndUpdateAsync(
+                    filter,
+                    update,
+                    new FindOneAndUpdateOptions<Product>
+                    {
+                        ReturnDocument = ReturnDocument.After
+                    });
+
+                return new ExecutionResult<Product>(updatedProduct != null, string.Empty, updatedProduct);
+            }
+            catch (Exception ex)
+            {
+                _logger.Log(ex.Message, LogLevel.Error);
+                return new ExecutionResult<Product>(false, ex.Message, null);
+            }
+        }
+
+        private async Task<bool> HasParentCard(string productId)
+        {           
+            var result = await _products.Find(p => p.ProductId == productId && p.ParentCardId != string.Empty).FirstOrDefaultAsync();
+            return result != null;
+        }
 
         public async Task<ExecutionResult<string>> GetParentCardIdAsync(string productId)
         {
@@ -187,7 +231,7 @@ namespace ProductService.Data
             }
         }
 
-        public async Task<ExecutionResult> UpdateParentCardId(Product product)
+        public async Task<ExecutionResult<Product>> UpdateParentCardIdAsync(Product product)
         {
             try
             {
@@ -197,29 +241,32 @@ namespace ProductService.Data
                 var updates = new List<UpdateDefinition<Product>>();
 
                 if (product.ParentCardId != null)
-                    updates.Add(updateBuilder.Set(p => p.ParentCardId, product.ParentCardId));
+                    updates.Add(updateBuilder.Set(p => p.ParentCardId, product.ParentCardId));             
+
+                if (updates.Count == 0)
+                    return new ExecutionResult<Product>(false, "Nothing to update", null);
 
                 updates.Add(updateBuilder.Set(p => p.UpdatedAt, product.UpdatedAt));
 
-                if (updates.Count == 0)
-                    return new ExecutionResult(false, "Nothing to update");
-
                 var update = updateBuilder.Combine(updates);
-                var result = await _products.UpdateOneAsync(filter, update);
+                var updatedProduct = await _products.FindOneAndUpdateAsync(
+                    filter,
+                    update,
+                    new FindOneAndUpdateOptions<Product>
+                    {
+                        ReturnDocument = ReturnDocument.After
+                    });
 
-                return new ExecutionResult(result.ModifiedCount > 0, string.Empty);
+                return new ExecutionResult<Product>(updatedProduct != null, string.Empty, updatedProduct);
             }
             catch (Exception ex)
             {
                 _logger.Log(ex.Message, LogLevel.Error);
-                return new ExecutionResult(false, ex.Message);
-            }
-
-
-            
+                return new ExecutionResult<Product>(false, ex.Message, null);
+            }            
         }
 
-        public async Task<ExecutionResult> AddImagesToProductAsync(Product product)
+        public async Task<ExecutionResult<Product>> AddImagesToProductAsync(Product product)
         {
             try
             {
@@ -231,20 +278,26 @@ namespace ProductService.Data
                 if (product.ImageURLs != null && product.ImageURLs.Count != 0)
                     updates.Add(updateBuilder.AddToSetEach(p => p.ImageURLs, product.ImageURLs));
 
+                if (updates.Count == 0)
+                    return new ExecutionResult<Product>(false, "Nothing to update", null);
+
                 updates.Add(updateBuilder.Set(p => p.UpdatedAt, product.UpdatedAt));
 
-                if (updates.Count == 0)
-                    return new ExecutionResult(false, "Nothing to update");
-
                 var update = updateBuilder.Combine(updates);
-                var result = await _products.UpdateOneAsync(filter, update);
+                var updatedProduct = await _products.FindOneAndUpdateAsync(
+                    filter,
+                    update,
+                    new FindOneAndUpdateOptions<Product>
+                    {
+                        ReturnDocument = ReturnDocument.After
+                    });
 
-                return new ExecutionResult(result.ModifiedCount > 0, string.Empty);
+                return new ExecutionResult<Product>(updatedProduct != null, string.Empty, updatedProduct);
             }
             catch (Exception ex)
             {
                 _logger.Log(ex.Message, LogLevel.Error);
-                return new ExecutionResult(false, ex.Message);
+                return new ExecutionResult<Product>(false, ex.Message, null);
             }   
         }
 
@@ -258,12 +311,12 @@ namespace ProductService.Data
                 var updates = new List<UpdateDefinition<Product>>();
 
                 if (product.ImageURLs != null && product.ImageURLs.Count != 0)
-                    updates.Add(updateBuilder.PullAll(p => p.ImageURLs, product.ImageURLs));
-
-                updates.Add(updateBuilder.Set(p => p.UpdatedAt, product.UpdatedAt));
+                    updates.Add(updateBuilder.PullAll(p => p.ImageURLs, product.ImageURLs));              
 
                 if (updates.Count == 0)
                     return new ExecutionResult(false, "Nothing to update");
+
+                updates.Add(updateBuilder.Set(p => p.UpdatedAt, product.UpdatedAt));
 
                 var update = updateBuilder.Combine(updates);
                 var result = await _products.UpdateOneAsync(filter, update);
@@ -277,7 +330,7 @@ namespace ProductService.Data
             }
         }
 
-        public async Task<ExecutionResult> AddAttributesToProductAsync(Product product)
+        public async Task<ExecutionResult<Product>> AddAttributesToProductAsync(Product product)
         {
             try
             {
@@ -289,20 +342,26 @@ namespace ProductService.Data
                 if (product.Attributes != null && product.Attributes.Count != 0)
                     updates.Add(updateBuilder.AddToSetEach(p => p.Attributes, product.Attributes));
 
+                if (updates.Count == 0)
+                    return new ExecutionResult<Product>(false, "Nothing to update", null);
+
                 updates.Add(updateBuilder.Set(p => p.UpdatedAt, product.UpdatedAt));
 
-                if (updates.Count == 0)
-                    return new ExecutionResult(false, "Nothing to update");
-
                 var update = updateBuilder.Combine(updates);
-                var result = await _products.UpdateOneAsync(filter, update);
+                var updatedProduct = await _products.FindOneAndUpdateAsync(
+                    filter,
+                    update,
+                    new FindOneAndUpdateOptions<Product>
+                    {
+                        ReturnDocument = ReturnDocument.After
+                    });
 
-                return new ExecutionResult(result.ModifiedCount > 0, string.Empty);
+                return new ExecutionResult<Product>(updatedProduct != null, string.Empty, updatedProduct);
             }
             catch (Exception ex)
             {
                 _logger.Log(ex.Message, LogLevel.Error);
-                return new ExecutionResult(false, ex.Message);
+                return new ExecutionResult<Product>(false, ex.Message, null);
             }
         }
 
@@ -321,12 +380,12 @@ namespace ProductService.Data
 
                     updates.Add(updateBuilder.PullFilter(p => p.Attributes,
                         attr => keysToRemove.Contains(attr.Key)));
-                }
-
-                updates.Add(updateBuilder.Set(p => p.UpdatedAt, product.UpdatedAt));
+                }                
 
                 if (updates.Count == 0)
                     return new ExecutionResult(false, "Nothing to update");
+
+                updates.Add(updateBuilder.Set(p => p.UpdatedAt, product.UpdatedAt));
 
                 var update = updateBuilder.Combine(updates);
                 var result = await _products.UpdateOneAsync(filter, update);

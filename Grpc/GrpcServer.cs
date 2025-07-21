@@ -109,9 +109,7 @@ namespace ProductService.Grpc
             product.UpdatedAt = localTime;
 
             var res = await _productRepo.CreateProductAsync(product);
-
-            //TODO: Тут ебасть сложно нужно подумать потому что
-            //при обновлении тоже нужно вызывать но возможно публиковать только то что поменялось а не весь продукт
+            
             if (res.success)
             {
                 var productPub = _mapper.Map<ProductPublishedDto>(product);
@@ -144,10 +142,38 @@ namespace ProductService.Grpc
 
             var res = await _productRepo.UpdateProductAsync(product);
             
-            //TODO: Тут тоже подумать
             if (res.success)
             {
-                var productPub = _mapper.Map<ProductPublishedDto>(product);
+                var productPub = _mapper.Map<ProductPublishedDto>(res.Value);
+                
+                productPub.Event = EventType.ProductUpdatePublished;
+                productPub.Service = ServicesEnum.SEARCH_SERVICE;
+
+                await _messageBusClient.PublishNewProduct(productPub);
+            }
+
+            return new StatusResponse { Status = res.success, Reason = res.message };
+        }
+
+        public override async Task<StatusResponse> SetCanBeOrdered(SetCanBeOrderedRequest request, ServerCallContext context)
+        {
+            _logger.Log($"\"SetCanBeOrdered\" with params {request.ToJson()} has noticed. Caller: {context.Peer}");
+
+            //TODO: новый валидатор нужно
+            //var valres = _updateProductValidator.Validate(request);
+
+            //if (!valres.IsValid)
+            //{
+            //    throw new RpcException(new Status(StatusCode.InvalidArgument, valres.ErrorMessage));
+            //}      
+
+            var localTime = DateTimeUtil.GetCurrentTimeFormatted(_config);
+
+            var res = await _productRepo.SetCanBeOrderedAsync(request.ProductId, request.CanBeOrdered, localTime);
+
+            if (res.success)
+            {
+                var productPub = _mapper.Map<ProductPublishedDto>(res.Value);
 
                 productPub.Event = EventType.ProductUpdatePublished;
                 productPub.Service = ServicesEnum.SEARCH_SERVICE;
@@ -216,12 +242,11 @@ namespace ProductService.Grpc
 
             product.UpdatedAt = localTime;
 
-            var res = await _productRepo.UpdateParentCardId(product);
+            var res = await _productRepo.UpdateParentCardIdAsync(product);
 
-            ////////
             if (res.success)
             {
-                var productPub = _mapper.Map<ProductPublishedDto>(product);
+                var productPub = _mapper.Map<ProductPublishedDto>(res.Value);
 
                 productPub.Event = EventType.ProductUpdatePublished;
                 productPub.Service = ServicesEnum.SEARCH_SERVICE;
@@ -244,10 +269,9 @@ namespace ProductService.Grpc
 
             var res = await _productRepo.AddImagesToProductAsync(product);
 
-            ////////
             if (res.success)
             {
-                var productPub = _mapper.Map<ProductPublishedDto>(product);
+                var productPub = _mapper.Map<ProductPublishedDto>(res.Value);
 
                 productPub.Event = EventType.ProductUpdatePublished;
                 productPub.Service = ServicesEnum.SEARCH_SERVICE;
@@ -270,7 +294,6 @@ namespace ProductService.Grpc
 
             var res = await _productRepo.DeleteImagesFromProductAsync(product);
 
-            ////////
             if (res.success)
             {
                 var productPub = _mapper.Map<ProductPublishedDto>(product);
@@ -296,10 +319,9 @@ namespace ProductService.Grpc
 
             var res = await _productRepo.AddAttributesToProductAsync(product);
 
-            ////////
             if (res.success)
             {
-                var productPub = _mapper.Map<ProductPublishedDto>(product);
+                var productPub = _mapper.Map<ProductPublishedDto>(res.Value);
 
                 productPub.Event = EventType.ProductUpdatePublished;
                 productPub.Service = ServicesEnum.SEARCH_SERVICE;
@@ -322,7 +344,6 @@ namespace ProductService.Grpc
 
             var res = await _productRepo.DeleteAttributesFromProductAsync(product);
 
-            ////////
             if (res.success)
             {
                 var productPub = _mapper.Map<ProductPublishedDto>(product);

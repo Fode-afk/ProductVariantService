@@ -14,9 +14,11 @@ namespace ProductService.Data
 
         Task<ExecutionResult> CreateProductAsync(Product product);
 
-        Task<ExecutionResult> UpdateProductAsync(Product product);
+        Task<ExecutionResult<Product>> UpdateProductAsync(Product product);
 
-        Task<ExecutionResult> UpdateParentCardId(Product product);
+        Task<ExecutionResult<Product>> UpdateParentCardIdAsync(Product product);
+
+        Task<ExecutionResult<Product>> SetCanBeOrderedAsync(string productId, bool canBeOrdered, DateTimeOffset updatedAt);
 
         Task<ExecutionResult> DeleteProductAsync(string productId);
 
@@ -24,11 +26,11 @@ namespace ProductService.Data
 
         Task<ExecutionResult<string>> GetParentCardIdAsync(string productId);
 
-        Task<ExecutionResult> AddImagesToProductAsync(Product product);
+        Task<ExecutionResult<Product>> AddImagesToProductAsync(Product product);
 
         Task<ExecutionResult> DeleteImagesFromProductAsync(Product product);
 
-        Task<ExecutionResult> AddAttributesToProductAsync(Product product);
+        Task<ExecutionResult<Product>> AddAttributesToProductAsync(Product product);
 
         Task<ExecutionResult> DeleteAttributesFromProductAsync(Product product);
     }
