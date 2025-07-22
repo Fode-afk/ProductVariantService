@@ -1,14 +1,10 @@
-﻿using ProductService.EventProcessing;
-using ProductService.Models;
+﻿using ProductService.Models;
 using ProductService.Protos;
 
 namespace ProductService.Dtos
 {
     public class ProductPublishedDto
     {
-        public EventType Event { get; set; }
-        public ServicesEnum Service { get; set; }
-
         public string ProductId { get; set; }
         public string ParentCardId { get; set; }
 

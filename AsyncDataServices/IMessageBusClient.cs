@@ -1,11 +1,12 @@
 ﻿using ProductService.Dtos;
+using ProductService.EventProcessing;
 
 namespace ProductService.AsyncDataServices
 {
     public interface IMessageBusClient
     {
         Task InitAsync();
-        Task PublishNewProduct(ProductPublishedDto productPublishedDto);
+        Task PublishGenericEvent<T>(T payload, EventType eventType, ServicesEnum[] consumers);
         ValueTask Dispose();
     }
 }

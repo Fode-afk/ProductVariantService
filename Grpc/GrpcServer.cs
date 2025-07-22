@@ -114,10 +114,7 @@ namespace ProductService.Grpc
             {
                 var productPub = _mapper.Map<ProductPublishedDto>(product);
 
-                productPub.Event = EventType.ProductPublished;
-                productPub.Service = ServicesEnum.SEARCH_SERVICE;
-
-                await _messageBusClient.PublishNewProduct(productPub);
+                await _messageBusClient.PublishGenericEvent(productPub, EventType.ProductPublished, [ServicesEnum.SEARCH_SERVICE]);
             }
 
             return new StatusResponse { Status = res.success, Reason = res.message };
@@ -145,11 +142,8 @@ namespace ProductService.Grpc
             if (res.success)
             {
                 var productPub = _mapper.Map<ProductPublishedDto>(res.Value);
-                
-                productPub.Event = EventType.ProductUpdatePublished;
-                productPub.Service = ServicesEnum.SEARCH_SERVICE;
 
-                await _messageBusClient.PublishNewProduct(productPub);
+                await _messageBusClient.PublishGenericEvent(productPub, EventType.ProductUpdatePublished, [ServicesEnum.SEARCH_SERVICE]);
             }
 
             return new StatusResponse { Status = res.success, Reason = res.message };
@@ -175,15 +169,13 @@ namespace ProductService.Grpc
             {
                 var productPub = _mapper.Map<ProductPublishedDto>(res.Value);
 
-                productPub.Event = EventType.ProductUpdatePublished;
-                productPub.Service = ServicesEnum.SEARCH_SERVICE;
-
-                await _messageBusClient.PublishNewProduct(productPub);
+                await _messageBusClient.PublishGenericEvent(productPub, EventType.ProductUpdatePublished, [ServicesEnum.SEARCH_SERVICE]);
             }
 
             return new StatusResponse { Status = res.success, Reason = res.message };
         }
 
+        //TODO мы должны уведомить card и cart и image
         public override async Task<StatusResponse> DeleteProductById(DeleteProductRequest request, ServerCallContext context)
         {
             _logger.Log($"\"DeleteProductById\" with params {request.ToJson()} has noticed. Caller: {context.Peer}");
@@ -201,10 +193,8 @@ namespace ProductService.Grpc
             {
                 var productPub = _mapper.Map<ProductPublishedDto>(new Product { ProductId = request.ProductId });
 
-                productPub.Event = EventType.ProductDeletePublished;
-                productPub.Service = ServicesEnum.SEARCH_SERVICE;
-
-                await _messageBusClient.PublishNewProduct(productPub);
+                await _messageBusClient.PublishGenericEvent(productPub, EventType.ProductDeletePublished,
+                    [ServicesEnum.SEARCH_SERVICE, ServicesEnum.CARD_SERVICE]);
             }
 
             return new StatusResponse { Status = res.success, Reason = res.message };
@@ -248,10 +238,7 @@ namespace ProductService.Grpc
             {
                 var productPub = _mapper.Map<ProductPublishedDto>(res.Value);
 
-                productPub.Event = EventType.ProductUpdatePublished;
-                productPub.Service = ServicesEnum.SEARCH_SERVICE;
-
-                await _messageBusClient.PublishNewProduct(productPub);
+                await _messageBusClient.PublishGenericEvent(productPub, EventType.ProductUpdatePublished, [ServicesEnum.SEARCH_SERVICE]);
             }
 
             return new StatusResponse { Status = res.success, Reason = res.message };
@@ -273,10 +260,7 @@ namespace ProductService.Grpc
             {
                 var productPub = _mapper.Map<ProductPublishedDto>(res.Value);
 
-                productPub.Event = EventType.ProductUpdatePublished;
-                productPub.Service = ServicesEnum.SEARCH_SERVICE;
-
-                await _messageBusClient.PublishNewProduct(productPub);
+                await _messageBusClient.PublishGenericEvent(productPub, EventType.ProductUpdatePublished, [ServicesEnum.SEARCH_SERVICE]);           
             }
 
             return new StatusResponse { Status = res.success, Reason = res.message };
@@ -298,10 +282,7 @@ namespace ProductService.Grpc
             {
                 var productPub = _mapper.Map<ProductPublishedDto>(product);
 
-                productPub.Event = EventType.ProductUpdatePublished;
-                productPub.Service = ServicesEnum.SEARCH_SERVICE;
-
-                await _messageBusClient.PublishNewProduct(productPub);
+                await _messageBusClient.PublishGenericEvent(productPub, EventType.ProductUpdatePublished, [ServicesEnum.SEARCH_SERVICE]);
             }
 
             return new StatusResponse { Status = res.success, Reason = res.message };
@@ -323,10 +304,7 @@ namespace ProductService.Grpc
             {
                 var productPub = _mapper.Map<ProductPublishedDto>(res.Value);
 
-                productPub.Event = EventType.ProductUpdatePublished;
-                productPub.Service = ServicesEnum.SEARCH_SERVICE;
-
-                await _messageBusClient.PublishNewProduct(productPub);
+                await _messageBusClient.PublishGenericEvent(productPub, EventType.ProductUpdatePublished, [ServicesEnum.SEARCH_SERVICE]);
             }
 
             return new StatusResponse { Status = res.success, Reason = res.message };
@@ -348,10 +326,7 @@ namespace ProductService.Grpc
             {
                 var productPub = _mapper.Map<ProductPublishedDto>(product);
 
-                productPub.Event = EventType.ProductUpdatePublished;
-                productPub.Service = ServicesEnum.SEARCH_SERVICE;
-
-                await _messageBusClient.PublishNewProduct(productPub);
+                await _messageBusClient.PublishGenericEvent(productPub, EventType.ProductUpdatePublished, [ServicesEnum.SEARCH_SERVICE]);            
             }
 
             return new StatusResponse { Status = res.success, Reason = res.message };

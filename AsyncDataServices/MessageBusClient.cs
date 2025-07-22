@@ -1,4 +1,5 @@
 ﻿using ProductService.Dtos;
+using ProductService.EventProcessing;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System.Text;
@@ -11,6 +12,11 @@ namespace ProductService.AsyncDataServices
         private readonly IConfiguration _config = configuration;
         private IConnection _connection;
         private IChannel _channel;
+        private readonly JsonSerializerOptions jsonSerializerOptions = new()
+        {
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+            WriteIndented = false
+        };
 
         public async Task InitAsync()
         {
@@ -61,18 +67,21 @@ namespace ProductService.AsyncDataServices
             return Task.CompletedTask;
         }
 
-        public async Task PublishNewProduct(ProductPublishedDto productPublishedDto)
+        public async Task PublishGenericEvent<T>(T payload, EventType eventType, ServicesEnum[] consumers)
         {
-            var message = JsonSerializer.Serialize(productPublishedDto);
+            var generic = new GenericEventDto<T>
+            {
+                EventType = eventType,
+                Consumers = consumers,
+                Data = payload
+            };
+
+            var message = JsonSerializer.Serialize(generic, jsonSerializerOptions);
 
             if (_connection?.IsOpen == true)
             {
-                Console.WriteLine("--> RabbitMQ connection is open, sending message...");
+                Console.WriteLine("--> Sending generic message...");
                 await SendMessageAsync(message);
-            }
-            else
-            {
-                Console.WriteLine("--> RabbitMQ connection is closed. Message not sent.");
             }
         }
 
