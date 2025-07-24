@@ -25,17 +25,17 @@ namespace ProductService.Data
             }
         }
 
-        public async Task<ExecutionResult> DeleteProductAsync(string productId)
+        public async Task<ExecutionResult<Product>> DeleteProductAsync(string productId)
         {
             try
             {
-                var res = await _products.DeleteOneAsync(p => p.ProductId == productId);
-                return new ExecutionResult(res.DeletedCount > 0, string.Empty);
+                var res = await _products.FindOneAndDeleteAsync(p => p.ProductId == productId);
+                return new ExecutionResult<Product>(res != null, string.Empty, res);
             }
             catch (Exception ex)
             {
                 _logger.Log(ex.Message, LogLevel.Error);
-                return new ExecutionResult(false, ex.Message);
+                return new ExecutionResult<Product>(false, ex.Message, null);
             }
         }
 

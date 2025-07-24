@@ -1,13 +1,15 @@
 ﻿using ProductService.Data;
 using ProductService.Dtos;
 using ProductService.Models;
+using ProductService.Utils;
 using System.Text.Json;
 
 namespace ProductService.EventProcessing
 {
-    public class EventProcessor(IServiceScopeFactory scopeFactory) : IEventProcessor
+    public class EventProcessor(IServiceScopeFactory scopeFactory, IConfiguration config) : IEventProcessor
     {
         private readonly IServiceScopeFactory _scopeFactory = scopeFactory;
+        private readonly IConfiguration _config = config;
         private readonly JsonSerializerOptions jsonSerializerOptions = new()
         {
             PropertyNamingPolicy = JsonNamingPolicy.CamelCase
@@ -41,7 +43,7 @@ namespace ProductService.EventProcessing
             {
                 case EventType.ImageUrlPublished:
                     await HandleEventAsync<ImagePublishedDto>(message, AddProductImage);
-                    break;
+                    break;             
                 default:
                     Console.WriteLine($"--> Unknown or unhandled event type: {generic.EventType}");
                     break;
@@ -76,7 +78,8 @@ namespace ProductService.EventProcessing
             var product = new Product
             {
                 ProductId = publishedDto.Id,
-                ImageURLs = [publishedDto.Url]
+                ImageURLs = [publishedDto.Url],
+                UpdatedAt = DateTimeUtil.GetCurrentTimeFormatted(_config)
             };
 
             await repo.AddImagesToProductAsync(product);

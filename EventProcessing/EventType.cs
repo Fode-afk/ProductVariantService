@@ -6,6 +6,7 @@
         ProductPublished,
         ProductUpdatePublished,
         ProductDeletePublished,
+        CardDeletePublished,
         Undetermined
     }
 }

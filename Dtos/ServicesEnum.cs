@@ -7,6 +7,8 @@
         CARD_SERVICE,
         USER_SERVICE,
         VENDOR_SERVICE,
-        SEARCH_SERVICE
+        SEARCH_SERVICE,
+        IMAGE_SERVICE,
+        CART_SERVICE
     }
 }

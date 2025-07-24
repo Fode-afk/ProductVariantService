@@ -20,7 +20,7 @@ namespace ProductService.Data
 
         Task<ExecutionResult<Product>> SetCanBeOrderedAsync(string productId, bool canBeOrdered, DateTimeOffset updatedAt);
 
-        Task<ExecutionResult> DeleteProductAsync(string productId);
+        Task<ExecutionResult<Product>> DeleteProductAsync(string productId);
 
         Task<ExecutionResult> ProductExistsAsync(string productId);
 

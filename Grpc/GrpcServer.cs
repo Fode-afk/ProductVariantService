@@ -159,7 +159,7 @@ namespace ProductService.Grpc
             //if (!valres.IsValid)
             //{
             //    throw new RpcException(new Status(StatusCode.InvalidArgument, valres.ErrorMessage));
-            //}      
+            //}
 
             var localTime = DateTimeUtil.GetCurrentTimeFormatted(_config);
 
@@ -175,7 +175,6 @@ namespace ProductService.Grpc
             return new StatusResponse { Status = res.success, Reason = res.message };
         }
 
-        //TODO мы должны уведомить card и cart и image
         public override async Task<StatusResponse> DeleteProductById(DeleteProductRequest request, ServerCallContext context)
         {
             _logger.Log($"\"DeleteProductById\" with params {request.ToJson()} has noticed. Caller: {context.Peer}");
@@ -191,10 +190,22 @@ namespace ProductService.Grpc
 
             if (res.success)
             {
-                var productPub = _mapper.Map<ProductPublishedDto>(new Product { ProductId = request.ProductId });
+                var productPub = _mapper.Map<ProductPublishedDto>(new Product
+                { 
+                    ProductId = request.ProductId,
+                    ParentCardId = res.Value.ParentCardId
+                });
 
                 await _messageBusClient.PublishGenericEvent(productPub, EventType.ProductDeletePublished,
-                    [ServicesEnum.SEARCH_SERVICE, ServicesEnum.CARD_SERVICE]);
+                    [.. new object[]
+                    {
+                        ServicesEnum.SEARCH_SERVICE,
+                        res.Value.ParentCardId != string.Empty ? ServicesEnum.CARD_SERVICE : null,
+                        res.Value.ImageURLs.Count > 0 ? ServicesEnum.IMAGE_SERVICE : null,
+                        res.Value.ParentCardId != string.Empty ? ServicesEnum.CART_SERVICE : null
+                    }
+                    .Where(s => s != null)!
+                    .Cast<ServicesEnum>()]);
             }
 
             return new StatusResponse { Status = res.success, Reason = res.message };
