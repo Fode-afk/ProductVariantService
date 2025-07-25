@@ -7,6 +7,8 @@
         ProductUpdatePublished,
         ProductDeletePublished,
         CardDeletePublished,
+        DeleteParentCardIdFromProducts,
+        ProductUpdateParentCardIdPublished,
         Undetermined
     }
 }

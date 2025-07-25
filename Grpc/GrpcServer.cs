@@ -249,7 +249,7 @@ namespace ProductService.Grpc
             {
                 var productPub = _mapper.Map<ProductPublishedDto>(res.Value);
 
-                await _messageBusClient.PublishGenericEvent(productPub, EventType.ProductUpdatePublished, [ServicesEnum.SEARCH_SERVICE]);
+                await _messageBusClient.PublishGenericEvent(productPub, EventType.ProductUpdateParentCardIdPublished, [ServicesEnum.SEARCH_SERVICE]);
             }
 
             return new StatusResponse { Status = res.success, Reason = res.message };

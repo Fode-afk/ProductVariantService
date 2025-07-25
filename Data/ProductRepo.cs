@@ -240,8 +240,11 @@ namespace ProductService.Data
                 var updateBuilder = Builders<Product>.Update;
                 var updates = new List<UpdateDefinition<Product>>();
 
-                if (product.ParentCardId != null)
-                    updates.Add(updateBuilder.Set(p => p.ParentCardId, product.ParentCardId));             
+                if (product.ParentCardId != null)                    
+                    updates.Add(updateBuilder.Set(p => p.ParentCardId, product.ParentCardId));
+
+                if (product.ParentCardId == string.Empty)
+                    updates.Add(updateBuilder.Set(p => p.CanBeOrdered, false));
 
                 if (updates.Count == 0)
                     return new ExecutionResult<Product>(false, "Nothing to update", null);
@@ -396,6 +399,34 @@ namespace ProductService.Data
             {
                 _logger.Log(ex.Message, LogLevel.Error);
                 return new ExecutionResult(false, ex.Message);
+            }
+        }
+
+        public async Task<ExecutionResult<List<Product>>> DeleteParentCardIdFromProductsAsync(string[] productIds, string cardId, DateTimeOffset updatedAt)
+        {
+            try
+            {
+                var filter = Builders<Product>.Filter.In(p => p.ProductId, productIds) &
+                             Builders<Product>.Filter.Eq(p => p.ParentCardId, cardId);
+
+                var update = Builders<Product>.Update
+                    .Set(p => p.ParentCardId, string.Empty)
+                    .Set(p => p.CanBeOrdered, false)
+                    .Set(p => p.UpdatedAt, updatedAt);
+
+                var result = await _products.UpdateManyAsync(filter, update);
+
+                var updatedFilter = Builders<Product>.Filter.In(p => p.ProductId, productIds) &
+                            Builders<Product>.Filter.Eq(p => p.ParentCardId, string.Empty);
+
+                var updatedProducts = await _products.Find(updatedFilter).ToListAsync();
+
+                return new ExecutionResult<List<Product>>(result.ModifiedCount > 0, string.Empty, updatedProducts);
+            }
+            catch (Exception ex)
+            {
+                _logger.Log(ex.Message, LogLevel.Error);
+                return new ExecutionResult<List<Product>>(false, ex.Message, null);
             }
         }
     }

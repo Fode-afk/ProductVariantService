@@ -1,4 +1,6 @@
-﻿using ProductService.Data;
+﻿using AutoMapper;
+using ProductService.AsyncDataServices;
+using ProductService.Data;
 using ProductService.Dtos;
 using ProductService.Models;
 using ProductService.Utils;
@@ -6,10 +8,13 @@ using System.Text.Json;
 
 namespace ProductService.EventProcessing
 {
-    public class EventProcessor(IServiceScopeFactory scopeFactory, IConfiguration config) : IEventProcessor
+    public class EventProcessor(IServiceScopeFactory scopeFactory, IConfiguration config,
+        IMapper mapper, IMessageBusClient messageBusClient) : IEventProcessor
     {
         private readonly IServiceScopeFactory _scopeFactory = scopeFactory;
         private readonly IConfiguration _config = config;
+        private readonly IMapper _mapper = mapper;
+        private readonly IMessageBusClient _messageBusClient = messageBusClient;
         private readonly JsonSerializerOptions jsonSerializerOptions = new()
         {
             PropertyNamingPolicy = JsonNamingPolicy.CamelCase
@@ -43,7 +48,10 @@ namespace ProductService.EventProcessing
             {
                 case EventType.ImageUrlPublished:
                     await HandleEventAsync<ImagePublishedDto>(message, AddProductImage);
-                    break;             
+                    break;
+                case EventType.CardDeletePublished:
+                    await HandleEventAsync<CardPublishedDto>(message, DeleteParentCardIdFromProducts);
+                    break;
                 default:
                     Console.WriteLine($"--> Unknown or unhandled event type: {generic.EventType}");
                     break;
@@ -83,6 +91,22 @@ namespace ProductService.EventProcessing
             };
 
             await repo.AddImagesToProductAsync(product);
+        }
+
+        private async Task DeleteParentCardIdFromProducts(CardPublishedDto publishedDto)
+        {
+            using var scope = _scopeFactory.CreateScope();
+            var repo = scope.ServiceProvider.GetRequiredService<IProductRepo>();
+
+            var res = await repo.DeleteParentCardIdFromProductsAsync([.. publishedDto.ProductIds],
+                publishedDto.CardId, DateTimeUtil.GetCurrentTimeFormatted(_config));
+
+            if (res.success)
+            {
+                var productsPub = _mapper.Map<List<ProductPublishedDto>>(res.Value);
+
+                await _messageBusClient.PublishGenericEvent(productsPub, EventType.DeleteParentCardIdFromProducts, [ServicesEnum.SEARCH_SERVICE]);
+            }
         }
     }
 }
