@@ -5,9 +5,9 @@ option csharp_namespace = "ProductService.Protos";
 service GrpcProducts
 {
     rpc CreateProduct(CreateProductRequest) returns (StatusResponse);
+    rpc GetProductById(GetProductRequest) returns (GetProductResponse);
     rpc GetProductsByIds(GetProductsByIdsRequest) returns (GetProductsByIdsResponse);
     rpc GetAllProductsByOwnerId(GetAllProductsByOwnerIdRequest) returns (GetAllProductsByOwnerIdResponse);
-    rpc GetProductById(GetProductRequest) returns (GetProductResponse);
     rpc UpdateProductById(UpdateProductRequest) returns (StatusResponse);
     rpc SetCanBeOrdered(SetCanBeOrderedRequest) returns (StatusResponse);
     rpc DeleteProductById(DeleteProductRequest) returns (StatusResponse);
