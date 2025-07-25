@@ -26,6 +26,8 @@ namespace ProductService.Data
 
         Task<ExecutionResult<string>> GetParentCardIdAsync(string productId);
 
+        Task<ExecutionResult<string>> GetOwnerIdAsync(string productId);
+
         Task<ExecutionResult<Product>> AddImagesToProductAsync(Product product);
 
         Task<ExecutionResult> DeleteImagesFromProductAsync(Product product);

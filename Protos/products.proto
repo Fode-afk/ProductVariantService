@@ -14,6 +14,7 @@ service GrpcProducts
     rpc ProductExists(ProductExistsRequest) returns (StatusResponse);
     rpc GetParentCardId(GetParentCardIdRequest) returns (GetParentCardIdResponse);
     rpc UpdateParentCardId(UpdateParentCardIdRequest) returns (StatusResponse);
+    rpc GetOwnerId(GetOwnerIdRequest) returns (GetOwnerIdResponse);
 
     rpc AddImagesToProduct(AddImagesToProductRequest) returns (StatusResponse);
     rpc DeleteImagesFromProduct(DeleteImagesFromProductRequest) returns (StatusResponse);
@@ -165,4 +166,15 @@ message UpdateParentCardIdRequest
 {
     string productId = 1;
     string parentCardId = 2;
+}
+
+message GetOwnerIdRequest
+{
+    string productId = 1;
+}
+
+message GetOwnerIdResponse
+{
+    StatusResponse status = 1;
+    string ownerId = 2;
 }

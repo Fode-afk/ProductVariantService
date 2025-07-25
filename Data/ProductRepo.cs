@@ -429,5 +429,24 @@ namespace ProductService.Data
                 return new ExecutionResult<List<Product>>(false, ex.Message, null);
             }
         }
+
+        public async Task<ExecutionResult<string>> GetOwnerIdAsync(string productId)
+        {
+            try
+            {
+                var result = await _products.Find(p => p.ProductId == productId).FirstOrDefaultAsync();
+
+                if (result == null)
+                    return new ExecutionResult<string>(false, "Product not found", string.Empty);
+
+                return new ExecutionResult<string>(true, string.Empty, result.OwnerId);
+
+            }
+            catch (Exception ex)
+            {
+                _logger.Log(ex.Message, LogLevel.Error);
+                return new ExecutionResult<string>(false, ex.Message, string.Empty);
+            }
+        }
     }
 }

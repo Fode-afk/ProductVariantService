@@ -255,6 +255,20 @@ namespace ProductService.Grpc
             return new StatusResponse { Status = res.success, Reason = res.message };
         }
 
+        public override async Task<GetOwnerIdResponse> GetOwnerId(GetOwnerIdRequest request, ServerCallContext context)
+        {
+            var res = await _productRepo.GetOwnerIdAsync(request.ProductId);
+
+            return new GetOwnerIdResponse {
+                Status = new StatusResponse
+                { 
+                    Status = res.success,
+                    Reason = res.message
+                },
+                OwnerId = res.Value
+            };
+        }
+
         public override async Task<StatusResponse> AddImagesToProduct(AddImagesToProductRequest request, ServerCallContext context)
         {
             _logger.Log($"\"AddImagesToProduct\" with params {request.ToJson()} has noticed. Caller: {context.Peer}");
