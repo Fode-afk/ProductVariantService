@@ -80,6 +80,9 @@ namespace ProductService.EventProcessing
 
         private async Task AddProductImage(ImagePublishedDto publishedDto)
         {
+            if (publishedDto.ContentType != ContentType.PRODUCT_IMAGE)
+                await Task.FromException(new Exception("ContentType doesn't match"));
+
             using var scope = _scopeFactory.CreateScope();
             var repo = scope.ServiceProvider.GetRequiredService<IProductRepo>();
 
