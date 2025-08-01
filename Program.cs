@@ -61,4 +61,8 @@ app.MapGet("/protos/products.proto", async context =>
     await context.Response.WriteAsync(await File.ReadAllTextAsync("Protos/products.proto"));
 });
 
+
+//var products = await new TestingUtils().ParseProductsAsync(builder.Configuration, 4);
+//new TestingUtils().Proccess(products, builder.Services.BuildServiceProvider().GetRequiredService<IProductRepo>());
+
 app.Run();
