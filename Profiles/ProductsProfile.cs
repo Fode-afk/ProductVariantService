@@ -35,11 +35,11 @@ namespace ProductService.Profiles
             CreateMap<UpdateParentCardIdRequest, Product>()
                 .ForAllMembers(opt => opt.Condition((src, dest, srcMember) => srcMember != null));
 
-            CreateMap<AddImagesToProductRequest, Product>()
-                .ForAllMembers(opt => opt.Condition((src, dest, srcMember) => srcMember != null));
+            //CreateMap<AddImagesToProductRequest, Product>()
+            //    .ForAllMembers(opt => opt.Condition((src, dest, srcMember) => srcMember != null));
 
-            CreateMap<DeleteImagesFromProductRequest, Product>()
-                .ForAllMembers(opt => opt.Condition((src, dest, srcMember) => srcMember != null));
+            //CreateMap<DeleteImagesFromProductRequest, Product>()
+            //    .ForAllMembers(opt => opt.Condition((src, dest, srcMember) => srcMember != null));
 
             CreateMap<AddAttributesToProductRequest, Product>()
                 .ForMember(dest => dest.Attributes, opt => opt.MapFrom(src => src.Attributes))

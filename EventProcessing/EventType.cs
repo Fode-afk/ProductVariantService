@@ -3,6 +3,7 @@
     public enum EventType
     {
         ImageUrlPublished,
+        ImageDeletePublished,
         ProductPublished,
         ProductUpdatePublished,
         ProductDeletePublished,

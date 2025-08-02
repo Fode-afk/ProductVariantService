@@ -269,49 +269,49 @@ namespace ProductService.Grpc
             };
         }
 
-        public override async Task<StatusResponse> AddImagesToProduct(AddImagesToProductRequest request, ServerCallContext context)
-        {
-            _logger.Log($"\"AddImagesToProduct\" with params {request.ToJson()} has noticed. Caller: {context.Peer}");
+        //public override async Task<StatusResponse> AddImagesToProduct(AddImagesToProductRequest request, ServerCallContext context)
+        //{
+        //    _logger.Log($"\"AddImagesToProduct\" with params {request.ToJson()} has noticed. Caller: {context.Peer}");
 
-            var product = _mapper.Map<Product>(request);
+        //    var product = _mapper.Map<Product>(request);
 
-            var localTime = DateTimeUtil.GetCurrentTimeFormatted(_config);
+        //    var localTime = DateTimeUtil.GetCurrentTimeFormatted(_config);
 
-            product.UpdatedAt = localTime;
+        //    product.UpdatedAt = localTime;
 
-            var res = await _productRepo.AddImagesToProductAsync(product);
+        //    var res = await _productRepo.AddImagesToProductAsync(product);
 
-            if (res.success)
-            {
-                var productPub = _mapper.Map<ProductPublishedDto>(res.Value);
+        //    if (res.success)
+        //    {
+        //        var productPub = _mapper.Map<ProductPublishedDto>(res.Value);
 
-                await _messageBusClient.PublishGenericEvent(productPub, EventType.ProductUpdatePublished, [ServicesEnum.SEARCH_SERVICE]);           
-            }
+        //        await _messageBusClient.PublishGenericEvent(productPub, EventType.ProductUpdatePublished, [ServicesEnum.SEARCH_SERVICE]);
+        //    }
 
-            return new StatusResponse { Status = res.success, Reason = res.message };
-        }
+        //    return new StatusResponse { Status = res.success, Reason = res.message };
+        //}
 
-        public override async Task<StatusResponse> DeleteImagesFromProduct(DeleteImagesFromProductRequest request, ServerCallContext context)
-        {
-            _logger.Log($"\"DeleteImagesFromProduct\" with params {request.ToJson()} has noticed. Caller: {context.Peer}");
+        //public override async Task<StatusResponse> DeleteImagesFromProduct(DeleteImagesFromProductRequest request, ServerCallContext context)
+        //{
+        //    _logger.Log($"\"DeleteImagesFromProduct\" with params {request.ToJson()} has noticed. Caller: {context.Peer}");
 
-            var product = _mapper.Map<Product>(request);
+        //    var product = _mapper.Map<Product>(request);
 
-            var localTime = DateTimeUtil.GetCurrentTimeFormatted(_config);
+        //    var localTime = DateTimeUtil.GetCurrentTimeFormatted(_config);
 
-            product.UpdatedAt = localTime;
+        //    product.UpdatedAt = localTime;
 
-            var res = await _productRepo.DeleteImagesFromProductAsync(product);
+        //    var res = await _productRepo.DeleteImagesFromProductAsync(product);
 
-            if (res.success)
-            {
-                var productPub = _mapper.Map<ProductPublishedDto>(product);
+        //    if (res.success)
+        //    {
+        //        var productPub = _mapper.Map<ProductPublishedDto>(product);
 
-                await _messageBusClient.PublishGenericEvent(productPub, EventType.ProductUpdatePublished, [ServicesEnum.SEARCH_SERVICE]);
-            }
+        //        await _messageBusClient.PublishGenericEvent(productPub, EventType.ProductUpdatePublished, [ServicesEnum.SEARCH_SERVICE]);
+        //    }
 
-            return new StatusResponse { Status = res.success, Reason = res.message };
-        }
+        //    return new StatusResponse { Status = res.success, Reason = res.message };
+        //}
 
         public override async Task<StatusResponse> AddAttributesToProduct(AddAttributesToProductRequest request, ServerCallContext context)
         {

@@ -4,6 +4,7 @@ option csharp_namespace = "ProductService.Protos";
 
 service GrpcProducts
 {
+    //TODO: ¬езде когда мы что-то создаем или обновл€ем вы должны возвращать обновлЄнную модель
     rpc CreateProduct(CreateProductRequest) returns (StatusResponse);
     rpc GetProductById(GetProductRequest) returns (GetProductResponse);
     rpc GetProductsByIds(GetProductsByIdsRequest) returns (GetProductsByIdsResponse);
@@ -16,8 +17,8 @@ service GrpcProducts
     rpc UpdateParentCardId(UpdateParentCardIdRequest) returns (StatusResponse);
     rpc GetOwnerId(GetOwnerIdRequest) returns (GetOwnerIdResponse);
 
-    rpc AddImagesToProduct(AddImagesToProductRequest) returns (StatusResponse);
-    rpc DeleteImagesFromProduct(DeleteImagesFromProductRequest) returns (StatusResponse);
+    //rpc AddImagesToProduct(AddImagesToProductRequest) returns (StatusResponse);
+    //rpc DeleteImagesFromProduct(DeleteImagesFromProductRequest) returns (StatusResponse);
     rpc AddAttributesToProduct(AddAttributesToProductRequest) returns (StatusResponse);
     rpc DeleteAttributesFromProduct(DeleteAttributesFromProductRequest) returns (StatusResponse);
 }
@@ -122,17 +123,17 @@ message SetCanBeOrderedRequest
     bool canBeOrdered = 2;
 }
 
-message AddImagesToProductRequest
-{
-    string productId = 1;
-    repeated string imageURLs = 2;
-}
+//message AddImagesToProductRequest
+//{
+//    string productId = 1;
+//    repeated string imageURLs = 2;
+//}
 
-message DeleteImagesFromProductRequest
-{
-    string productId = 1;
-    repeated string imageURLs = 2;
-}
+//message DeleteImagesFromProductRequest
+//{
+//    string productId = 1;
+//    repeated string imageURLs = 2;
+//}
 
 message AddAttributesToProductRequest
 {
