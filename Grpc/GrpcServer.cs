@@ -151,16 +151,7 @@ namespace ProductService.Grpc
 
         public override async Task<StatusResponse> SetCanBeOrdered(SetCanBeOrderedRequest request, ServerCallContext context)
         {
-            _logger.Log($"\"SetCanBeOrdered\" with params {request.ToJson()} has noticed. Caller: {context.Peer}");
-
-            //TODO: новый валидатор нужно
-            //var valres = _updateProductValidator.Validate(request);
-
-            //if (!valres.IsValid)
-            //{
-            //    throw new RpcException(new Status(StatusCode.InvalidArgument, valres.ErrorMessage));
-            //}
-
+            _logger.Log($"\"SetCanBeOrdered\" with params {request.ToJson()} has noticed. Caller: {context.Peer}");          
             var localTime = DateTimeUtil.GetCurrentTimeFormatted(_config);
 
             var res = await _productRepo.SetCanBeOrderedAsync(request.ProductId, request.CanBeOrdered, localTime);
@@ -191,7 +182,7 @@ namespace ProductService.Grpc
             if (res.success)
             {
                 var productPub = _mapper.Map<ProductPublishedDto>(new Product
-                { 
+                {
                     ProductId = request.ProductId,
                     ParentCardId = res.Value.ParentCardId
                 });
@@ -201,11 +192,20 @@ namespace ProductService.Grpc
                     {
                         ServicesEnum.SEARCH_SERVICE,
                         res.Value.ParentCardId != string.Empty ? ServicesEnum.CARD_SERVICE : null,
-                        res.Value.ImageURLs.Count > 0 ? ServicesEnum.IMAGE_SERVICE : null,
                         res.Value.ParentCardId != string.Empty ? ServicesEnum.CART_SERVICE : null
                     }
                     .Where(s => s != null)!
                     .Cast<ServicesEnum>()]);
+
+                if (res.Value.ImageURLs.Count > 0)
+                {
+                    List<ImagePublishedDto> publishedDtos = [];
+
+                    foreach (var url in res.Value.ImageURLs)
+                        publishedDtos.Add(new ImagePublishedDto { Id = request.ProductId, ContentType = ContentType.PRODUCT_IMAGE, Url = url });
+
+                    await _messageBusClient.PublishGenericEvent(publishedDtos, EventType.ImageDeletePublished, [ServicesEnum.IMAGE_SERVICE]);
+                }
             }
 
             return new StatusResponse { Status = res.success, Reason = res.message };
@@ -268,51 +268,6 @@ namespace ProductService.Grpc
                 OwnerId = res.Value
             };
         }
-
-        //public override async Task<StatusResponse> AddImagesToProduct(AddImagesToProductRequest request, ServerCallContext context)
-        //{
-        //    _logger.Log($"\"AddImagesToProduct\" with params {request.ToJson()} has noticed. Caller: {context.Peer}");
-
-        //    var product = _mapper.Map<Product>(request);
-
-        //    var localTime = DateTimeUtil.GetCurrentTimeFormatted(_config);
-
-        //    product.UpdatedAt = localTime;
-
-        //    var res = await _productRepo.AddImagesToProductAsync(product);
-
-        //    if (res.success)
-        //    {
-        //        var productPub = _mapper.Map<ProductPublishedDto>(res.Value);
-
-        //        await _messageBusClient.PublishGenericEvent(productPub, EventType.ProductUpdatePublished, [ServicesEnum.SEARCH_SERVICE]);
-        //    }
-
-        //    return new StatusResponse { Status = res.success, Reason = res.message };
-        //}
-
-        //public override async Task<StatusResponse> DeleteImagesFromProduct(DeleteImagesFromProductRequest request, ServerCallContext context)
-        //{
-        //    _logger.Log($"\"DeleteImagesFromProduct\" with params {request.ToJson()} has noticed. Caller: {context.Peer}");
-
-        //    var product = _mapper.Map<Product>(request);
-
-        //    var localTime = DateTimeUtil.GetCurrentTimeFormatted(_config);
-
-        //    product.UpdatedAt = localTime;
-
-        //    var res = await _productRepo.DeleteImagesFromProductAsync(product);
-
-        //    if (res.success)
-        //    {
-        //        var productPub = _mapper.Map<ProductPublishedDto>(product);
-
-        //        await _messageBusClient.PublishGenericEvent(productPub, EventType.ProductUpdatePublished, [ServicesEnum.SEARCH_SERVICE]);
-        //    }
-
-        //    return new StatusResponse { Status = res.success, Reason = res.message };
-        //}
-
         public override async Task<StatusResponse> AddAttributesToProduct(AddAttributesToProductRequest request, ServerCallContext context)
         {
             _logger.Log($"\"AddAttributesToProduct\" with params {request.ToJson()} has noticed. Caller: {context.Peer}");
