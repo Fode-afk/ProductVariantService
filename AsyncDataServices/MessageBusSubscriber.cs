@@ -11,7 +11,9 @@ namespace ProductService.AsyncDataServices
         private readonly IEventProcessor _eventProcessor = eventProcessor;
         private IConnection _connection;
         private IChannel _channel;
-        private readonly string _queueName = configuration["RabbitMQQueueName"];
+        private readonly string _queueName = configuration["RabbitMQ:RoutingKeys:PRODUCT_SERVICE"] + "-queue";
+        private readonly string _exchangeName = configuration["RabbitMQ:Exchange"];
+        private readonly string _routingKey = configuration["RabbitMQ:RoutingKeys:PRODUCT_SERVICE"];
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
@@ -32,7 +34,7 @@ namespace ProductService.AsyncDataServices
 
             await _channel.BasicConsumeAsync(queue: _queueName, autoAck: false, consumer: consumer, cancellationToken: stoppingToken);
 
-            Console.WriteLine("--> Listening for messages...");
+            Console.WriteLine($"--> Listening for messages on queue: {_queueName}");
 
             await Task.Delay(Timeout.Infinite, stoppingToken);
         }
@@ -41,14 +43,14 @@ namespace ProductService.AsyncDataServices
         {
             var factory = new ConnectionFactory
             {
-                HostName = _config["RabbitMQHost"],
-                Port = int.Parse(_config["RabbitMQPort"])
+                HostName = _config["RabbitMQ:Host"],
+                Port = int.Parse(_config["RabbitMQ:Port"])
             };
 
             _connection = await factory.CreateConnectionAsync();
             _channel = await _connection.CreateChannelAsync();
-
-            await _channel.ExchangeDeclareAsync(exchange: "trigger", type: ExchangeType.Fanout, durable: true);
+           
+            await _channel.ExchangeDeclareAsync(exchange: _exchangeName, type: ExchangeType.Direct, durable: true);
 
             await _channel.QueueDeclareAsync(
                 queue: _queueName,
@@ -57,21 +59,26 @@ namespace ProductService.AsyncDataServices
                 autoDelete: false
             );
 
-            await _channel.QueueBindAsync(queue: _queueName, exchange: "trigger", routingKey: "");
+            await _channel.QueueBindAsync(
+                queue: _queueName,
+                exchange: _exchangeName,
+                routingKey: _routingKey
+            );
 
-            Console.WriteLine("--> RabbitMQ connected and queue bound.");
+            Console.WriteLine($"--> Queue '{_queueName}' bound to exchange '{_exchangeName}' with routing key '{_routingKey}'");
 
             _connection.ConnectionShutdownAsync += RabbitMQ_ConnectionShutdown;
         }
 
         private Task RabbitMQ_ConnectionShutdown(object sender, ShutdownEventArgs e)
         {
+            Console.WriteLine("--> RabbitMQ connection shut down");
             return Task.CompletedTask;
         }
 
         public async ValueTask Dispose()
         {
-            if (_channel.IsOpen)
+            if (_channel?.IsOpen == true)
             {
                 await _channel.CloseAsync();
                 await _connection.CloseAsync();

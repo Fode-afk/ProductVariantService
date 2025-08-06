@@ -12,6 +12,9 @@ namespace ProductService.AsyncDataServices
         private readonly IConfiguration _config = configuration;
         private IConnection _connection;
         private IChannel _channel;
+        private string _exchange;
+        private Dictionary<ServicesEnum, string> _routingMap;
+
         private readonly JsonSerializerOptions jsonSerializerOptions = new()
         {
             PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
@@ -22,9 +25,17 @@ namespace ProductService.AsyncDataServices
         {
             var factory = new ConnectionFactory
             {
-                HostName = _config["RabbitMQHost"],
-                Port = int.Parse(_config["RabbitMQPort"])
+                HostName = _config["RabbitMQ:Host"],
+                Port = int.Parse(_config["RabbitMQ:Port"])
             };
+
+            _exchange = _config["RabbitMQ:Exchange"];
+
+            _routingMap = Enum.GetValues<ServicesEnum>()
+                .ToDictionary(
+                    key => key,
+                    key => _config[$"RabbitMQ:RoutingKeys:{key}"]
+                )!;
 
             try
             {
@@ -32,27 +43,30 @@ namespace ProductService.AsyncDataServices
                 _channel = await _connection.CreateChannelAsync();
 
                 await _channel.ExchangeDeclareAsync(
-                    exchange: "trigger",
-                    type: ExchangeType.Fanout,
+                    exchange: _exchange,
+                    type: ExchangeType.Direct,
                     durable: true
                 );
 
-                string queueName = "productService-queue";
-                await _channel.QueueDeclareAsync(
-                    queue: queueName,
-                    durable: true,
-                    exclusive: false,
-                    autoDelete: false
-                );
+                foreach (var (service, routingKey) in _routingMap)
+                {
+                    string queueName = $"{routingKey}-queue";
 
-                await _channel.QueueBindAsync(
-                    queue: queueName,
-                    exchange: "trigger",
-                    routingKey: ""
-                );
+                    await _channel.QueueDeclareAsync(
+                        queue: queueName,
+                        durable: true,
+                        exclusive: false,
+                        autoDelete: false
+                    );
+
+                    await _channel.QueueBindAsync(
+                        queue: queueName,
+                        exchange: _exchange,
+                        routingKey: routingKey
+                    );
+                }
 
                 _connection.ConnectionShutdownAsync += RabbitMQ_ConnectionShutdown;
-
                 Console.WriteLine("--> Connected to the message bus.");
             }
             catch (Exception ex)
@@ -81,22 +95,33 @@ namespace ProductService.AsyncDataServices
             if (_connection?.IsOpen == true)
             {
                 Console.WriteLine("--> Sending generic message...");
-                await SendMessageAsync(message);
+                foreach (var service in consumers)
+                {
+                    if (_routingMap.TryGetValue(service, out var routingKey))
+                    {
+                        await SendMessageAsync(message, routingKey);
+                    }
+                    else
+                    {
+                        Console.WriteLine($"--> No routing key found for service: {service}");
+                    }
+                }
             }
         }
 
-        private async Task SendMessageAsync(string message)
+        private async Task SendMessageAsync(string message, string routingKey)
         {
             var body = Encoding.UTF8.GetBytes(message);
 
             await _channel.BasicPublishAsync(
-                exchange: "trigger",
-                routingKey: "",
+                exchange: _exchange,
+                routingKey: routingKey,
                 mandatory: true,
-                basicProperties: new BasicProperties() { Persistent = true },
-                body: body);
+                basicProperties: new BasicProperties { Persistent = true },
+                body: body
+            );
 
-            Console.WriteLine($"--> Message sent: {message}");
+            Console.WriteLine($"--> Message sent to {routingKey}: {message}");
         }
 
         public async ValueTask Dispose()
