@@ -22,6 +22,8 @@ namespace ProductService.Data
 
         Task<ExecutionResult<Product>> DeleteProductAsync(string productId);
 
+        Task<ExecutionResult<List<Product>>> DeleteProductsByOwnerIdAsync(string ownerId);
+
         Task<ExecutionResult> ProductExistsAsync(string productId);
 
         Task<ExecutionResult<string>> GetParentCardIdAsync(string productId);

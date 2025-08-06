@@ -55,6 +55,9 @@ namespace ProductService.EventProcessing
                 case EventType.CardDeletePublished:
                     await HandleEventAsync<CardPublishedDto>(message, DeleteParentCardIdFromProducts);
                     break;
+                case EventType.VendorDeletePublished:
+                    await HandleEventAsync<VendorPublishedDto>(message, DeleteProductsByVendorId);
+                    break;
                 default:
                     Console.WriteLine($"--> Unknown or unhandled event type: {generic.EventType}");
                     break;
@@ -145,6 +148,34 @@ namespace ProductService.EventProcessing
                 var productsPub = _mapper.Map<List<ProductPublishedDto>>(res.Value);
 
                 await _messageBusClient.PublishGenericEvent(productsPub, EventType.DeleteParentCardIdFromProducts, [ServicesEnum.SEARCH_SERVICE]);
+            }
+        }
+
+        private async Task DeleteProductsByVendorId(VendorPublishedDto publishedDto)
+        {
+            using var scope = _scopeFactory.CreateScope();
+            var repo = scope.ServiceProvider.GetRequiredService<IProductRepo>();
+
+            var res = await repo.DeleteProductsByOwnerIdAsync(publishedDto.VendorId);
+
+            if (res.success)
+            {
+                var productsPub = _mapper.Map<List<ProductPublishedDto>>(res.Value);
+
+                await _messageBusClient.PublishGenericEvent(productsPub, EventType.ProductsDeletePublished, [ServicesEnum.SEARCH_SERVICE]);
+
+                List<ImagePublishedDto> publishedDtos = [];
+
+                foreach (var product in res.Value)
+                {
+                    if (res.Value.Any(p => p.ImageURLs.Count > 0))
+                    {                      
+                        foreach (var url in product.ImageURLs)
+                            publishedDtos.Add(new ImagePublishedDto { Id = product.ProductId, ContentType = ContentType.PRODUCT_IMAGE, Url = url });
+                    }
+                }
+
+                await _messageBusClient.PublishGenericEvent(publishedDtos, EventType.ImageDeletePublished, [ServicesEnum.IMAGE_SERVICE]);
             }
         }
     }

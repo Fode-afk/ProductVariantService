@@ -448,5 +448,20 @@ namespace ProductService.Data
                 return new ExecutionResult<string>(false, ex.Message, string.Empty);
             }
         }
+
+        public async Task<ExecutionResult<List<Product>>> DeleteProductsByOwnerIdAsync(string ownerId)
+        {
+            try
+            {
+                var products = await _products.FindAsync(p => p.OwnerId == ownerId);
+                var res = await _products.DeleteManyAsync(p => p.OwnerId == ownerId);
+                return new ExecutionResult<List<Product>>(res != null, string.Empty, products.ToList());
+            }
+            catch (Exception ex)
+            {
+                _logger.Log(ex.Message, LogLevel.Error);
+                return new ExecutionResult<List<Product>>(false, ex.Message, null);
+            }
+        }
     }
 }

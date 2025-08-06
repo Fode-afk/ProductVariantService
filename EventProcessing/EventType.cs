@@ -10,6 +10,9 @@
         CardDeletePublished,
         DeleteParentCardIdFromProducts,
         ProductUpdateParentCardIdPublished,
+        UserDeletePublished,
+        VendorDeletePublished,
+        ProductsDeletePublished,
         Undetermined
     }
 }
