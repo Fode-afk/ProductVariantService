@@ -9,6 +9,7 @@
         VENDOR_SERVICE,
         SEARCH_SERVICE,
         IMAGE_SERVICE,
-        CART_SERVICE
+        CART_SERVICE,
+        REVIEW_SERVICE
     }
 }

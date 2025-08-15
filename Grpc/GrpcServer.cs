@@ -191,6 +191,7 @@ namespace ProductService.Grpc
                     [.. new object[]
                     {
                         ServicesEnum.SEARCH_SERVICE,
+                        ServicesEnum.REVIEW_SERVICE,
                         res.Value.ParentCardId != string.Empty ? ServicesEnum.CARD_SERVICE : null,
                         res.Value.ParentCardId != string.Empty ? ServicesEnum.CART_SERVICE : null
                     }

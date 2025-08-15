@@ -162,7 +162,8 @@ namespace ProductService.EventProcessing
             {
                 var productsPub = _mapper.Map<List<ProductPublishedDto>>(res.Value);
 
-                await _messageBusClient.PublishGenericEvent(productsPub, EventType.ProductsDeletePublished, [ServicesEnum.SEARCH_SERVICE]);
+                await _messageBusClient.PublishGenericEvent(productsPub, EventType.ProductsDeletePublished,
+                    [ServicesEnum.SEARCH_SERVICE, ServicesEnum.REVIEW_SERVICE]);
 
                 List<ImagePublishedDto> publishedDtos = [];
 
