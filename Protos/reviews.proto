@@ -1,0 +1,123 @@
+syntax = "proto3";
+
+option csharp_namespace = "ReviewService.Protos";
+
+service GrpcReviews
+{  
+    rpc GetReviewById(GetReviewByIdRequest) returns (GetReviewByIdResponse);
+    rpc GetReviewsByUserId(GetReviewsByUserIdRequest) returns (GetReviewsByUserIdResponse);
+    rpc GetReviewsByProductId(GetReviewsByProductIdRequest) returns (GetReviewsByProductIdResponse);
+    rpc CreateReview(CreateReviewRequest) returns (StatusResponse);
+    rpc AddVendorReply(AddVendorReplyRequest) returns (StatusResponse);
+    rpc DeleteReview(DeleteReviewRequest) returns (StatusResponse);
+
+    rpc GetRatingById(GetRatingByIdRequest) returns (GetRatingByIdResponse);
+    rpc CreateRating(CreateRatingRequest) returns (StatusResponse);
+}
+
+message VendorReplyGrpc
+{
+    string reviewId = 1;
+    string vendorId = 2;
+    string productId = 3;
+    string body = 4;
+    string createdAt = 5;
+}
+
+message ReviewGrpc
+{
+    string reviewId = 1;
+    string userId = 2;
+    string productId = 3;
+    int32 rating = 4;
+    string body = 5;
+    repeated string imageURLs = 6;
+    VendorReplyGrpc reply = 7;
+    string createdAt = 8;
+}
+
+message StatusResponse
+{
+    bool status = 1;
+    string reason = 2;
+} 
+
+message GetReviewsByUserIdRequest
+{
+    string userId = 1;
+}
+
+message GetReviewsByUserIdResponse
+{
+    StatusResponse status = 1;
+    repeated ReviewGrpc reviews = 2;
+}
+
+message GetReviewByIdRequest
+{
+    string reviewId = 1;
+}
+
+message GetReviewByIdResponse
+{
+    StatusResponse status = 1;
+    ReviewGrpc review = 2;
+}
+
+message GetReviewsByProductIdRequest
+{
+    string productId = 1;
+}
+
+message GetReviewsByProductIdResponse
+{
+    StatusResponse status = 1;
+    repeated ReviewGrpc reviews = 2;
+}
+
+message CreateReviewRequest
+{
+    string productId = 1;
+    string userId = 2;
+    int32 rating = 3;
+    string body = 4;
+}
+
+message AddVendorReplyRequest
+{
+    string reviewId = 1;
+    string vendorId = 2;
+    string productId = 3;
+    string body = 4;  
+}
+
+message DeleteReviewRequest
+{
+    string reviewId = 1;
+    string userId = 2;
+}
+
+///////////////////////////
+
+message RatingGrpc
+{
+    string id = 1;
+    float ratingAvg = 2;
+    int32 reviewsCount = 3;
+}
+
+message GetRatingByIdRequest
+{
+    string id = 1;
+}
+
+message GetRatingByIdResponse
+{
+    StatusResponse status = 1;
+    RatingGrpc rating = 2;
+}
+
+message CreateRatingRequest
+{
+    string id = 1;
+}
