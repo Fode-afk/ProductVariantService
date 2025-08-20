@@ -9,19 +9,17 @@ using ProductService.Grpc.Validators;
 using ProductService.Models;
 using ProductService.Protos;
 using ProductService.Utils;
-using ReviewService.Protos;
 
 namespace ProductService.Grpc
 {
     public class GrpcServer(IProductRepo productRepo, IMapper mapper, IMessageBusClient messageBusClient,
-        IConfiguration config, ILogger logger, GrpcReviews.GrpcReviewsClient reviewsClient) : GrpcProducts.GrpcProductsBase
+        IConfiguration config, ILogger logger) : GrpcProducts.GrpcProductsBase
     {
         private readonly IProductRepo _productRepo = productRepo;
         private readonly IMapper _mapper = mapper;
         private readonly IMessageBusClient _messageBusClient = messageBusClient;
         private readonly IConfiguration _config = config;
         private readonly ILogger _logger = logger;
-        private readonly GrpcReviews.GrpcReviewsClient _reviewsClient = reviewsClient;
 
         private readonly IValidator<CreateProductRequest> _createProductValidator = new CreateProductValidator();
         private readonly IValidator<GetProductRequest> _getProductValidator = new GetProductValidator();
@@ -115,25 +113,10 @@ namespace ProductService.Grpc
             if (!res.success)
                 return new Protos.StatusResponse { Status = false, Reason = res.message };
 
-            try
-            {
-                var ratingRes = await _reviewsClient.CreateRatingAsync(new CreateRatingRequest { Id = product.ProductId });
-
-                if (!ratingRes.Status)
-                {
-                    await _productRepo.DeleteProductAsync(product.ProductId);
-                    return new Protos.StatusResponse { Status = false, Reason = res.message };                 
-                }
-            }
-            catch (Exception ex)
-            {
-                await _productRepo.DeleteProductAsync(product.ProductId);
-                return new Protos.StatusResponse { Status = false, Reason = ex.Message };
-            }
-
             var productPub = _mapper.Map<ProductPublishedDto>(product);
 
-            await _messageBusClient.PublishGenericEvent(productPub, EventType.ProductPublished, [ServicesEnum.SEARCH_SERVICE]);           
+            await _messageBusClient.PublishGenericEvent(productPub, EventType.ProductPublished,
+                [ServicesEnum.SEARCH_SERVICE, ServicesEnum.REVIEW_SERVICE]);           
 
             return new Protos.StatusResponse { Status = res.success, Reason = res.message };
         }

@@ -13,6 +13,7 @@
         UserDeletePublished,
         VendorDeletePublished,
         ProductsDeletePublished,
+        VendorCreatePublished,
         Undetermined
     }
 }

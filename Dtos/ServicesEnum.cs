@@ -10,6 +10,8 @@
         SEARCH_SERVICE,
         IMAGE_SERVICE,
         CART_SERVICE,
+        ORDER_SERVICE,
+        PROMO_SERVICE,
         REVIEW_SERVICE
     }
 }

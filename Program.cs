@@ -3,9 +3,7 @@ using ProductService.AsyncDataServices;
 using ProductService.Data;
 using ProductService.EventProcessing;
 using ProductService.Grpc;
-using ProductService.Protos;
 using ProductService.Settings;
-using ReviewService.Protos;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -41,11 +39,6 @@ builder.Services.AddSingleton<ILogger>(provider =>
 {
     var logPath = Path.Combine("Logs", $"{DateTime.UtcNow:yyyy-MM-dd HH-mm-ss}.log");
     return new Logger(logPath);
-});
-
-builder.Services.AddGrpcClient<GrpcReviews.GrpcReviewsClient>(options =>
-{
-    options.Address = new Uri(builder.Configuration["GrpcReview"]);
 });
 
 var app = builder.Build();
