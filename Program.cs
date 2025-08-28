@@ -1,19 +1,25 @@
 using MongoDB.Driver;
 using ProductService.AsyncDataServices;
 using ProductService.Data;
+using ProductService.Data.Caching;
 using ProductService.EventProcessing;
 using ProductService.Grpc;
 using ProductService.Settings;
+using StackExchange.Redis;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 
 builder.Services.AddScoped<IProductRepo, ProductRepo>();
+builder.Services.AddScoped<ICacheRepo, CacheRepo>();
 
 builder.Services.AddGrpc();
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
+    ConnectionMultiplexer.Connect(builder.Configuration.GetConnectionString("Redis")!));
 
 builder.Services.Configure<MongoSettings>(
     builder.Configuration.GetSection("MongoSettings"));

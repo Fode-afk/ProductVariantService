@@ -3,6 +3,7 @@ using Grpc.Core;
 using MongoDB.Bson;
 using ProductService.AsyncDataServices;
 using ProductService.Data;
+using ProductService.Data.Caching;
 using ProductService.Dtos;
 using ProductService.EventProcessing;
 using ProductService.Grpc.Validators;
@@ -12,10 +13,11 @@ using ProductService.Utils;
 
 namespace ProductService.Grpc
 {
-    public class GrpcServer(IProductRepo productRepo, IMapper mapper, IMessageBusClient messageBusClient,
+    public class GrpcServer(IProductRepo productRepo, ICacheRepo cacheRepo, IMapper mapper, IMessageBusClient messageBusClient,
         IConfiguration config, ILogger logger) : GrpcProducts.GrpcProductsBase
     {
         private readonly IProductRepo _productRepo = productRepo;
+        private readonly ICacheRepo _cacheRepo = cacheRepo;
         private readonly IMapper _mapper = mapper;
         private readonly IMessageBusClient _messageBusClient = messageBusClient;
         private readonly IConfiguration _config = config;
@@ -76,7 +78,21 @@ namespace ProductService.Grpc
                 throw new RpcException(new Status(StatusCode.InvalidArgument, valres.ErrorMessage));
             }
 
+            string cacheKey = $"product:{request.ProductId}";
+            var cacheRes = await _cacheRepo.GetAsync<Product>(cacheKey);
+
+            if (cacheRes.success)
+            {
+                return new GetProductResponse
+                {
+                    Status = new StatusResponse { Status = cacheRes.success },
+                    Product = _mapper.Map<ProductGrpc>(cacheRes.Value)
+                };
+            }
+
             var res = await _productRepo.GetProductByIdAsync(request.ProductId);
+
+            await _cacheRepo.SetAsync(cacheKey, res.Value, TimeSpan.FromMinutes(10));
 
             if (!res.success)
             {
@@ -177,6 +193,11 @@ namespace ProductService.Grpc
             {
                 throw new RpcException(new Status(StatusCode.InvalidArgument, valres.ErrorMessage));
             }
+
+            var cacheRes = await _cacheRepo.RemoveAsync(request.ProductId);
+
+            if (!cacheRes.success && cacheRes.message != "Couldn't find product in cache")
+                return new StatusResponse { Status = cacheRes.success, Reason = cacheRes.message };
 
             var res = await _productRepo.DeleteProductAsync(request.ProductId);
 
