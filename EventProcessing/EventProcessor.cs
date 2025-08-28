@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using ProductService.AsyncDataServices;
 using ProductService.Data;
+using ProductService.Data.Caching;
 using ProductService.Dtos;
 using ProductService.Models;
 using ProductService.Utils;
@@ -154,12 +155,19 @@ namespace ProductService.EventProcessing
         private async Task DeleteProductsByVendorId(VendorPublishedDto publishedDto)
         {
             using var scope = _scopeFactory.CreateScope();
-            var repo = scope.ServiceProvider.GetRequiredService<IProductRepo>();
+            var productRepo = scope.ServiceProvider.GetRequiredService<IProductRepo>();
+            var cacheRepo = scope.ServiceProvider.GetRequiredService<ICacheRepo>();
 
-            var res = await repo.DeleteProductsByOwnerIdAsync(publishedDto.VendorId);
+            var res = await productRepo.DeleteProductsByOwnerIdAsync(publishedDto.VendorId);
 
             if (res.success)
             {
+                foreach (var product in res.Value)
+                {
+                    string cacheKey = $"product:{product.ProductId}";
+                    await cacheRepo.RemoveAsync(cacheKey);
+                }
+
                 var productsPub = _mapper.Map<List<ProductPublishedDto>>(res.Value);
 
                 await _messageBusClient.PublishGenericEvent(productsPub, EventType.ProductsDeletePublished,

@@ -194,7 +194,8 @@ namespace ProductService.Grpc
                 throw new RpcException(new Status(StatusCode.InvalidArgument, valres.ErrorMessage));
             }
 
-            var cacheRes = await _cacheRepo.RemoveAsync(request.ProductId);
+            string cacheKey = $"product:{request.ProductId}";
+            var cacheRes = await _cacheRepo.RemoveAsync(cacheKey);
 
             if (!cacheRes.success && cacheRes.message != "Couldn't find product in cache")
                 return new StatusResponse { Status = cacheRes.success, Reason = cacheRes.message };
