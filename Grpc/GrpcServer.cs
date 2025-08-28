@@ -92,12 +92,12 @@ namespace ProductService.Grpc
 
             var res = await _productRepo.GetProductByIdAsync(request.ProductId);
 
-            await _cacheRepo.SetAsync(cacheKey, res.Value, TimeSpan.FromMinutes(10));
-
             if (!res.success)
             {
                 return new GetProductResponse { Status = new Protos.StatusResponse { Status = res.success, Reason = res.message } };
             }
+
+            await _cacheRepo.SetAsync(cacheKey, res.Value, TimeSpan.FromMinutes(10));
 
             return new GetProductResponse
             {
@@ -197,7 +197,7 @@ namespace ProductService.Grpc
             string cacheKey = $"product:{request.ProductId}";
             var cacheRes = await _cacheRepo.RemoveAsync(cacheKey);
 
-            if (!cacheRes.success && cacheRes.message != "Couldn't find product in cache")
+            if (!cacheRes.success && cacheRes.message != "Couldn't find object in cache")
                 return new StatusResponse { Status = cacheRes.success, Reason = cacheRes.message };
 
             var res = await _productRepo.DeleteProductAsync(request.ProductId);

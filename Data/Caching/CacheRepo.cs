@@ -45,7 +45,7 @@ namespace ProductService.Data.Caching
             {
                 var res = await _db.KeyDeleteAsync(key);
 
-                return new ExecutionResult(res, "Couldn't find product in cache");
+                return new ExecutionResult(res, "Couldn't find object in cache");
             }
             catch (Exception ex)
             {
