@@ -7,21 +7,29 @@ namespace ProductService.Data.Caching
     {
         private readonly IDatabase _db = connectionMultiplexer.GetDatabase();
 
-        public async Task<ExecutionResult<T?>> GetAsync<T>(string key)
+        public async Task<ExecutionResult<List<T?>>> GetManyAsync<T>(string[] keys)
         {
             try
             {
-                var value = await _db.StringGetAsync(key);
+                var values = await _db.StringGetAsync([.. keys.Select(k => (RedisKey)k)]);
 
-                if (value.IsNullOrEmpty)
-                    return new ExecutionResult<T?>(false, string.Empty, default);
+                var result = new List<T?>();
 
-                return new ExecutionResult<T?>(true, string.Empty, JsonSerializer.Deserialize<T>(value!));
+                foreach (var value in values)
+                {
+                    if (value.HasValue)
+                        result.Add(JsonSerializer.Deserialize<T>(value!));
+                }
+
+                if (result.Count == 0)
+                    return new ExecutionResult<List<T?>>(false, string.Empty, null);
+
+                return new ExecutionResult<List<T?>>(true, string.Empty, result);
             }
             catch (Exception ex)
             {
-                return new ExecutionResult<T?>(false, ex.Message, default);
-            }          
+                return new ExecutionResult<List<T?>>(false, ex.Message, []);
+            }
         }
 
         public async Task<ExecutionResult> SetAsync<T>(string key, T value, TimeSpan? expiry = null)

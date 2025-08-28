@@ -36,7 +36,7 @@ namespace ProductService.Data
 
         Task<ExecutionResult<Product>> AddAttributesToProductAsync(Product product);
 
-        Task<ExecutionResult> DeleteAttributesFromProductAsync(Product product);
+        Task<ExecutionResult<Product>> DeleteAttributesFromProductAsync(Product product);
 
         Task<ExecutionResult<List<Product>>> DeleteParentCardIdFromProductsAsync(string[] productIds, string cardId, DateTimeOffset updatedAt);
     }

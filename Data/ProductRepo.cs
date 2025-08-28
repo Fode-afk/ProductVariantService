@@ -368,7 +368,7 @@ namespace ProductService.Data
             }
         }
 
-        public async Task<ExecutionResult> DeleteAttributesFromProductAsync(Product product)
+        public async Task<ExecutionResult<Product>> DeleteAttributesFromProductAsync(Product product)
         {
             try
             {
@@ -386,19 +386,25 @@ namespace ProductService.Data
                 }                
 
                 if (updates.Count == 0)
-                    return new ExecutionResult(false, "Nothing to update");
+                    return new ExecutionResult<Product>(false, "Nothing to update", null);
 
                 updates.Add(updateBuilder.Set(p => p.UpdatedAt, product.UpdatedAt));
 
                 var update = updateBuilder.Combine(updates);
-                var result = await _products.UpdateOneAsync(filter, update);
+                var updatedProduct = await _products.FindOneAndUpdateAsync(
+                    filter,
+                    update,
+                    new FindOneAndUpdateOptions<Product>
+                    {
+                        ReturnDocument = ReturnDocument.After
+                    });
 
-                return new ExecutionResult(result.ModifiedCount > 0, string.Empty);
+                return new ExecutionResult<Product>(updatedProduct != null, string.Empty, updatedProduct);
             }
             catch (Exception ex)
             {
                 _logger.Log(ex.Message, LogLevel.Error);
-                return new ExecutionResult(false, ex.Message);
+                return new ExecutionResult<Product>(false, ex.Message, null);
             }
         }
 

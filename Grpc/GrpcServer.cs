@@ -33,13 +33,41 @@ namespace ProductService.Grpc
         {
             _logger.Log($"\"GetProductsByIds\" with params {request.ToJson()} has noticed. Caller: {context.Peer}");
 
+            var cacheKeys = request.ProductIds.Select(id => $"product:{id}").ToArray();
+            var cacheRes = await _cacheRepo.GetManyAsync<Product>(cacheKeys);
+
+            if (cacheRes.success)
+            {
+                foreach (var cachedId in cacheRes.Value.Select(p => p!.ProductId))
+                    request.ProductIds.Remove(cachedId);
+
+                if (request.ProductIds.Count == 0)
+                {
+                    return new GetProductsByIdsResponse
+                    {
+                        Status = new StatusResponse { Status = cacheRes.success },
+                        Products = { _mapper.Map<List<ProductGrpc>>(cacheRes.Value) }
+                    };
+                }
+            }
+
             var res = await _productRepo.GetProductsByIdsAsync([.. request.ProductIds]);
 
             if (!res.success)
             {
-                return new GetProductsByIdsResponse { Status = new Protos.StatusResponse { Status = res.success, Reason = res.message } };
+                return new GetProductsByIdsResponse { Status = new StatusResponse { Status = res.success, Reason = res.message } };
             }
-            return new GetProductsByIdsResponse { Status = new Protos.StatusResponse { Status = res.success }, Products = { _mapper.Map<IEnumerable<ProductGrpc>>(res.Value) } };
+
+            foreach (var product in res.Value)
+            {
+                await _cacheRepo.SetAsync($"product:{product.ProductId}", product, TimeSpan.FromMinutes(10));
+            }
+
+            return new GetProductsByIdsResponse
+            { 
+                Status = new StatusResponse { Status = res.success },
+                Products = { _mapper.Map<List<ProductGrpc>>(cacheRes.success ? res.Value.Concat(cacheRes.Value) : res.Value) }
+            };
         }
 
         public override async Task<GetAllProductsByOwnerIdResponse> GetAllProductsByOwnerId(GetAllProductsByOwnerIdRequest request, ServerCallContext context)
@@ -79,14 +107,14 @@ namespace ProductService.Grpc
             }
 
             string cacheKey = $"product:{request.ProductId}";
-            var cacheRes = await _cacheRepo.GetAsync<Product>(cacheKey);
+            var cacheRes = await _cacheRepo.GetManyAsync<Product>([cacheKey]);
 
             if (cacheRes.success)
             {
                 return new GetProductResponse
                 {
                     Status = new StatusResponse { Status = cacheRes.success },
-                    Product = _mapper.Map<ProductGrpc>(cacheRes.Value)
+                    Product = _mapper.Map<ProductGrpc>(cacheRes.Value.First())
                 };
             }
 
@@ -134,10 +162,10 @@ namespace ProductService.Grpc
             await _messageBusClient.PublishGenericEvent(productPub, EventType.ProductPublished,
                 [ServicesEnum.SEARCH_SERVICE, ServicesEnum.REVIEW_SERVICE]);           
 
-            return new Protos.StatusResponse { Status = res.success, Reason = res.message };
+            return new StatusResponse { Status = res.success, Reason = res.message };
         }
 
-        public override async Task<Protos.StatusResponse> UpdateProductById(UpdateProductRequest request, ServerCallContext context)
+        public override async Task<StatusResponse> UpdateProductById(UpdateProductRequest request, ServerCallContext context)
         {
             _logger.Log($"\"UpdateProductById\" with params {request.ToJson()} has noticed. Caller: {context.Peer}");
 
@@ -158,15 +186,21 @@ namespace ProductService.Grpc
             
             if (res.success)
             {
+                await _cacheRepo.RemoveAsync($"product:{res.Value.ProductId}");
+
+                //TODO: проблема что если мы потеряем связь с redis то мы не удалим кеш и у нас останутся устаревшие данные
+                //if (!cacheRes.success && cacheRes.message != "Couldn't find object in cache")
+                //    return new StatusResponse { Status = cacheRes.success, Reason = cacheRes.message };
+
                 var productPub = _mapper.Map<ProductPublishedDto>(res.Value);
 
                 await _messageBusClient.PublishGenericEvent(productPub, EventType.ProductUpdatePublished, [ServicesEnum.SEARCH_SERVICE]);
             }
 
-            return new Protos.StatusResponse { Status = res.success, Reason = res.message };
+            return new StatusResponse { Status = res.success, Reason = res.message };
         }
 
-        public override async Task<Protos.StatusResponse> SetCanBeOrdered(SetCanBeOrderedRequest request, ServerCallContext context)
+        public override async Task<StatusResponse> SetCanBeOrdered(SetCanBeOrderedRequest request, ServerCallContext context)
         {
             _logger.Log($"\"SetCanBeOrdered\" with params {request.ToJson()} has noticed. Caller: {context.Peer}");          
             var localTime = DateTimeUtil.GetCurrentTimeFormatted(_config);
@@ -175,15 +209,17 @@ namespace ProductService.Grpc
 
             if (res.success)
             {
+                await _cacheRepo.RemoveAsync($"product:{res.Value.ProductId}");
+
                 var productPub = _mapper.Map<ProductPublishedDto>(res.Value);
 
                 await _messageBusClient.PublishGenericEvent(productPub, EventType.ProductUpdatePublished, [ServicesEnum.SEARCH_SERVICE]);
             }
 
-            return new Protos.StatusResponse { Status = res.success, Reason = res.message };
+            return new StatusResponse { Status = res.success, Reason = res.message };
         }
 
-        public override async Task<Protos.StatusResponse> DeleteProductById(DeleteProductRequest request, ServerCallContext context)
+        public override async Task<StatusResponse> DeleteProductById(DeleteProductRequest request, ServerCallContext context)
         {
             _logger.Log($"\"DeleteProductById\" with params {request.ToJson()} has noticed. Caller: {context.Peer}");
 
@@ -232,15 +268,15 @@ namespace ProductService.Grpc
                 }
             }
 
-            return new Protos.StatusResponse { Status = res.success, Reason = res.message };
+            return new StatusResponse { Status = res.success, Reason = res.message };
         }
 
-        public override async Task<Protos.StatusResponse> ProductExists(ProductExistsRequest request, ServerCallContext context)
+        public override async Task<StatusResponse> ProductExists(ProductExistsRequest request, ServerCallContext context)
         {
             _logger.Log($"\"ProductExists\" with params {request.ToJson()} has noticed. Caller: {context.Peer}");
 
             var res = await _productRepo.ProductExistsAsync(request.ProductId);
-            return new Protos.StatusResponse { Status = res.success, Reason = res.message };
+            return new StatusResponse { Status = res.success, Reason = res.message };
         }
 
         public override async Task<GetParentCardIdResponse> GetParentCardId(GetParentCardIdRequest request, ServerCallContext context)
@@ -251,13 +287,13 @@ namespace ProductService.Grpc
 
             if (res.Value == "")
             { 
-                return new GetParentCardIdResponse {Status = new Protos.StatusResponse { Status = res.success, Reason = res.message } };
+                return new GetParentCardIdResponse {Status = new StatusResponse { Status = res.success, Reason = res.message } };
             }
 
-            return new GetParentCardIdResponse {Status = new Protos.StatusResponse { Status = res.success, Reason = res.message }, ParentCardId = res.Value };
+            return new GetParentCardIdResponse {Status = new StatusResponse { Status = res.success, Reason = res.message }, ParentCardId = res.Value };
         }
 
-        public override async Task<Protos.StatusResponse> UpdateParentCardId(UpdateParentCardIdRequest request, ServerCallContext context)
+        public override async Task<StatusResponse> UpdateParentCardId(UpdateParentCardIdRequest request, ServerCallContext context)
         {
             _logger.Log($"\"UpdateParentCardId\" with params {request.ToJson()} has noticed. Caller: {context.Peer}");
 
@@ -271,12 +307,14 @@ namespace ProductService.Grpc
 
             if (res.success)
             {
+                await _cacheRepo.RemoveAsync($"product:{res.Value.ProductId}");
+
                 var productPub = _mapper.Map<ProductPublishedDto>(res.Value);
 
                 await _messageBusClient.PublishGenericEvent(productPub, EventType.ProductUpdateParentCardIdPublished, [ServicesEnum.SEARCH_SERVICE]);
             }
 
-            return new Protos.StatusResponse { Status = res.success, Reason = res.message };
+            return new StatusResponse { Status = res.success, Reason = res.message };
         }
 
         public override async Task<GetOwnerIdResponse> GetOwnerId(GetOwnerIdRequest request, ServerCallContext context)
@@ -284,7 +322,7 @@ namespace ProductService.Grpc
             var res = await _productRepo.GetOwnerIdAsync(request.ProductId);
 
             return new GetOwnerIdResponse {
-                Status = new Protos.StatusResponse
+                Status = new StatusResponse
                 { 
                     Status = res.success,
                     Reason = res.message
@@ -292,7 +330,7 @@ namespace ProductService.Grpc
                 OwnerId = res.Value
             };
         }
-        public override async Task<Protos.StatusResponse> AddAttributesToProduct(AddAttributesToProductRequest request, ServerCallContext context)
+        public override async Task<StatusResponse> AddAttributesToProduct(AddAttributesToProductRequest request, ServerCallContext context)
         {
             _logger.Log($"\"AddAttributesToProduct\" with params {request.ToJson()} has noticed. Caller: {context.Peer}");
 
@@ -306,15 +344,17 @@ namespace ProductService.Grpc
 
             if (res.success)
             {
+                await _cacheRepo.RemoveAsync($"product:{res.Value.ProductId}");
+
                 var productPub = _mapper.Map<ProductPublishedDto>(res.Value);
 
                 await _messageBusClient.PublishGenericEvent(productPub, EventType.ProductUpdatePublished, [ServicesEnum.SEARCH_SERVICE]);
             }
 
-            return new Protos.StatusResponse { Status = res.success, Reason = res.message };
+            return new StatusResponse { Status = res.success, Reason = res.message };
         }
 
-        public override async Task<Protos.StatusResponse> DeleteAttributesFromProduct(DeleteAttributesFromProductRequest request, ServerCallContext context)
+        public override async Task<StatusResponse> DeleteAttributesFromProduct(DeleteAttributesFromProductRequest request, ServerCallContext context)
         {
             _logger.Log($"\"DeleteAttributesFromProduct\" with params {request.ToJson()} has noticed. Caller: {context.Peer}");
 
@@ -328,12 +368,14 @@ namespace ProductService.Grpc
 
             if (res.success)
             {
+                await _cacheRepo.RemoveAsync($"product:{res.Value.ProductId}");
+
                 var productPub = _mapper.Map<ProductPublishedDto>(product);
 
                 await _messageBusClient.PublishGenericEvent(productPub, EventType.ProductUpdatePublished, [ServicesEnum.SEARCH_SERVICE]);            
             }
 
-            return new Protos.StatusResponse { Status = res.success, Reason = res.message };
+            return new StatusResponse { Status = res.success, Reason = res.message };
         }
     }
 }

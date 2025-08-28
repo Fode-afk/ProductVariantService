@@ -92,6 +92,7 @@ namespace ProductService.EventProcessing
 
             using var scope = _scopeFactory.CreateScope();
             var repo = scope.ServiceProvider.GetRequiredService<IProductRepo>();
+            var cacheRepo = scope.ServiceProvider.GetRequiredService<ICacheRepo>();
 
             var product = new Product
             {
@@ -104,6 +105,8 @@ namespace ProductService.EventProcessing
 
             if (res.success)
             {
+                await cacheRepo.RemoveAsync($"product:{product.ProductId}");
+
                 var productPub = _mapper.Map<ProductPublishedDto>(res.Value);
 
                 await _messageBusClient.PublishGenericEvent(productPub, EventType.ProductUpdatePublished, [ServicesEnum.SEARCH_SERVICE]);
@@ -117,6 +120,7 @@ namespace ProductService.EventProcessing
 
             using var scope = _scopeFactory.CreateScope();
             var repo = scope.ServiceProvider.GetRequiredService<IProductRepo>();
+            var cacheRepo = scope.ServiceProvider.GetRequiredService<ICacheRepo>();
 
             var product = new Product
             {
@@ -129,6 +133,8 @@ namespace ProductService.EventProcessing
 
             if (res.success)
             {
+                await cacheRepo.RemoveAsync($"product:{product.ProductId}");
+
                 var productPub = _mapper.Map<ProductPublishedDto>(product);
 
                 await _messageBusClient.PublishGenericEvent(productPub, EventType.ProductUpdatePublished, [ServicesEnum.SEARCH_SERVICE]);
@@ -140,12 +146,16 @@ namespace ProductService.EventProcessing
         {
             using var scope = _scopeFactory.CreateScope();
             var repo = scope.ServiceProvider.GetRequiredService<IProductRepo>();
+            var cacheRepo = scope.ServiceProvider.GetRequiredService<ICacheRepo>();
 
             var res = await repo.DeleteParentCardIdFromProductsAsync([.. publishedDto.ProductIds],
                 publishedDto.CardId, DateTimeUtil.GetCurrentTimeFormatted(_config));
 
             if (res.success)
             {
+                foreach (var productId in res.Value.Select(p => p.ProductId))
+                    await cacheRepo.RemoveAsync($"product:{productId}");
+
                 var productsPub = _mapper.Map<List<ProductPublishedDto>>(res.Value);
 
                 await _messageBusClient.PublishGenericEvent(productsPub, EventType.DeleteParentCardIdFromProducts, [ServicesEnum.SEARCH_SERVICE]);
