@@ -19,7 +19,15 @@ builder.Services.AddGrpc();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
-    ConnectionMultiplexer.Connect(builder.Configuration.GetConnectionString("Redis")!));
+{
+    var redisConfig = ConfigurationOptions.Parse(
+        builder.Configuration.GetConnectionString("Redis")!
+    );
+    redisConfig.AbortOnConnectFail = false;
+    redisConfig.ReconnectRetryPolicy = new ExponentialRetry(5000);
+
+    return ConnectionMultiplexer.Connect(redisConfig);
+});
 
 builder.Services.Configure<MongoSettings>(
     builder.Configuration.GetSection("MongoSettings"));
