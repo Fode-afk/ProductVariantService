@@ -119,7 +119,7 @@ namespace ProductService.Grpc
             }
 
             var res = await _productRepo.GetProductByIdAsync(request.ProductId);
-
+if (res.success) {
             if (!res.success)
             {
                 return new GetProductResponse { Status = new Protos.StatusResponse { Status = res.success, Reason = res.message } };
