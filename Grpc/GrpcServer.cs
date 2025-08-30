@@ -3,7 +3,6 @@ using Grpc.Core;
 using MongoDB.Bson;
 using ProductService.AsyncDataServices;
 using ProductService.Data;
-using ProductService.Data.Caching;
 using ProductService.Dtos;
 using ProductService.EventProcessing;
 using ProductService.Grpc.Validators;
@@ -13,11 +12,10 @@ using ProductService.Utils;
 
 namespace ProductService.Grpc
 {
-    public class GrpcServer(IProductRepo productRepo, ICacheRepo cacheRepo, IMapper mapper, IMessageBusClient messageBusClient,
+    public class GrpcServer(IProductRepo productRepo, IMapper mapper, IMessageBusClient messageBusClient,
         IConfiguration config, ILogger logger) : GrpcProducts.GrpcProductsBase
     {
-        private readonly IProductRepo _productRepo = productRepo;
-        private readonly ICacheRepo _cacheRepo = cacheRepo;
+        private readonly IProductRepo _productRepo = productRepo;      
         private readonly IMapper _mapper = mapper;
         private readonly IMessageBusClient _messageBusClient = messageBusClient;
         private readonly IConfiguration _config = config;
@@ -32,41 +30,13 @@ namespace ProductService.Grpc
         public async override Task<GetProductsByIdsResponse> GetProductsByIds(GetProductsByIdsRequest request, ServerCallContext context)
         {
             _logger.Log($"\"GetProductsByIds\" with params {request.ToJson()} has noticed. Caller: {context.Peer}");
-
-            var cacheKeys = request.ProductIds.Select(id => $"product:{id}").ToArray();
-            var cacheRes = await _cacheRepo.GetManyAsync<Product>(cacheKeys);
-
-            if (cacheRes.success)
-            {
-                foreach (var cachedId in cacheRes.Value.Select(p => p!.ProductId))
-                    request.ProductIds.Remove(cachedId);
-
-                if (request.ProductIds.Count == 0)
-                {
-                    return new GetProductsByIdsResponse
-                    {
-                        Status = new StatusResponse { Status = cacheRes.success },
-                        Products = { _mapper.Map<List<ProductGrpc>>(cacheRes.Value) }
-                    };
-                }
-            }
-
-            var res = await _productRepo.GetProductsByIdsAsync([.. request.ProductIds]);
-
-            if (!res.success)
-            {
-                return new GetProductsByIdsResponse { Status = new StatusResponse { Status = res.success, Reason = res.message } };
-            }
-
-            foreach (var product in res.Value)
-            {
-                await _cacheRepo.SetAsync($"product:{product.ProductId}", product, TimeSpan.FromMinutes(10));
-            }
+            
+            var res = await _productRepo.GetProductsByIdsAsync([.. request.ProductIds]);          
 
             return new GetProductsByIdsResponse
             { 
-                Status = new StatusResponse { Status = res.success },
-                Products = { _mapper.Map<List<ProductGrpc>>(cacheRes.success ? res.Value.Concat(cacheRes.Value) : res.Value) }
+                Status = new StatusResponse { Status = res.success, Reason = res.message },
+                Products = { _mapper.Map<IEnumerable<ProductGrpc>>(res.Value) }
             };
         }
 
@@ -90,7 +60,7 @@ namespace ProductService.Grpc
 
             return new GetAllProductsByOwnerIdResponse
             {
-                Status = new Protos.StatusResponse { Status = true },
+                Status = new StatusResponse { Status = true },
                 Products = { _mapper.Map<IEnumerable<ProductGrpc>>(res.Value) }
             };
         }
@@ -104,28 +74,9 @@ namespace ProductService.Grpc
             if (!valres.IsValid)
             {
                 throw new RpcException(new Status(StatusCode.InvalidArgument, valres.ErrorMessage));
-            }
+            }            
 
-            string cacheKey = $"product:{request.ProductId}";
-            var cacheRes = await _cacheRepo.GetManyAsync<Product>([cacheKey]);
-
-            if (cacheRes.success)
-            {
-                return new GetProductResponse
-                {
-                    Status = new StatusResponse { Status = cacheRes.success },
-                    Product = _mapper.Map<ProductGrpc>(cacheRes.Value.First())
-                };
-            }
-
-            var res = await _productRepo.GetProductByIdAsync(request.ProductId);
-if (res.success) {
-            if (!res.success)
-            {
-                return new GetProductResponse { Status = new Protos.StatusResponse { Status = res.success, Reason = res.message } };
-            }
-
-            await _cacheRepo.SetAsync(cacheKey, res.Value, TimeSpan.FromMinutes(10));
+            var res = await _productRepo.GetProductByIdAsync(request.ProductId);            
 
             return new GetProductResponse
             {
@@ -185,13 +136,7 @@ if (res.success) {
             var res = await _productRepo.UpdateProductAsync(product);
             
             if (res.success)
-            {
-                await _cacheRepo.RemoveAsync($"product:{res.Value.ProductId}");
-
-                //TODO: проблема что если мы потеряем связь с redis то мы не удалим кеш и у нас останутся устаревшие данные
-                //if (!cacheRes.success && cacheRes.message != "Couldn't find object in cache")
-                //    return new StatusResponse { Status = cacheRes.success, Reason = cacheRes.message };
-
+            {              
                 var productPub = _mapper.Map<ProductPublishedDto>(res.Value);
 
                 await _messageBusClient.PublishGenericEvent(productPub, EventType.ProductUpdatePublished, 
@@ -209,9 +154,7 @@ if (res.success) {
             var res = await _productRepo.SetCanBeOrderedAsync(request.ProductId, request.CanBeOrdered, localTime);
 
             if (res.success)
-            {
-                await _cacheRepo.RemoveAsync($"product:{res.Value.ProductId}");
-
+            {              
                 var productPub = _mapper.Map<ProductPublishedDto>(res.Value);
 
                 await _messageBusClient.PublishGenericEvent(productPub, EventType.ProductUpdatePublished, 
@@ -230,13 +173,7 @@ if (res.success) {
             if (!valres.IsValid)
             {
                 throw new RpcException(new Status(StatusCode.InvalidArgument, valres.ErrorMessage));
-            }
-
-            string cacheKey = $"product:{request.ProductId}";
-            var cacheRes = await _cacheRepo.RemoveAsync(cacheKey);
-
-            if (!cacheRes.success && cacheRes.message != "Couldn't find object in cache")
-                return new StatusResponse { Status = cacheRes.success, Reason = cacheRes.message };
+            }          
 
             var res = await _productRepo.DeleteProductAsync(request.ProductId);
 
@@ -309,9 +246,7 @@ if (res.success) {
             var res = await _productRepo.UpdateParentCardIdAsync(product);
 
             if (res.success)
-            {
-                await _cacheRepo.RemoveAsync($"product:{res.Value.ProductId}");
-
+            {               
                 var productPub = _mapper.Map<ProductPublishedDto>(res.Value);
 
                 await _messageBusClient.PublishGenericEvent(productPub, EventType.ProductUpdateParentCardIdPublished, 
@@ -347,9 +282,7 @@ if (res.success) {
             var res = await _productRepo.AddAttributesToProductAsync(product);
 
             if (res.success)
-            {
-                await _cacheRepo.RemoveAsync($"product:{res.Value.ProductId}");
-
+            {             
                 var productPub = _mapper.Map<ProductPublishedDto>(res.Value);
 
                 await _messageBusClient.PublishGenericEvent(productPub, EventType.ProductUpdatePublished, 
@@ -372,9 +305,7 @@ if (res.success) {
             var res = await _productRepo.DeleteAttributesFromProductAsync(product);
 
             if (res.success)
-            {
-                await _cacheRepo.RemoveAsync($"product:{res.Value.ProductId}");
-
+            {            
                 var productPub = _mapper.Map<ProductPublishedDto>(product);
 
                 await _messageBusClient.PublishGenericEvent(productPub, EventType.ProductUpdatePublished, 
