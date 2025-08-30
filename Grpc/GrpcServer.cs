@@ -160,7 +160,7 @@ namespace ProductService.Grpc
             var productPub = _mapper.Map<ProductPublishedDto>(product);
 
             await _messageBusClient.PublishGenericEvent(productPub, EventType.ProductPublished,
-                [ServicesEnum.SEARCH_SERVICE, ServicesEnum.REVIEW_SERVICE]);           
+                [ServicesEnum.SEARCH_SERVICE, ServicesEnum.REVIEW_SERVICE, ServicesEnum.RECOMMENDATION_SERVICE]);           
 
             return new StatusResponse { Status = res.success, Reason = res.message };
         }
@@ -194,7 +194,8 @@ namespace ProductService.Grpc
 
                 var productPub = _mapper.Map<ProductPublishedDto>(res.Value);
 
-                await _messageBusClient.PublishGenericEvent(productPub, EventType.ProductUpdatePublished, [ServicesEnum.SEARCH_SERVICE]);
+                await _messageBusClient.PublishGenericEvent(productPub, EventType.ProductUpdatePublished, 
+                    [ServicesEnum.SEARCH_SERVICE, ServicesEnum.RECOMMENDATION_SERVICE]);
             }
 
             return new StatusResponse { Status = res.success, Reason = res.message };
@@ -213,7 +214,8 @@ namespace ProductService.Grpc
 
                 var productPub = _mapper.Map<ProductPublishedDto>(res.Value);
 
-                await _messageBusClient.PublishGenericEvent(productPub, EventType.ProductUpdatePublished, [ServicesEnum.SEARCH_SERVICE]);
+                await _messageBusClient.PublishGenericEvent(productPub, EventType.ProductUpdatePublished, 
+                    [ServicesEnum.SEARCH_SERVICE, ServicesEnum.RECOMMENDATION_SERVICE]);
             }
 
             return new StatusResponse { Status = res.success, Reason = res.message };
@@ -252,7 +254,8 @@ namespace ProductService.Grpc
                         ServicesEnum.SEARCH_SERVICE,
                         ServicesEnum.REVIEW_SERVICE,
                         res.Value.ParentCardId != string.Empty ? ServicesEnum.CARD_SERVICE : null,
-                        res.Value.ParentCardId != string.Empty ? ServicesEnum.CART_SERVICE : null
+                        res.Value.ParentCardId != string.Empty ? ServicesEnum.CART_SERVICE : null, 
+                        ServicesEnum.RECOMMENDATION_SERVICE
                     }
                     .Where(s => s != null)!
                     .Cast<ServicesEnum>()]);
@@ -311,7 +314,8 @@ namespace ProductService.Grpc
 
                 var productPub = _mapper.Map<ProductPublishedDto>(res.Value);
 
-                await _messageBusClient.PublishGenericEvent(productPub, EventType.ProductUpdateParentCardIdPublished, [ServicesEnum.SEARCH_SERVICE]);
+                await _messageBusClient.PublishGenericEvent(productPub, EventType.ProductUpdateParentCardIdPublished, 
+                    [ServicesEnum.SEARCH_SERVICE, ServicesEnum.RECOMMENDATION_SERVICE]);
             }
 
             return new StatusResponse { Status = res.success, Reason = res.message };
@@ -348,7 +352,8 @@ namespace ProductService.Grpc
 
                 var productPub = _mapper.Map<ProductPublishedDto>(res.Value);
 
-                await _messageBusClient.PublishGenericEvent(productPub, EventType.ProductUpdatePublished, [ServicesEnum.SEARCH_SERVICE]);
+                await _messageBusClient.PublishGenericEvent(productPub, EventType.ProductUpdatePublished, 
+                    [ServicesEnum.SEARCH_SERVICE, ServicesEnum.RECOMMENDATION_SERVICE]);
             }
 
             return new StatusResponse { Status = res.success, Reason = res.message };
@@ -372,7 +377,8 @@ namespace ProductService.Grpc
 
                 var productPub = _mapper.Map<ProductPublishedDto>(product);
 
-                await _messageBusClient.PublishGenericEvent(productPub, EventType.ProductUpdatePublished, [ServicesEnum.SEARCH_SERVICE]);            
+                await _messageBusClient.PublishGenericEvent(productPub, EventType.ProductUpdatePublished, 
+                    [ServicesEnum.SEARCH_SERVICE, ServicesEnum.RECOMMENDATION_SERVICE]);            
             }
 
             return new StatusResponse { Status = res.success, Reason = res.message };

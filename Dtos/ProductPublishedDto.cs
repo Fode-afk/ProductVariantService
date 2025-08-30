@@ -21,5 +21,7 @@ namespace ProductService.Dtos
         public List<string> ImageURLs { get; set; }
 
         public List<ProductAttribute> Attributes { get; set; }
+        public DateTimeOffset UpdatedAt { get; set; }
+        public DateTimeOffset CreatedAt { get; set; }
     }
 }

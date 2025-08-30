@@ -12,6 +12,7 @@
         CART_SERVICE,
         ORDER_SERVICE,
         PROMO_SERVICE,
-        REVIEW_SERVICE
+        REVIEW_SERVICE,
+        RECOMMENDATION_SERVICE
     }
 }
