@@ -122,18 +122,22 @@ namespace ProductService.Data.Caching
                     }
                 }
 
-                var res = await _products.Find(p => ids.Contains(p.ProductId)).ToListAsync();
+                var productRes = await _products.Find(p => ids.Contains(p.ProductId)).ToListAsync();
 
-                if (res.Count == 0)
+                if (productRes.Count == 0)
                     return new ExecutionResult<IEnumerable<Product>>(false, "Products not found", null);
 
-                foreach (var product in res)
+                var res = cacheRes.success ? productRes.Concat(cacheRes.Value.OfType<Product>()) : productRes;
+
+                if (!productIds.OrderBy(x => x).SequenceEqual(res.Select(p => p.ProductId).OrderBy(x => x)))
+                    return new ExecutionResult<IEnumerable<Product>>(false, "Not all products were found", null);
+
+                foreach (var product in productRes)
                 {
                     await _cacheRepo.SetAsync($"product:{product.ProductId}", product, TimeSpan.FromMinutes(10));
                 }
 
-                return new ExecutionResult<IEnumerable<Product>>(true, string.Empty,
-                    cacheRes.success ? res.Concat(cacheRes.Value.OfType<Product>()) : res);
+                return new ExecutionResult<IEnumerable<Product>>(true, string.Empty, res);
             }
             catch (Exception ex)
             {
