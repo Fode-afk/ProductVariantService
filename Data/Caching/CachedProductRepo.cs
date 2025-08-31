@@ -30,10 +30,8 @@ namespace ProductService.Data.Caching
             try
             {
                 string cacheKey = $"product:{productId}";
-                var cacheRes = await _cacheRepo.RemoveAsync(cacheKey);
 
-                if (!cacheRes.success && cacheRes.message != "Couldn't find object in cache")
-                    return new ExecutionResult<Product>(cacheRes.success, cacheRes.message, null);
+                await _cacheRepo.RemoveAsync(cacheKey);          
 
                 var res = await _products.FindOneAndDeleteAsync(p => p.ProductId == productId);              
                 return new ExecutionResult<Product>(res != null, string.Empty, res);
@@ -203,10 +201,6 @@ namespace ProductService.Data.Caching
                 if (updatedProduct != null)
                     await _cacheRepo.RemoveAsync($"product:{updatedProduct.ProductId}");
 
-                //TODO: проблема что если мы потеряем связь с redis то мы не удалим кеш и у нас останутся устаревшие данные
-                //if (!cacheRes.success && cacheRes.message != "Couldn't find object in cache")
-                //    return new StatusResponse { Status = cacheRes.success, Reason = cacheRes.message };
-
                 return new ExecutionResult<Product>(updatedProduct != null, string.Empty, updatedProduct);
             }
             catch (Exception ex)
@@ -221,13 +215,11 @@ namespace ProductService.Data.Caching
         {
             try
             {
-                var filter = Builders<Product>.Filter.Eq(p => p.ProductId, productId);
+                var filter = Builders<Product>.Filter.Eq(p => p.ProductId, productId) &
+                            Builders<Product>.Filter.Ne(p => p.ParentCardId, "");
 
                 var updateBuilder = Builders<Product>.Update;
                 var updates = new List<UpdateDefinition<Product>>();
-
-                if (!await HasParentCard(productId))
-                    return new ExecutionResult<Product>(false, "Product must have a parentCardId", null);
 
                 updates.Add(updateBuilder.Set(p => p.CanBeOrdered, canBeOrdered));
 
@@ -255,12 +247,6 @@ namespace ProductService.Data.Caching
                 _logger.Log(ex.Message, LogLevel.Error);
                 return new ExecutionResult<Product>(false, ex.Message, null);
             }
-        }
-
-        private async Task<bool> HasParentCard(string productId)
-        {
-            var result = await _products.Find(p => p.ProductId == productId && p.ParentCardId != string.Empty).FirstOrDefaultAsync();
-            return result != null;
         }
 
         public async Task<ExecutionResult<string>> GetParentCardIdAsync(string productId)

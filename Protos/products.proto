@@ -4,7 +4,7 @@ option csharp_namespace = "ProductService.Protos";
 
 service GrpcProducts
 {
-    //TODO: Везде когда мы что-то создаем или обновляем вы должны возвращать обновлённую модель
+    //TODO: пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅ-пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
     rpc CreateProduct(CreateProductRequest) returns (StatusResponse);
     rpc GetProductById(GetProductRequest) returns (GetProductResponse);
     rpc GetProductsByIds(GetProductsByIdsRequest) returns (GetProductsByIdsResponse);
