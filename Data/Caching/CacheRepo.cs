@@ -7,18 +7,27 @@ namespace ProductService.Data.Caching
     {
         private readonly IDatabase _db = connectionMultiplexer.GetDatabase();
 
-        public async Task<ExecutionResult<List<T?>>> GetManyAsync<T>(string[] keys)
+        public async Task<ExecutionResult<List<T?>>> GetManyAsync<T>(string[] keys, TimeSpan? slidingExpiration = null)
         {
             try
             {
-                var values = await _db.StringGetAsync([.. keys.Select(k => (RedisKey)k)]);
+                var redisKeys = keys.Select(k => (RedisKey)k).ToArray();
+                var values = await _db.StringGetAsync(redisKeys);
 
                 var result = new List<T?>();
 
-                foreach (var value in values)
+                for (int i = 0; i < redisKeys.Length; i++)
                 {
+                    var value = values[i];
                     if (value.HasValue)
+                    {
                         result.Add(JsonSerializer.Deserialize<T>(value!));
+
+                        if (slidingExpiration != null)
+                        {
+                            await _db.KeyExpireAsync(redisKeys[i], slidingExpiration);
+                        }
+                    }
                 }
 
                 if (result.Count == 0)

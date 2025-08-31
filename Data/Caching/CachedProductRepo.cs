@@ -81,7 +81,7 @@ namespace ProductService.Data.Caching
             try
             {
                 string cacheKey = $"product:{productId}";
-                var cacheRes = await _cacheRepo.GetManyAsync<Product>([cacheKey]);
+                var cacheRes = await _cacheRepo.GetManyAsync<Product>([cacheKey], TimeSpan.FromMinutes(10));
 
                 if (cacheRes.success)
                     return new ExecutionResult<Product>(cacheRes.success, cacheRes.message, cacheRes.Value.First());                   
@@ -107,7 +107,7 @@ namespace ProductService.Data.Caching
             try
             {
                 var cacheKeys = productIds.Select(id => $"product:{id}").ToArray();
-                var cacheRes = await _cacheRepo.GetManyAsync<Product>(cacheKeys);
+                var cacheRes = await _cacheRepo.GetManyAsync<Product>(cacheKeys, TimeSpan.FromMinutes(10));
 
                 var ids = productIds.ToList();
 
