@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
 using ProductService.AsyncDataServices;
 using ProductService.Data;
-using ProductService.Data.Caching;
-using ProductService.Dtos;
 using ProductService.Models;
 using ProductService.Utils;
 using System.Text.Json;
+using migApp.Shared.EventDtos;
+using migApp.Shared.Enums;
 
 namespace ProductService.EventProcessing
 {

@@ -1,5 +1,4 @@
-﻿using ProductService.Dtos;
-using ProductService.EventProcessing;
+﻿using migApp.Shared.Enums;
 
 namespace ProductService.AsyncDataServices
 {

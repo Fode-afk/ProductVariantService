@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
-using ProductService.Dtos;
+using migApp.Shared.Dtos.Products;
+using migApp.Shared.EventDtos;
 using ProductService.Models;
 using ProductService.Protos;
 using ProductService.Utils;
@@ -23,6 +24,7 @@ namespace ProductService.Profiles
                 .ForMember(dest => dest.UpdatedAt, opt => opt.MapFrom(src => src.UpdatedAt.ToString("o")));
 
             CreateMap<ProductAttributeGrpc, ProductAttribute>().ReverseMap();
+            CreateMap<ProductAttributeDto, ProductAttribute>().ReverseMap();
 
             CreateMap<Product, ProductPublishedDto>()
                 .ForMember(dest => dest.Attributes, opt => opt.MapFrom(src => src.Attributes))

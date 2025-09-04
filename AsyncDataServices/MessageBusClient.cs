@@ -1,5 +1,5 @@
-﻿using ProductService.Dtos;
-using ProductService.EventProcessing;
+﻿using migApp.Shared.Enums;
+using migApp.Shared.EventDtos;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System.Text;

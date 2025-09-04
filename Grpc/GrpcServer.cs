@@ -3,12 +3,11 @@ using Grpc.Core;
 using MongoDB.Bson;
 using ProductService.AsyncDataServices;
 using ProductService.Data;
-using ProductService.Dtos;
-using ProductService.EventProcessing;
-using ProductService.Grpc.Validators;
 using ProductService.Models;
 using ProductService.Protos;
 using ProductService.Utils;
+using migApp.Shared.Enums;
+using migApp.Shared.EventDtos;
 
 namespace ProductService.Grpc
 {
@@ -19,13 +18,7 @@ namespace ProductService.Grpc
         private readonly IMapper _mapper = mapper;
         private readonly IMessageBusClient _messageBusClient = messageBusClient;
         private readonly IConfiguration _config = config;
-        private readonly ILogger _logger = logger;
-
-        private readonly IValidator<CreateProductRequest> _createProductValidator = new CreateProductValidator();
-        private readonly IValidator<GetProductRequest> _getProductValidator = new GetProductValidator();
-        private readonly IValidator<GetAllProductsByOwnerIdRequest> _getAllProductsValidator = new GetAllProductsValidator();
-        private readonly IValidator<UpdateProductRequest> _updateProductValidator = new UpdateProductValidator();
-        private readonly IValidator<DeleteProductRequest> _deleteProductValidator = new DeleteProductValidator();
+        private readonly ILogger _logger = logger;      
 
         public async override Task<GetProductsByIdsResponse> GetProductsByIds(GetProductsByIdsRequest request, ServerCallContext context)
         {
@@ -43,14 +36,7 @@ namespace ProductService.Grpc
         public override async Task<GetAllProductsByOwnerIdResponse> GetAllProductsByOwnerId(GetAllProductsByOwnerIdRequest request, ServerCallContext context)
         {
             _logger.Log($"\"GetAllProductsByOwnerId\" with params {request.ToJson()} has noticed. Caller: {context.Peer}");
-
-            var valres = _getAllProductsValidator.Validate(request);
-
-            if (!valres.IsValid)
-            {
-                throw new RpcException(new Status(StatusCode.InvalidArgument, valres.ErrorMessage));
-            }
-
+           
             var res = await _productRepo.GetAllProductsByOwnerIdAsync(request.OwnerId);
 
             if (!res.success)
@@ -68,14 +54,7 @@ namespace ProductService.Grpc
         public override async Task<GetProductResponse> GetProductById(GetProductRequest request, ServerCallContext context)
         {
             _logger.Log($"\"GetProductById\" with params {request.ToJson()} has noticed. Caller: {context.Peer}");
-
-            var valres = _getProductValidator.Validate(request);
-
-            if (!valres.IsValid)
-            {
-                throw new RpcException(new Status(StatusCode.InvalidArgument, valres.ErrorMessage));
-            }            
-
+            
             var res = await _productRepo.GetProductByIdAsync(request.ProductId);            
 
             return new GetProductResponse
@@ -88,14 +67,7 @@ namespace ProductService.Grpc
         public override async Task<Protos.StatusResponse> CreateProduct(CreateProductRequest request, ServerCallContext context)
         {
             _logger.Log($"\"CreateProduct\" with params {request.ToJson()} has noticed. Caller: {context.Peer}");
-
-            var valres = _createProductValidator.Validate(request);
-
-            if (!valres.IsValid)
-            {
-                throw new RpcException(new Status(StatusCode.InvalidArgument, valres.ErrorMessage));
-            }
-
+            
             var product = _mapper.Map<Product>(new ProductGrpc() { Name = request.Name, OwnerId = request.OwnerId });
 
             var localTime = DateTimeUtil.GetCurrentTimeFormatted(_config);
@@ -118,14 +90,7 @@ namespace ProductService.Grpc
 
         public override async Task<StatusResponse> UpdateProductById(UpdateProductRequest request, ServerCallContext context)
         {
-            _logger.Log($"\"UpdateProductById\" with params {request.ToJson()} has noticed. Caller: {context.Peer}");
-
-            var valres = _updateProductValidator.Validate(request);
-
-            if (!valres.IsValid)
-            {
-                throw new RpcException(new Status(StatusCode.InvalidArgument, valres.ErrorMessage));
-            }
+            _logger.Log($"\"UpdateProductById\" with params {request.ToJson()} has noticed. Caller: {context.Peer}");           
 
             var product = _mapper.Map<Product>(request);
 
@@ -166,14 +131,7 @@ namespace ProductService.Grpc
 
         public override async Task<StatusResponse> DeleteProductById(DeleteProductRequest request, ServerCallContext context)
         {
-            _logger.Log($"\"DeleteProductById\" with params {request.ToJson()} has noticed. Caller: {context.Peer}");
-
-            var valres = _deleteProductValidator.Validate(request);
-
-            if (!valres.IsValid)
-            {
-                throw new RpcException(new Status(StatusCode.InvalidArgument, valres.ErrorMessage));
-            }          
+            _logger.Log($"\"DeleteProductById\" with params {request.ToJson()} has noticed. Caller: {context.Peer}");                     
 
             var res = await _productRepo.DeleteProductAsync(request.ProductId);
 
