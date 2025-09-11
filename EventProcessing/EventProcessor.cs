@@ -50,9 +50,6 @@ namespace ProductService.EventProcessing
                 case EventType.ImageUrlPublished:
                     await HandleEventAsync<ImagePublishedDto>(message, AddProductImage);
                     break;
-                case EventType.ImageDeletePublished:
-                    await HandleEventAsync<List<ImagePublishedDto>>(message, DeleteProductImages);
-                    break;
                 case EventType.CardDeletePublished:
                     await HandleEventAsync<CardPublishedDto>(message, DeleteParentCardIdFromProducts);
                     break;
@@ -108,33 +105,7 @@ namespace ProductService.EventProcessing
 
                 await _messageBusClient.PublishGenericEvent(productPub, EventType.ProductUpdatePublished, [ServicesEnum.SEARCH_SERVICE]);
             }
-        }
-
-        private async Task DeleteProductImages(List<ImagePublishedDto> publishedDtos)
-        {
-            if (publishedDtos.Any(dto => dto.ContentType != ContentType.PRODUCT_IMAGE))
-                await Task.FromException(new Exception("ContentType doesn't match"));
-
-            using var scope = _scopeFactory.CreateScope();
-            var repo = scope.ServiceProvider.GetRequiredService<IProductRepo>();           
-
-            var product = new Product
-            {
-                ProductId = publishedDtos[0].Id,
-                ImageURLs = [..publishedDtos.Select(dto => dto.Url)],
-                UpdatedAt = DateTimeUtil.GetCurrentTimeFormatted(_config)
-            };
-
-            var res = await repo.DeleteImagesFromProductAsync(product);
-
-            if (res.success)
-            {       
-                var productPub = _mapper.Map<ProductPublishedDto>(product);
-
-                await _messageBusClient.PublishGenericEvent(productPub, EventType.ProductUpdatePublished, [ServicesEnum.SEARCH_SERVICE]);
-            }
-        }
-
+        }      
 
         private async Task DeleteParentCardIdFromProducts(CardPublishedDto publishedDto)
         {

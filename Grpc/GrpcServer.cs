@@ -272,5 +272,39 @@ namespace ProductService.Grpc
 
             return new StatusResponse { Status = res.success, Reason = res.message };
         }
+
+        public override async Task<StatusResponse> DeleteImagesFromProduct(DeleteImagesFromProductRequest request, ServerCallContext context)
+        {
+            _logger.Log($"\"DeleteImagesFromProduct\" with params {request.ToJson()} has noticed. Caller: {context.Peer}");
+
+            var product = new Product
+            {
+                ProductId = request.ProductId,
+                ImageURLs = [.. request.ImageURLs],
+                UpdatedAt = DateTimeUtil.GetCurrentTimeFormatted(_config)
+            };
+
+            var res = await _productRepo.DeleteImagesFromProductAsync(product);
+
+            if (res.success)
+            {
+                if (request.ImageURLs.Count > 0)
+                {
+                    List<ImagePublishedDto> publishedDtos = [];
+
+                    foreach (var url in request.ImageURLs)
+                        publishedDtos.Add(new ImagePublishedDto { Id = request.ProductId, ContentType = ContentType.PRODUCT_IMAGE, Url = url });
+
+                    await _messageBusClient.PublishGenericEvent(publishedDtos, EventType.ImageDeletePublished, [ServicesEnum.IMAGE_SERVICE]);
+                }
+
+                var productPub = _mapper.Map<ProductPublishedDto>(product);
+
+                await _messageBusClient.PublishGenericEvent(productPub, EventType.ProductUpdatePublished, 
+                    [ServicesEnum.SEARCH_SERVICE, ServicesEnum.RECOMMENDATION_SERVICE]);
+            }
+
+            return new StatusResponse { Status = res.success, Reason = res.message };
+            }
     }
 }
