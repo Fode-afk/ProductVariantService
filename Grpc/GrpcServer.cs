@@ -169,27 +169,27 @@ namespace ProductService.Grpc
             return new StatusResponse { Status = res.success, Reason = res.message };
         }
 
-        public override async Task<StatusResponse> ProductExists(ProductExistsRequest request, ServerCallContext context)
-        {
-            _logger.Log($"\"ProductExists\" with params {request.ToJson()} has noticed. Caller: {context.Peer}");
+        //public override async Task<StatusResponse> ProductExists(ProductExistsRequest request, ServerCallContext context)
+        //{
+        //    _logger.Log($"\"ProductExists\" with params {request.ToJson()} has noticed. Caller: {context.Peer}");
 
-            var res = await _productRepo.ProductExistsAsync(request.ProductId);
-            return new StatusResponse { Status = res.success, Reason = res.message };
-        }
+        //    var res = await _productRepo.ProductExistsAsync(request.ProductId);
+        //    return new StatusResponse { Status = res.success, Reason = res.message };
+        //}
 
-        public override async Task<GetParentCardIdResponse> GetParentCardId(GetParentCardIdRequest request, ServerCallContext context)
-        {
-            _logger.Log($"\"GetParentCardId\" with params {request.ToJson()} has noticed. Caller: {context.Peer}");
+        //public override async Task<GetParentCardIdResponse> GetParentCardId(GetParentCardIdRequest request, ServerCallContext context)
+        //{
+        //    _logger.Log($"\"GetParentCardId\" with params {request.ToJson()} has noticed. Caller: {context.Peer}");
 
-            var res = await _productRepo.GetParentCardIdAsync(request.ProductId);
+        //    var res = await _productRepo.GetParentCardIdAsync(request.ProductId);
 
-            if (res.Value == "")
-            { 
-                return new GetParentCardIdResponse {Status = new StatusResponse { Status = res.success, Reason = res.message } };
-            }
+        //    if (res.Value == "")
+        //    { 
+        //        return new GetParentCardIdResponse {Status = new StatusResponse { Status = res.success, Reason = res.message } };
+        //    }
 
-            return new GetParentCardIdResponse {Status = new StatusResponse { Status = res.success, Reason = res.message }, ParentCardId = res.Value };
-        }
+        //    return new GetParentCardIdResponse {Status = new StatusResponse { Status = res.success, Reason = res.message }, ParentCardId = res.Value };
+        //}
 
         public override async Task<StatusResponse> UpdateParentCardId(UpdateParentCardIdRequest request, ServerCallContext context)
         {
@@ -214,19 +214,19 @@ namespace ProductService.Grpc
             return new StatusResponse { Status = res.success, Reason = res.message };
         }
 
-        public override async Task<GetOwnerIdResponse> GetOwnerId(GetOwnerIdRequest request, ServerCallContext context)
-        {
-            var res = await _productRepo.GetOwnerIdAsync(request.ProductId);
+        //public override async Task<GetOwnerIdResponse> GetOwnerId(GetOwnerIdRequest request, ServerCallContext context)
+        //{
+        //    var res = await _productRepo.GetOwnerIdAsync(request.ProductId);
 
-            return new GetOwnerIdResponse {
-                Status = new StatusResponse
-                { 
-                    Status = res.success,
-                    Reason = res.message
-                },
-                OwnerId = res.Value
-            };
-        }
+        //    return new GetOwnerIdResponse {
+        //        Status = new StatusResponse
+        //        { 
+        //            Status = res.success,
+        //            Reason = res.message
+        //        },
+        //        OwnerId = res.Value
+        //    };
+        //}
         public override async Task<StatusResponse> AddAttributesToProduct(AddAttributesToProductRequest request, ServerCallContext context)
         {
             _logger.Log($"\"AddAttributesToProduct\" with params {request.ToJson()} has noticed. Caller: {context.Peer}");

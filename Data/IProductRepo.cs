@@ -24,11 +24,11 @@ namespace ProductService.Data
 
         Task<ExecutionResult<List<Product>>> DeleteProductsByOwnerIdAsync(string ownerId);
 
-        Task<ExecutionResult> ProductExistsAsync(string productId);
+        //Task<ExecutionResult> ProductExistsAsync(string productId);
 
-        Task<ExecutionResult<string>> GetParentCardIdAsync(string productId);
+        //Task<ExecutionResult<string>> GetParentCardIdAsync(string productId);
 
-        Task<ExecutionResult<string>> GetOwnerIdAsync(string productId);
+        //Task<ExecutionResult<string>> GetOwnerIdAsync(string productId);
 
         Task<ExecutionResult<Product>> AddImagesToProductAsync(Product product);
 

@@ -11,10 +11,10 @@ service GrpcProducts
     rpc UpdateProductById(UpdateProductRequest) returns (StatusResponse);
     rpc SetCanBeOrdered(SetCanBeOrderedRequest) returns (StatusResponse);
     rpc DeleteProductById(DeleteProductRequest) returns (StatusResponse);
-    rpc ProductExists(ProductExistsRequest) returns (StatusResponse);
-    rpc GetParentCardId(GetParentCardIdRequest) returns (GetParentCardIdResponse);
+    //rpc ProductExists(ProductExistsRequest) returns (StatusResponse);
+    //rpc GetParentCardId(GetParentCardIdRequest) returns (GetParentCardIdResponse);
     rpc UpdateParentCardId(UpdateParentCardIdRequest) returns (StatusResponse);
-    rpc GetOwnerId(GetOwnerIdRequest) returns (GetOwnerIdResponse);
+    //rpc GetOwnerId(GetOwnerIdRequest) returns (GetOwnerIdResponse);
     rpc AddAttributesToProduct(AddAttributesToProductRequest) returns (StatusResponse);
     rpc DeleteAttributesFromProduct(DeleteAttributesFromProductRequest) returns (StatusResponse);
     rpc DeleteImagesFromProduct(DeleteImagesFromProductRequest) returns (StatusResponse);

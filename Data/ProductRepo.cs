@@ -106,21 +106,21 @@ namespace ProductService.Data
             }
         }
 
-        public async Task<ExecutionResult> ProductExistsAsync(string productId)
-        {
-            try
-            {
-                var filter = Builders<Product>.Filter.Eq(p => p.ProductId, productId);
-                var res = await _products.Find(filter).Limit(1).AnyAsync();
+        //public async Task<ExecutionResult> ProductExistsAsync(string productId)
+        //{
+        //    try
+        //    {
+        //        var filter = Builders<Product>.Filter.Eq(p => p.ProductId, productId);
+        //        var res = await _products.Find(filter).Limit(1).AnyAsync();
 
-                return new ExecutionResult(res, string.Empty);
-            }
-            catch (Exception ex)
-            {
-                _logger.Log(ex.Message, LogLevel.Error);
-                return new ExecutionResult(false, ex.Message);
-            }
-        }
+        //        return new ExecutionResult(res, string.Empty);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        _logger.Log(ex.Message, LogLevel.Error);
+        //        return new ExecutionResult(false, ex.Message);
+        //    }
+        //}
 
         public async Task<ExecutionResult<Product>> UpdateProductAsync(Product product)
         {
@@ -213,23 +213,23 @@ namespace ProductService.Data
             return result != null;
         }
 
-        public async Task<ExecutionResult<string>> GetParentCardIdAsync(string productId)
-        {
-            try
-            {
-                var result = await _products.Find(p => p.ProductId == productId).FirstOrDefaultAsync();
-                if (result == null)
-                    return new ExecutionResult<string>(false, "Product not found", string.Empty);
+        //public async Task<ExecutionResult<string>> GetParentCardIdAsync(string productId)
+        //{
+        //    try
+        //    {
+        //        var result = await _products.Find(p => p.ProductId == productId).FirstOrDefaultAsync();
+        //        if (result == null)
+        //            return new ExecutionResult<string>(false, "Product not found", string.Empty);
 
-                return new ExecutionResult<string>(true, string.Empty, result.ParentCardId);
+        //        return new ExecutionResult<string>(true, string.Empty, result.ParentCardId);
 
-            }
-            catch (Exception ex)
-            {
-                _logger.Log(ex.Message, LogLevel.Error);
-                return new ExecutionResult<string>(false, ex.Message, string.Empty);
-            }
-        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        _logger.Log(ex.Message, LogLevel.Error);
+        //        return new ExecutionResult<string>(false, ex.Message, string.Empty);
+        //    }
+        //}
 
         public async Task<ExecutionResult<Product>> UpdateParentCardIdAsync(Product product)
         {
@@ -436,24 +436,24 @@ namespace ProductService.Data
             }
         }
 
-        public async Task<ExecutionResult<string>> GetOwnerIdAsync(string productId)
-        {
-            try
-            {
-                var result = await _products.Find(p => p.ProductId == productId).FirstOrDefaultAsync();
+        //public async Task<ExecutionResult<string>> GetOwnerIdAsync(string productId)
+        //{
+        //    try
+        //    {
+        //        var result = await _products.Find(p => p.ProductId == productId).FirstOrDefaultAsync();
 
-                if (result == null)
-                    return new ExecutionResult<string>(false, "Product not found", string.Empty);
+        //        if (result == null)
+        //            return new ExecutionResult<string>(false, "Product not found", string.Empty);
 
-                return new ExecutionResult<string>(true, string.Empty, result.OwnerId);
+        //        return new ExecutionResult<string>(true, string.Empty, result.OwnerId);
 
-            }
-            catch (Exception ex)
-            {
-                _logger.Log(ex.Message, LogLevel.Error);
-                return new ExecutionResult<string>(false, ex.Message, string.Empty);
-            }
-        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        _logger.Log(ex.Message, LogLevel.Error);
+        //        return new ExecutionResult<string>(false, ex.Message, string.Empty);
+        //    }
+        //}
 
         public async Task<ExecutionResult<List<Product>>> DeleteProductsByOwnerIdAsync(string ownerId)
         {
