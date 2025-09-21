@@ -1,3 +1,4 @@
+using migApp.Shared.MsgBus;
 using MongoDB.Driver;
 using ProductService.AsyncDataServices;
 using ProductService.Data;
@@ -11,7 +12,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 
-builder.Services.AddScoped<IProductRepo, CachedProductRepo>();
+builder.Services.AddScoped<IProductRepo, ProductRepo>();
 builder.Services.AddScoped<ICacheRepo, CacheRepo>();
 
 builder.Services.AddGrpc();
@@ -36,9 +37,15 @@ var mongoSettings = builder.Configuration
     .GetSection("MongoSettings")
     .Get<MongoSettings>();
 
+if (mongoSettings?.ConnectionString == null)
+    throw new InvalidOperationException("MongoDB connection string is not configured");
+
 var client = new MongoClient(mongoSettings.ConnectionString);
 var database = client.GetDatabase(mongoSettings.DatabaseName);
 builder.Services.AddSingleton(database);
+
+var mongoInitializer = new MongoDbInitializer(database);
+await mongoInitializer.InitializeAsync();
 
 builder.Services.AddSingleton<IMessageBusClient, MessageBusClient>();
 builder.Services.AddHostedService<MessageBusClientInitializer>();

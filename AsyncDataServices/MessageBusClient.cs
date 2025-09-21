@@ -1,5 +1,10 @@
 ﻿using migApp.Shared.Enums;
 using migApp.Shared.EventDtos;
+using migApp.Shared.MsgBus;
+using migApp.Shared.MsgBus.Dtos;
+using migApp.Shared.MsgBus.Dtos.Images;
+using migApp.Shared.MsgBus.Dtos.Product;
+using migApp.Shared.MsgBus.Enums;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System.Text;
@@ -81,20 +86,35 @@ namespace ProductService.AsyncDataServices
             return Task.CompletedTask;
         }
 
-        public async Task PublishGenericEvent<T>(T payload, EventType eventType, ServicesEnum[] consumers)
+        public async Task PublishEventAsync<TPayload, TEventEnum>(TPayload payload, TEventEnum eventType, ServicesEnum[] consumers)
+                where TEventEnum : Enum
         {
-            var generic = new GenericEventDto<T>
+            BaseEventDto eventDto = eventType switch
             {
-                EventType = eventType,
-                Consumers = consumers,
-                Data = payload
+                ProductEvents => new ProductEventDto<TPayload>
+                {
+                    Category = EventCategory.Product,
+                    Consumers = consumers,
+                    EventType = (ProductEvents)(object)eventType,
+                    Data = payload
+                },
+
+                ImageEvents => new ImageEventDto<TPayload>
+                {
+                    Category = EventCategory.Image,
+                    Consumers = consumers,
+                    EventType = (ImageEvents)(object)eventType,
+                    Data = payload
+                },
+
+                _ => throw new NotSupportedException($"Unknown event enum: {eventType}")
             };
 
-            var message = JsonSerializer.Serialize(generic, jsonSerializerOptions);
+            var message = JsonSerializer.Serialize(eventDto, jsonSerializerOptions);
 
             if (_connection?.IsOpen == true)
             {
-                Console.WriteLine("--> Sending generic message...");
+                Console.WriteLine($"--> Sending {eventDto.Category} event ({eventType})...");
                 foreach (var service in consumers)
                 {
                     if (_routingMap.TryGetValue(service, out var routingKey))

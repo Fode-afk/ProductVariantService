@@ -34,7 +34,6 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="9.0.5" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.5" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.22.1-Preview.1" />
-    <PackageReference Include="migApp.Shared" Version="1.0.3" />
     <PackageReference Include="MongoDB.Driver" Version="3.4.0" />
     <PackageReference Include="RabbitMQ.Client" Version="7.1.2" />   
     <PackageReference Include="StackExchange.Redis" Version="2.9.11" />
@@ -43,4 +42,10 @@
   <ItemGroup>
 	 <Protobuf Include="Protos\products.proto" GrpcServices="Server" />
   </ItemGroup>
+
+	<ItemGroup>
+		<Reference Include="migApp.Shared">
+			<HintPath>..\migApp.Shared\bin\Debug\net8.0\migApp.Shared.dll</HintPath>
+		</Reference>
+	</ItemGroup>
 </Project>

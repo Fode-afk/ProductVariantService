@@ -21,6 +21,8 @@ namespace ProductService.Models
 
         public bool CanBeOrdered { get; set; }
 
+        public bool IsArchived { get; set; }
+
         public int StockQuantity { get; set; }
 
         public List<string> ImageURLs { get; set; }
@@ -29,5 +31,9 @@ namespace ProductService.Models
 
         public DateTimeOffset CreatedAt { get; set; }
         public DateTimeOffset UpdatedAt { get; set; }
+        
+        [BsonElement("expiresAt")]
+        [BsonIgnoreIfNull]
+        public DateTime? ExpiresAt { get; set; }
     }
 }

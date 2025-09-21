@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using migApp.Shared.Dtos.Products;
 using migApp.Shared.EventDtos;
+using migApp.Shared.MsgBus.Dtos.Product;
 using ProductService.Models;
 using ProductService.Protos;
 using ProductService.Utils;
@@ -31,20 +32,16 @@ namespace ProductService.Profiles
                 .ForMember(dest => dest.ImageURLs, opt => opt.MapFrom(src => src.ImageURLs))
                 .ForAllMembers(opt => opt.Condition((src, dest, srcMember) => srcMember != null));
 
+            CreateMap<Product, ProductDeletedDto>()
+                .ForMember(dest => dest.ImageURLs, opt => opt.MapFrom(src => src.ImageURLs))
+                .ForAllMembers(opt => opt.Condition((src, dest, srcMember) => srcMember != null));
+
             CreateMap<UpdateProductRequest, Product>()
                 .ForAllMembers(opt => opt.Condition((src, dest, srcMember) => srcMember != null));
 
-            CreateMap<UpdateParentCardIdRequest, Product>()
+            CreateMap<CreateProductRequest, Product>()
                 .ForAllMembers(opt => opt.Condition((src, dest, srcMember) => srcMember != null));
 
-            CreateMap<AddAttributesToProductRequest, Product>()
-                .ForMember(dest => dest.Attributes, opt => opt.MapFrom(src => src.Attributes))
-                .ForAllMembers(opt => opt.Condition((src, dest, srcMember) => srcMember != null));
-
-            CreateMap<DeleteAttributesFromProductRequest, Product>()
-                .ForMember(dest => dest.Attributes, opt => opt.MapFrom(src =>
-                    src.Key.Select(k => new ProductAttribute { Key = k }).ToList()))
-                .ForAllMembers(opt => opt.Condition((src, dest, srcMember) => srcMember != null));
         }
     }
 }

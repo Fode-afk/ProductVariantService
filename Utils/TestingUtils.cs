@@ -72,7 +72,7 @@ namespace ProductService.Utils
                         StockQuantity = new Random().Next(0, 100),
                         OwnerId = "fanifffs",
                         CreatedAt = DateTimeUtil.GetCurrentTimeFormatted(config),
-                        Type = Protos.ProductType.Shirts,
+                        Type = Protos.ProductType.Vape,
                         UpdatedAt = DateTimeUtil.GetCurrentTimeFormatted(config),
                         ParentCardId = string.Empty
 

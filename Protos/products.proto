@@ -4,19 +4,15 @@ option csharp_namespace = "ProductService.Protos";
 
 service GrpcProducts
 {
+    rpc CreateProductModel(CreateProductModelRequest) returns (CreateProductModelResponse);
     rpc CreateProduct(CreateProductRequest) returns (StatusResponse);
-    rpc GetProductById(GetProductRequest) returns (GetProductResponse);
+
     rpc GetProductsByIds(GetProductsByIdsRequest) returns (GetProductsByIdsResponse);
     rpc GetAllProductsByOwnerId(GetAllProductsByOwnerIdRequest) returns (GetAllProductsByOwnerIdResponse);
+
     rpc UpdateProductById(UpdateProductRequest) returns (StatusResponse);
-    rpc SetCanBeOrdered(SetCanBeOrderedRequest) returns (StatusResponse);
-    rpc DeleteProductById(DeleteProductRequest) returns (StatusResponse);
-    //rpc ProductExists(ProductExistsRequest) returns (StatusResponse);
-    //rpc GetParentCardId(GetParentCardIdRequest) returns (GetParentCardIdResponse);
-    rpc UpdateParentCardId(UpdateParentCardIdRequest) returns (StatusResponse);
-    //rpc GetOwnerId(GetOwnerIdRequest) returns (GetOwnerIdResponse);
-    rpc AddAttributesToProduct(AddAttributesToProductRequest) returns (StatusResponse);
-    rpc DeleteAttributesFromProduct(DeleteAttributesFromProductRequest) returns (StatusResponse);
+
+    rpc DeleteProductsByIds(DeleteProductsRequest) returns (StatusResponse);
     rpc DeleteImagesFromProduct(DeleteImagesFromProductRequest) returns (StatusResponse);
 }
 
@@ -35,11 +31,13 @@ message ProductGrpc
     repeated string imageURLs = 11;
     repeated ProductAttributeGrpc attributes = 12;
     bool canBeOrdered = 13;
+    bool isArchived = 14;
 }
 
 enum ProductType{
     UNKNOWN_TYPE = 0;
-    SHIRTS = 1;
+    LIQUID = 1;
+    VAPE = 2;
 }
 
 enum AttributeKey{  
@@ -60,15 +58,31 @@ message StatusResponse
     string reason = 2;
 }
 
+message CreateProductModelRequest
+{    
+    string ownerId = 1;
+}
+
+message CreateProductModelResponse
+{    
+    StatusResponse status = 1;
+    string productId = 2;
+}
+
 message CreateProductRequest
 {    
-    string ownerId = 1;   
-    string name = 2;
+    string productId = 1;   
+    ProductType type = 2;
+    string name = 3;
+    string description = 4;    
+    int32 price = 5;
+    int32 stockQuantity = 6;
+    repeated ProductAttributeGrpc attributes = 7;
 }
 
 message GetProductsByIdsRequest
 {
-	repeated string productIds = 1;
+	repeated string productsIds = 1;
 }
 
 message GetProductsByIdsResponse
@@ -88,81 +102,20 @@ message GetAllProductsByOwnerIdResponse
     repeated ProductGrpc products = 2;
 }
 
-message GetProductRequest
+message DeleteProductsRequest
 {
-    string productId = 1;
-}
-
-message GetProductResponse
-{
-    StatusResponse status = 1;
-    ProductGrpc product = 2;
-}
-
-message DeleteProductRequest
-{
-    string productId = 1;
+    repeated string productsIds = 1;
 }
 
 message UpdateProductRequest
 {
     string productId = 1;   
-    string name = 2;
-    ProductType type = 3;
+    ProductType type = 2;
+    string name = 3;
     string description = 4;    
-    int32 price = 5; 
-    int32 stockQuantity = 6;   
-}
-
-message SetCanBeOrderedRequest
-{
-    string productId = 1;
-    bool canBeOrdered = 2;
-}
-
-message AddAttributesToProductRequest
-{
-    string productId = 1;
-    repeated ProductAttributeGrpc attributes = 2;
-}
-
-message DeleteAttributesFromProductRequest
-{
-    string productId = 1;
-    repeated AttributeKey key = 2; 
-}
-
-message ProductExistsRequest
-{
-    string productId = 1;
-}
-
-message GetParentCardIdRequest
-{
-    string productId = 1;
-}
-
-message GetParentCardIdResponse
-{
-    StatusResponse status = 1;
-    string parentCardId = 2;
-}
-
-message UpdateParentCardIdRequest
-{
-    string productId = 1;
-    string parentCardId = 2;
-}
-
-message GetOwnerIdRequest
-{
-    string productId = 1;
-}
-
-message GetOwnerIdResponse
-{
-    StatusResponse status = 1;
-    string ownerId = 2;
+    int32 price = 5;
+    int32 stockQuantity = 6;
+    repeated ProductAttributeGrpc attributes = 7;
 }
 
 message DeleteImagesFromProductRequest

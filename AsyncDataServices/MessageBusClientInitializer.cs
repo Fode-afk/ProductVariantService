@@ -1,4 +1,6 @@
-﻿namespace ProductService.AsyncDataServices
+﻿using migApp.Shared.MsgBus;
+
+namespace ProductService.AsyncDataServices
 {
     public class MessageBusClientInitializer(IMessageBusClient messageBusClient) : IHostedService
     {

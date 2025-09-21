@@ -1,13 +1,14 @@
 ﻿using AutoMapper;
 using Grpc.Core;
+using migApp.Shared.MsgBus;
+using migApp.Shared.MsgBus.Dtos.Images;
+using migApp.Shared.MsgBus.Dtos.Product;
+using migApp.Shared.MsgBus.Enums;
 using MongoDB.Bson;
-using ProductService.AsyncDataServices;
 using ProductService.Data;
 using ProductService.Models;
 using ProductService.Protos;
 using ProductService.Utils;
-using migApp.Shared.Enums;
-using migApp.Shared.EventDtos;
 
 namespace ProductService.Grpc
 {
@@ -24,8 +25,8 @@ namespace ProductService.Grpc
         {
             _logger.Log($"\"GetProductsByIds\" with params {request.ToJson()} has noticed. Caller: {context.Peer}");
             
-            var res = await _productRepo.GetProductsByIdsAsync([.. request.ProductIds]);          
-
+            var res = await _productRepo.GetProductsByIdsAsync([.. request.ProductsIds]);          
+            
             return new GetProductsByIdsResponse
             { 
                 Status = new StatusResponse { Status = res.success, Reason = res.message },
@@ -37,11 +38,11 @@ namespace ProductService.Grpc
         {
             _logger.Log($"\"GetAllProductsByOwnerId\" with params {request.ToJson()} has noticed. Caller: {context.Peer}");
            
-            var res = await _productRepo.GetAllProductsByOwnerIdAsync(request.OwnerId);
+            var res = await _productRepo.GetProductsByOwnerIdAsync(request.OwnerId);
 
             if (!res.success)
             {
-                return new GetAllProductsByOwnerIdResponse { Status = new Protos.StatusResponse { Status = res.success, Reason = res.message} };
+                return new GetAllProductsByOwnerIdResponse { Status = new StatusResponse { Status = res.success, Reason = res.message} };
             }
 
             return new GetAllProductsByOwnerIdResponse
@@ -51,39 +52,38 @@ namespace ProductService.Grpc
             };
         }
 
-        public override async Task<GetProductResponse> GetProductById(GetProductRequest request, ServerCallContext context)
+        public override async Task<CreateProductModelResponse> CreateProductModel(CreateProductModelRequest request, ServerCallContext context)
         {
-            _logger.Log($"\"GetProductById\" with params {request.ToJson()} has noticed. Caller: {context.Peer}");
-            
-            var res = await _productRepo.GetProductByIdAsync(request.ProductId);            
-
-            return new GetProductResponse
-            {
-                Status = new Protos.StatusResponse { Status = res.success },
-                Product = _mapper.Map<ProductGrpc>(res.Value)
-            };
-        }
-
-        public override async Task<Protos.StatusResponse> CreateProduct(CreateProductRequest request, ServerCallContext context)
-        {
-            _logger.Log($"\"CreateProduct\" with params {request.ToJson()} has noticed. Caller: {context.Peer}");
-            
-            var product = _mapper.Map<Product>(new ProductGrpc() { Name = request.Name, OwnerId = request.OwnerId });
+            _logger.Log($"\"CreateProductModel\" with params {request.ToJson()} has noticed. Caller: {context.Peer}");
 
             var localTime = DateTimeUtil.GetCurrentTimeFormatted(_config);
 
-            product.CreatedAt = localTime;
+            var res = await _productRepo.CreateProductModelAsync(request.OwnerId, localTime);
+
+            return new CreateProductModelResponse { Status = new StatusResponse { Status = res.success, Reason = res.message }, ProductId = res.Value };
+        }
+
+        public override async Task<StatusResponse> CreateProduct(CreateProductRequest request, ServerCallContext context)
+        {
+            _logger.Log($"\"CreateProduct\" with params {request.ToJson()} has noticed. Caller: {context.Peer}");
+
+            var localTime = DateTimeUtil.GetCurrentTimeFormatted(_config);
+
+            var product = _mapper.Map<Product>(request);
             product.UpdatedAt = localTime;
 
             var res = await _productRepo.CreateProductAsync(product);
+
+
+            //CardService call
+            //Вообще тут должна быть достаточно крепкая связь между продуктом и карточкой.
+            //По сути, карточка становится главней продукта 
             
             if (!res.success)
-                return new Protos.StatusResponse { Status = false, Reason = res.message };
+                return new StatusResponse { Status = false, Reason = res.message };
 
-            var productPub = _mapper.Map<ProductPublishedDto>(product);
-
-            await _messageBusClient.PublishGenericEvent(productPub, EventType.ProductPublished,
-                [ServicesEnum.SEARCH_SERVICE, ServicesEnum.REVIEW_SERVICE, ServicesEnum.RECOMMENDATION_SERVICE]);           
+            await _messageBusClient.PublishEventAsync(_mapper.Map<ProductPublishedDto>(res.Value), ProductEvents.Published,
+                [ServicesEnum.SEARCH_SERVICE, ServicesEnum.REVIEW_SERVICE, ServicesEnum.RECOMMENDATION_SERVICE]);     
 
             return new StatusResponse { Status = res.success, Reason = res.message };
         }
@@ -104,176 +104,55 @@ namespace ProductService.Grpc
             {              
                 var productPub = _mapper.Map<ProductPublishedDto>(res.Value);
 
-                await _messageBusClient.PublishGenericEvent(productPub, EventType.ProductUpdatePublished, 
+                await _messageBusClient.PublishEventAsync(productPub, ProductEvents.Updated, 
                     [ServicesEnum.SEARCH_SERVICE, ServicesEnum.RECOMMENDATION_SERVICE]);
             }
 
             return new StatusResponse { Status = res.success, Reason = res.message };
         }
 
-        public override async Task<StatusResponse> SetCanBeOrdered(SetCanBeOrderedRequest request, ServerCallContext context)
-        {
-            _logger.Log($"\"SetCanBeOrdered\" with params {request.ToJson()} has noticed. Caller: {context.Peer}");          
-            var localTime = DateTimeUtil.GetCurrentTimeFormatted(_config);
-
-            var res = await _productRepo.SetCanBeOrderedAsync(request.ProductId, request.CanBeOrdered, localTime);
-
-            if (res.success)
-            {              
-                var productPub = _mapper.Map<ProductPublishedDto>(res.Value);
-
-                await _messageBusClient.PublishGenericEvent(productPub, EventType.ProductUpdatePublished, 
-                    [ServicesEnum.SEARCH_SERVICE, ServicesEnum.RECOMMENDATION_SERVICE]);
-            }
-
-            return new StatusResponse { Status = res.success, Reason = res.message };
-        }
-
-        public override async Task<StatusResponse> DeleteProductById(DeleteProductRequest request, ServerCallContext context)
-        {
+        public override async Task<StatusResponse> DeleteProductsByIds(DeleteProductsRequest request, ServerCallContext context)
+        {    
             _logger.Log($"\"DeleteProductById\" with params {request.ToJson()} has noticed. Caller: {context.Peer}");                     
 
-            var res = await _productRepo.DeleteProductAsync(request.ProductId);
+            var res = await _productRepo.DeleteProductsAsync(request.ProductsIds.ToArray());
 
             if (res.success)
             {
-                var productPub = _mapper.Map<ProductPublishedDto>(new Product
+                foreach (var product in res.Value)
                 {
-                    ProductId = request.ProductId,
-                    ParentCardId = res.Value.ParentCardId
-                });
+                    var eventDto = _mapper.Map<ProductDeletedDto>(product);
 
-                await _messageBusClient.PublishGenericEvent(productPub, EventType.ProductDeletePublished,
+
+                    await _messageBusClient.PublishEventAsync(eventDto, ProductEvents.Deleted,
                     [.. new object[]
                     {
                         ServicesEnum.SEARCH_SERVICE,
                         ServicesEnum.REVIEW_SERVICE,
-                        res.Value.ParentCardId != string.Empty ? ServicesEnum.CARD_SERVICE : null,
-                        res.Value.ParentCardId != string.Empty ? ServicesEnum.CART_SERVICE : null, 
+                        ServicesEnum.CARD_SERVICE,
+                        product.ParentCardId != string.Empty ? ServicesEnum.CART_SERVICE : null, //ХЗ
                         ServicesEnum.RECOMMENDATION_SERVICE
                     }
                     .Where(s => s != null)!
                     .Cast<ServicesEnum>()]);
 
-                if (res.Value.ImageURLs.Count > 0)
-                {
-                    List<ImagePublishedDto> publishedDtos = [];
+                    if (product.ImageURLs.Count > 0)
+                    {
 
-                    foreach (var url in res.Value.ImageURLs)
-                        publishedDtos.Add(new ImagePublishedDto { Id = request.ProductId, ContentType = ContentType.PRODUCT_IMAGE, Url = url });
+                        foreach (var url in product.ImageURLs)
+                        {
+                            var imageEvent = new ImageDeletedDto { Id = product.ProductId, Url = url };
+                            await _messageBusClient.PublishEventAsync(imageEvent, ImageEvents.Deleted, [ServicesEnum.IMAGE_SERVICE]);
 
-                    await _messageBusClient.PublishGenericEvent(publishedDtos, EventType.ImageDeletePublished, [ServicesEnum.IMAGE_SERVICE]);
-                }
+                        }
+                    }
+                }         
             }
 
             return new StatusResponse { Status = res.success, Reason = res.message };
-        }
+        }   
 
-        //public override async Task<StatusResponse> ProductExists(ProductExistsRequest request, ServerCallContext context)
-        //{
-        //    _logger.Log($"\"ProductExists\" with params {request.ToJson()} has noticed. Caller: {context.Peer}");
-
-        //    var res = await _productRepo.ProductExistsAsync(request.ProductId);
-        //    return new StatusResponse { Status = res.success, Reason = res.message };
-        //}
-
-        //public override async Task<GetParentCardIdResponse> GetParentCardId(GetParentCardIdRequest request, ServerCallContext context)
-        //{
-        //    _logger.Log($"\"GetParentCardId\" with params {request.ToJson()} has noticed. Caller: {context.Peer}");
-
-        //    var res = await _productRepo.GetParentCardIdAsync(request.ProductId);
-
-        //    if (res.Value == "")
-        //    { 
-        //        return new GetParentCardIdResponse {Status = new StatusResponse { Status = res.success, Reason = res.message } };
-        //    }
-
-        //    return new GetParentCardIdResponse {Status = new StatusResponse { Status = res.success, Reason = res.message }, ParentCardId = res.Value };
-        //}
-
-        public override async Task<StatusResponse> UpdateParentCardId(UpdateParentCardIdRequest request, ServerCallContext context)
-        {
-            _logger.Log($"\"UpdateParentCardId\" with params {request.ToJson()} has noticed. Caller: {context.Peer}");
-
-            var product = _mapper.Map<Product>(request);
-
-            var localTime = DateTimeUtil.GetCurrentTimeFormatted(_config);
-
-            product.UpdatedAt = localTime;
-
-            var res = await _productRepo.UpdateParentCardIdAsync(product);
-
-            if (res.success)
-            {               
-                var productPub = _mapper.Map<ProductPublishedDto>(res.Value);
-
-                await _messageBusClient.PublishGenericEvent(productPub, EventType.ProductUpdateParentCardIdPublished, 
-                    [ServicesEnum.SEARCH_SERVICE, ServicesEnum.RECOMMENDATION_SERVICE]);
-            }
-
-            return new StatusResponse { Status = res.success, Reason = res.message };
-        }
-
-        //public override async Task<GetOwnerIdResponse> GetOwnerId(GetOwnerIdRequest request, ServerCallContext context)
-        //{
-        //    var res = await _productRepo.GetOwnerIdAsync(request.ProductId);
-
-        //    return new GetOwnerIdResponse {
-        //        Status = new StatusResponse
-        //        { 
-        //            Status = res.success,
-        //            Reason = res.message
-        //        },
-        //        OwnerId = res.Value
-        //    };
-        //}
-        public override async Task<StatusResponse> AddAttributesToProduct(AddAttributesToProductRequest request, ServerCallContext context)
-        {
-            _logger.Log($"\"AddAttributesToProduct\" with params {request.ToJson()} has noticed. Caller: {context.Peer}");
-
-            var product = _mapper.Map<Product>(request);
-
-            var localTime = DateTimeUtil.GetCurrentTimeFormatted(_config);
-
-            product.UpdatedAt = localTime;
-
-            var res = await _productRepo.AddAttributesToProductAsync(product);
-
-            if (res.success)
-            {             
-                var productPub = _mapper.Map<ProductPublishedDto>(res.Value);
-
-                await _messageBusClient.PublishGenericEvent(productPub, EventType.ProductUpdatePublished, 
-                    [ServicesEnum.SEARCH_SERVICE, ServicesEnum.RECOMMENDATION_SERVICE]);
-            }
-
-            return new StatusResponse { Status = res.success, Reason = res.message };
-        }
-
-        public override async Task<StatusResponse> DeleteAttributesFromProduct(DeleteAttributesFromProductRequest request, ServerCallContext context)
-        {
-            _logger.Log($"\"DeleteAttributesFromProduct\" with params {request.ToJson()} has noticed. Caller: {context.Peer}");
-
-            var product = _mapper.Map<Product>(request);
-
-            var localTime = DateTimeUtil.GetCurrentTimeFormatted(_config);
-
-            product.UpdatedAt = localTime;
-
-            var res = await _productRepo.DeleteAttributesFromProductAsync(product);
-
-            if (res.success)
-            {            
-                var productPub = _mapper.Map<ProductPublishedDto>(product);
-
-                await _messageBusClient.PublishGenericEvent(productPub, EventType.ProductUpdatePublished, 
-                    [ServicesEnum.SEARCH_SERVICE, ServicesEnum.RECOMMENDATION_SERVICE]);            
-            }
-
-            return new StatusResponse { Status = res.success, Reason = res.message };
-        }
-
-        public override async Task<StatusResponse> DeleteImagesFromProduct(DeleteImagesFromProductRequest request, ServerCallContext context)
+        public override async Task<StatusResponse> DeleteImagesFromProduct(DeleteImagesFromProductRequest request, ServerCallContext context) //TOREFACTOR
         {
             _logger.Log($"\"DeleteImagesFromProduct\" with params {request.ToJson()} has noticed. Caller: {context.Peer}");
 
@@ -290,21 +169,16 @@ namespace ProductService.Grpc
             {
                 if (request.ImageURLs.Count > 0)
                 {
-                    List<ImagePublishedDto> publishedDtos = [];
+                    foreach (var url in product.ImageURLs)
+                    {
+                        var imageEvent = new ImageDeletedDto { Id = product.ProductId, Url = url };
+                        await _messageBusClient.PublishEventAsync(imageEvent, ImageEvents.Deleted, [ServicesEnum.IMAGE_SERVICE]);
 
-                    foreach (var url in request.ImageURLs)
-                        publishedDtos.Add(new ImagePublishedDto { Id = request.ProductId, ContentType = ContentType.PRODUCT_IMAGE, Url = url });
-
-                    await _messageBusClient.PublishGenericEvent(publishedDtos, EventType.ImageDeletePublished, [ServicesEnum.IMAGE_SERVICE]);
+                    }
                 }
-
-                var productPub = _mapper.Map<ProductPublishedDto>(product);
-
-                await _messageBusClient.PublishGenericEvent(productPub, EventType.ProductUpdatePublished, 
-                    [ServicesEnum.SEARCH_SERVICE, ServicesEnum.RECOMMENDATION_SERVICE]);
             }
 
             return new StatusResponse { Status = res.success, Reason = res.message };
-            }
+        }
     }
 }

@@ -1,4 +1,5 @@
-﻿using ProductService.EventProcessing;
+﻿using migApp.Shared.MsgBus;
+using ProductService.EventProcessing;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System.Text;

@@ -1,11 +1,15 @@
 ﻿using AutoMapper;
-using ProductService.AsyncDataServices;
+using migApp.Shared.Enums.Image;
+using migApp.Shared.EventDtos;
+using migApp.Shared.MsgBus;
+using migApp.Shared.MsgBus.Dtos;
+using migApp.Shared.MsgBus.Dtos.Images;
+using migApp.Shared.MsgBus.Dtos.Product;
+using migApp.Shared.MsgBus.Enums;
 using ProductService.Data;
 using ProductService.Models;
 using ProductService.Utils;
 using System.Text.Json;
-using migApp.Shared.EventDtos;
-using migApp.Shared.Enums;
 
 namespace ProductService.EventProcessing
 {
@@ -22,12 +26,12 @@ namespace ProductService.EventProcessing
         };
 
         public async Task ProcessEventAsync(string message)
-        {          
-            GenericEventDto<object>? generic;
+        {
+            BaseEventDto baseEvent;
             try
             {
-                generic = JsonSerializer.Deserialize<GenericEventDto<object>>(message, jsonSerializerOptions);
-                if (generic == null)
+                baseEvent = JsonSerializer.Deserialize<BaseEventDto>(message, jsonSerializerOptions);
+                if (baseEvent == null)
                 {
                     Console.WriteLine("--> Failed to parse GenericEventDto");
                     return;
@@ -39,53 +43,62 @@ namespace ProductService.EventProcessing
                 return;
             }
 
-            if (!generic.Consumers.Contains(ServicesEnum.PRODUCT_SERVICE))
+            if (!baseEvent.Consumers.Contains(ServicesEnum.PRODUCT_SERVICE))
             {
-                Console.WriteLine($"--> Ignoring event not for PRODUCT_SERVICE (for: {string.Join(", ", generic.Consumers)})");
+                Console.WriteLine($"--> Ignoring event not for PRODUCT_SERVICE (for: {string.Join(", ", baseEvent.Consumers)})");
                 return;
             }
 
-            switch (generic.EventType)
+            switch (baseEvent.Category)
             {
-                case EventType.ImageUrlPublished:
-                    await HandleEventAsync<ImagePublishedDto>(message, AddProductImage);
+                case EventCategory.Image:
+                    await HandleImageEvent(message);
                     break;
-                case EventType.CardDeletePublished:
-                    await HandleEventAsync<CardPublishedDto>(message, DeleteParentCardIdFromProducts);
-                    break;
-                case EventType.VendorDeletePublished:
-                    await HandleEventAsync<VendorPublishedDto>(message, DeleteProductsByVendorId);
-                    break;
+
                 default:
-                    Console.WriteLine($"--> Unknown or unhandled event type: {generic.EventType}");
+                    Console.WriteLine($"--> Unknown event category: {baseEvent.Category}");
                     break;
             }
         }
 
-        private async Task HandleEventAsync<T>(string message, Func<T, Task> handler)
+        private async Task HandleImageEvent(string message)
         {
+            ImageEventDto<ImageDtoClass>? imageEvent;
             try
             {
-                var typedEvent = JsonSerializer.Deserialize<GenericEventDto<T>>(message, jsonSerializerOptions);
-                if (typedEvent.Data is not null)
-                {
-                    await handler(typedEvent.Data);
-                }
-                else
-                {
-                    Console.WriteLine("--> Typed event data was null.");
-                }
+                imageEvent = JsonSerializer.Deserialize<ImageEventDto<ImageDtoClass>>(message, jsonSerializerOptions);
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"--> Deserialization error (typed): {ex.Message}");
+                Console.WriteLine($"--> Product event deserialization failed: {ex.Message}");
+                return;
+            }
+
+            if (imageEvent == null)
+                return;
+
+            switch (imageEvent.EventType)
+            {
+                case ImageEvents.Published:
+                    var published = (ImagePublishedDto)imageEvent.Data;
+                    await AddProductImage(published);
+                    break;
+
+                case ImageEvents.Deleted:
+                    //var updated = (ProductUpdatePublishedDto)productEvent.Data;
+                    //await UpdateProduct(updated);
+                    break;
+
+                default:
+                    Console.WriteLine($"--> Unhandled product event type: {imageEvent.EventType}");
+                    break;
             }
         }
 
-        private async Task AddProductImage(ImagePublishedDto publishedDto)
+        private async Task AddProductImage(ImagePublishedDto publishedDto) //TOWATCH
         {
-            if (publishedDto.ContentType != ContentType.PRODUCT_IMAGE)
-                await Task.FromException(new Exception("ContentType doesn't match"));
+            if (publishedDto.ImageType != ImageType.PRODUCT_IMAGE)
+                await Task.FromException(new Exception("ImageType doesn't match"));
 
             using var scope = _scopeFactory.CreateScope();
             var repo = scope.ServiceProvider.GetRequiredService<IProductRepo>();          
@@ -102,28 +115,10 @@ namespace ProductService.EventProcessing
             if (res.success)
             {
                 var productPub = _mapper.Map<ProductPublishedDto>(res.Value);
-
-                await _messageBusClient.PublishGenericEvent(productPub, EventType.ProductUpdatePublished, [ServicesEnum.SEARCH_SERVICE]);
             }
         }      
 
-        private async Task DeleteParentCardIdFromProducts(CardPublishedDto publishedDto)
-        {
-            using var scope = _scopeFactory.CreateScope();
-            var repo = scope.ServiceProvider.GetRequiredService<IProductRepo>();
-
-            var res = await repo.DeleteParentCardIdFromProductsAsync([.. publishedDto.ProductIds],
-                publishedDto.CardId, DateTimeUtil.GetCurrentTimeFormatted(_config));
-
-            if (res.success)
-            {            
-                var productsPub = _mapper.Map<List<ProductPublishedDto>>(res.Value);
-
-                await _messageBusClient.PublishGenericEvent(productsPub, EventType.DeleteParentCardIdFromProducts, [ServicesEnum.SEARCH_SERVICE]);
-            }
-        }
-
-        private async Task DeleteProductsByVendorId(VendorPublishedDto publishedDto)
+        private async Task DeleteProductsByVendorId(VendorPublishedDto publishedDto) //TOWATCH
         {
             using var scope = _scopeFactory.CreateScope();
             var productRepo = scope.ServiceProvider.GetRequiredService<IProductRepo>();           
@@ -134,8 +129,8 @@ namespace ProductService.EventProcessing
             {               
                 var productsPub = _mapper.Map<List<ProductPublishedDto>>(res.Value);
 
-                await _messageBusClient.PublishGenericEvent(productsPub, EventType.ProductsDeletePublished,
-                    [ServicesEnum.SEARCH_SERVICE, ServicesEnum.REVIEW_SERVICE]);
+                //await _messageBusClient.PublishGenericEvent(productsPub, EventType.ProductsDeletePublished,
+                //    [ServicesEnum.SEARCH_SERVICE, ServicesEnum.REVIEW_SERVICE]);
 
                 List<ImagePublishedDto> publishedDtos = [];
 
@@ -144,11 +139,11 @@ namespace ProductService.EventProcessing
                     if (res.Value.Any(p => p.ImageURLs.Count > 0))
                     {                      
                         foreach (var url in product.ImageURLs)
-                            publishedDtos.Add(new ImagePublishedDto { Id = product.ProductId, ContentType = ContentType.PRODUCT_IMAGE, Url = url });
+                            publishedDtos.Add(new ImagePublishedDto { Id = product.ProductId, ImageType = ImageType.PRODUCT_IMAGE, Url = url });
                     }
                 }
 
-                await _messageBusClient.PublishGenericEvent(publishedDtos, EventType.ImageDeletePublished, [ServicesEnum.IMAGE_SERVICE]);
+               // await _messageBusClient.PublishGenericEvent(publishedDtos, EventType.ImageDeletePublished, [ServicesEnum.IMAGE_SERVICE]);
             }
         }
     }

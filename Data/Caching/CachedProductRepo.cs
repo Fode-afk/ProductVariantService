@@ -4,7 +4,7 @@ using ProductService.Models;
 
 namespace ProductService.Data.Caching
 {
-    public class CachedProductRepo(IMongoDatabase database, ILogger logger, ICacheRepo cacheRepo) : IProductRepo
+    public class CachedProductRepo(IMongoDatabase database, ILogger logger, ICacheRepo cacheRepo) //: IProductRepo
     {
         private readonly IMongoCollection<Product> _products = database.GetCollection<Product>("Products");
         private readonly ILogger _logger = logger;
@@ -25,15 +25,15 @@ namespace ProductService.Data.Caching
             }
         }
 
-        public async Task<ExecutionResult<Product>> DeleteProductAsync(string productId)
+        public async Task<ExecutionResult<Product>> DeleteProductsAsync(string[] productIds)
         {
             try
             {
-                string cacheKey = $"product:{productId}";
+                string cacheKey = $"product:{productIds}";
 
                 await _cacheRepo.RemoveAsync(cacheKey);          
 
-                var res = await _products.FindOneAndDeleteAsync(p => p.ProductId == productId);              
+                var res = await _products.FindOneAndDeleteAsync(p => productIds.Contains(p.ProductId));              
                 return new ExecutionResult<Product>(res != null, string.Empty, res);
             }
             catch (Exception ex)
@@ -533,6 +533,16 @@ namespace ProductService.Data.Caching
                 _logger.Log(ex.Message, LogLevel.Error);
                 return new ExecutionResult<List<Product>>(false, ex.Message, null);
             }
+        }
+
+        public Task<ExecutionResult<string>> CreateProductModelAsync(string ownerId, DateTimeOffset createdAt)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<ExecutionResult<Product>> DeleteProductAsync(string[] productIds)
+        {
+            throw new NotImplementedException();
         }
     }
 }
