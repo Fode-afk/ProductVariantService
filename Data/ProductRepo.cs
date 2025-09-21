@@ -67,7 +67,7 @@ namespace ProductService.Data
                     ReturnDocument = ReturnDocument.After
                 });
 
-                if (result != null)
+                if (result == null)
                 {
                     return new ExecutionResult<Product>(false, "Failed to create product or product was already processed.", null);
                 }
