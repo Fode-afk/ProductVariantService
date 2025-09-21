@@ -9,6 +9,7 @@ using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization.Metadata;
 
 namespace ProductService.AsyncDataServices
 {
@@ -20,10 +21,43 @@ namespace ProductService.AsyncDataServices
         private string _exchange;
         private Dictionary<ServicesEnum, string> _routingMap;
 
-        private readonly JsonSerializerOptions jsonSerializerOptions = new()
+        //private readonly JsonSerializerOptions jsonSerializerOptions = new()
+        //{
+        //    PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+        //    WriteIndented = false
+        //};
+
+        private readonly JsonSerializerOptions jsonSerializerOptions = new JsonSerializerOptions
         {
-            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-            WriteIndented = false
+            WriteIndented = true,
+            TypeInfoResolver = new DefaultJsonTypeInfoResolver
+            {
+                Modifiers =
+                {
+                    ti =>
+                    {
+                        if (ti.Type == typeof(ImageDtoClass))
+                        {
+                            ti.PolymorphismOptions = new JsonPolymorphismOptions
+                            {
+                                TypeDiscriminatorPropertyName = "$type"
+                            };
+                            ti.PolymorphismOptions.DerivedTypes.Add(new JsonDerivedType(typeof(ImagePublishedDto), "Published"));
+                            ti.PolymorphismOptions.DerivedTypes.Add(new JsonDerivedType(typeof(ImageDeletedDto), "Deleted"));
+                        }
+
+                        if (ti.Type == typeof(ProductDtoClass))
+                        {
+                            ti.PolymorphismOptions = new JsonPolymorphismOptions
+                            {
+                                TypeDiscriminatorPropertyName = "$producttype"
+                            };
+                            ti.PolymorphismOptions.DerivedTypes.Add(new JsonDerivedType(typeof(ProductPublishedDto), "Published"));
+                            ti.PolymorphismOptions.DerivedTypes.Add(new JsonDerivedType(typeof(ProductDeletedDto), "Deleted"));
+                        }
+                    }
+                }
+            }
         };
 
         public async Task InitAsync()
@@ -110,7 +144,7 @@ namespace ProductService.AsyncDataServices
                 _ => throw new NotSupportedException($"Unknown event enum: {eventType}")
             };
 
-            var message = JsonSerializer.Serialize(eventDto, jsonSerializerOptions);
+            var message = JsonSerializer.Serialize(eventDto, eventDto.GetType(), jsonSerializerOptions);
 
             if (_connection?.IsOpen == true)
             {
