@@ -27,7 +27,7 @@ namespace ProductService.EventProcessing
 
         public async Task ProcessEventAsync(string message)
         {
-            BaseEventDto baseEvent;
+            /*BaseEventDto baseEvent;
             try
             {
                 baseEvent = JsonSerializer.Deserialize<BaseEventDto>(message, jsonSerializerOptions);
@@ -58,7 +58,7 @@ namespace ProductService.EventProcessing
                 default:
                     Console.WriteLine($"--> Unknown event category: {baseEvent.Category}");
                     break;
-            }
+            }*/
         }
 
         private async Task HandleImageEvent(string message)

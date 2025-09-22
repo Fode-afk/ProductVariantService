@@ -72,6 +72,9 @@ namespace ProductService.Grpc
             var product = _mapper.Map<Product>(request);
             product.UpdatedAt = localTime;
 
+            await _messageBusClient.PublishEventAsync(_mapper.Map<ProductPublishedDto>(product), ProductEvents.Published,
+               [ServicesEnum.SEARCH_SERVICE, ServicesEnum.REVIEW_SERVICE, ServicesEnum.RECOMMENDATION_SERVICE]);
+
             var res = await _productRepo.CreateProductAsync(product);
 
 

@@ -21,43 +21,10 @@ namespace ProductService.AsyncDataServices
         private string _exchange;
         private Dictionary<ServicesEnum, string> _routingMap;
 
-        //private readonly JsonSerializerOptions jsonSerializerOptions = new()
-        //{
-        //    PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-        //    WriteIndented = false
-        //};
-
-        private readonly JsonSerializerOptions jsonSerializerOptions = new JsonSerializerOptions
+        private readonly JsonSerializerOptions jsonSerializerOptions = new()
         {
-            WriteIndented = true,
-            TypeInfoResolver = new DefaultJsonTypeInfoResolver
-            {
-                Modifiers =
-                {
-                    ti =>
-                    {
-                        if (ti.Type == typeof(ImageDtoClass))
-                        {
-                            ti.PolymorphismOptions = new JsonPolymorphismOptions
-                            {
-                                TypeDiscriminatorPropertyName = "$type"
-                            };
-                            ti.PolymorphismOptions.DerivedTypes.Add(new JsonDerivedType(typeof(ImagePublishedDto), "Published"));
-                            ti.PolymorphismOptions.DerivedTypes.Add(new JsonDerivedType(typeof(ImageDeletedDto), "Deleted"));
-                        }
-
-                        if (ti.Type == typeof(ProductDtoClass))
-                        {
-                            ti.PolymorphismOptions = new JsonPolymorphismOptions
-                            {
-                                TypeDiscriminatorPropertyName = "$producttype"
-                            };
-                            ti.PolymorphismOptions.DerivedTypes.Add(new JsonDerivedType(typeof(ProductPublishedDto), "Published"));
-                            ti.PolymorphismOptions.DerivedTypes.Add(new JsonDerivedType(typeof(ProductDeletedDto), "Deleted"));
-                        }
-                    }
-                }
-            }
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+            WriteIndented = false
         };
 
         public async Task InitAsync()
@@ -123,43 +90,55 @@ namespace ProductService.AsyncDataServices
         public async Task PublishEventAsync<TPayload, TEventEnum>(TPayload payload, TEventEnum eventType, ServicesEnum[] consumers)
                 where TEventEnum : Enum
         {
-            BaseEventDto eventDto = eventType switch
+            BaseEventDto<TPayload> eventDto = typeof(TEventEnum).Name switch
             {
-                ProductEvents => new ProductEventDto<TPayload>
+                nameof(ProductEvents) => new BaseEventDto<TPayload>
                 {
                     Category = EventCategory.Product,
                     Consumers = consumers,
-                    EventType = (ProductEvents)(object)eventType,
-                    Data = payload
+                    Event = payload,
+                    EventType = eventType.ToString()
                 },
 
-                ImageEvents => new ImageEventDto<TPayload>
+                nameof(ImageEvents) => new BaseEventDto<TPayload>
                 {
                     Category = EventCategory.Image,
                     Consumers = consumers,
-                    EventType = (ImageEvents)(object)eventType,
-                    Data = payload
+                    Event = payload,
+                    EventType = eventType.ToString()
                 },
 
-                _ => throw new NotSupportedException($"Unknown event enum: {eventType}")
+                _ => throw new NotSupportedException($"Unknown event enum type: {typeof(TEventEnum).Name}")
             };
 
-            var message = JsonSerializer.Serialize(eventDto, eventDto.GetType(), jsonSerializerOptions);
-
-            if (_connection?.IsOpen == true)
+            try
             {
-                Console.WriteLine($"--> Sending {eventDto.Category} event ({eventType})...");
-                foreach (var service in consumers)
+                var message = JsonSerializer.Serialize(eventDto, jsonSerializerOptions);
+
+                if (_connection?.IsOpen == true)
                 {
-                    if (_routingMap.TryGetValue(service, out var routingKey))
+                    Console.WriteLine($"--> Sending {eventDto.Category} event ({eventDto.EventType}) to {consumers.Length} consumers...");
+                    foreach (var service in consumers)
                     {
-                        await SendMessageAsync(message, routingKey);
-                    }
-                    else
-                    {
-                        Console.WriteLine($"--> No routing key found for service: {service}");
+                        if (_routingMap.TryGetValue(service, out var routingKey))
+                        {
+                            await SendMessageAsync(message, routingKey);
+                        }
+                        else
+                        {
+                            Console.WriteLine($"--> No routing key found for service: {service}");
+                        }
                     }
                 }
+                else
+                {
+                    Console.WriteLine($"--> Cannot send event: RabbitMQ connection is not open");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"--> Error serializing or sending event: {ex.Message}");
+                throw;
             }
         }
 
