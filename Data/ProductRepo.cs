@@ -8,6 +8,7 @@ namespace ProductService.Data
     {
         private readonly IMongoCollection<Product> _products = database.GetCollection<Product>("Products");
         private readonly ILogger _logger = logger;
+        private const int pageSize = 50;
 
         public async Task<ExecutionResult<string>> CreateProductModelAsync(string ownerId, DateTimeOffset createdAt)
         {
@@ -99,24 +100,41 @@ namespace ProductService.Data
             }
         }
 
-        public async Task<ExecutionResult<IEnumerable<Product>>> GetProductsByOwnerIdAsync(string ownerId)
+        public async Task<ExecutionResult<(IEnumerable<Product>, int)>> GetProductsByOwnerIdAsync(string ownerId, int pageNumber)
         {
             try
             {
-                var res = await _products.Find(p => p.OwnerId == ownerId && p.ExpiresAt == null).ToListAsync();
-                if (res.Count == 0)
-                    return new ExecutionResult<IEnumerable<Product>>(false, "Products not found", null);
+                if (pageNumber <= 0)
+                    pageNumber = 1;
 
-                return new ExecutionResult<IEnumerable<Product>>(true, string.Empty, res);
+                var filter = Builders<Product>.Filter.Eq(p => p.OwnerId, ownerId) &
+                             Builders<Product>.Filter.Eq(p => p.ExpiresAt, null);
+
+                var totalCount = await _products.CountDocumentsAsync(filter);
+                var totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
+
+                if (pageNumber > totalPages)
+                    pageNumber = totalPages;
+
+                var skip = (pageNumber - 1) * pageSize;
+
+                if (totalCount == 0)
+                    return new ExecutionResult<(IEnumerable<Product>, int)>(false, "Products not found", (null, 0));
+
+                var res = await _products
+                    .Find(filter)
+                    .Skip(skip)
+                    .Limit(pageSize)
+                    .ToListAsync();
+
+                return new ExecutionResult<(IEnumerable<Product>, int)>(true, string.Empty, (res, totalPages));
             }
             catch (Exception ex)
             {
                 _logger.Log(ex.Message, LogLevel.Error);
-                return new ExecutionResult<IEnumerable<Product>>(false, ex.Message, null);
+                return new ExecutionResult<(IEnumerable<Product>, int)>(false, ex.Message, (null, 0));
             }
         }
-
-
 
         public async Task<ExecutionResult<Product>> UpdateProductAsync(Product product)
         {

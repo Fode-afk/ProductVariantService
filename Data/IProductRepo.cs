@@ -10,7 +10,7 @@ namespace ProductService.Data
 
 
         Task<ExecutionResult<IEnumerable<Product>>> GetProductsByIdsAsync(string[] productIds);
-        Task<ExecutionResult<IEnumerable<Product>>> GetProductsByOwnerIdAsync(string ownerId);
+        Task<ExecutionResult<(IEnumerable<Product>, int)>> GetProductsByOwnerIdAsync(string ownerId, int pageNumber);
 
 
 

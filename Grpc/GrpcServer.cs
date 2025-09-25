@@ -38,7 +38,7 @@ namespace ProductService.Grpc
         {
             _logger.Log($"\"GetAllProductsByOwnerId\" with params {request.ToJson()} has noticed. Caller: {context.Peer}");
            
-            var res = await _productRepo.GetProductsByOwnerIdAsync(request.OwnerId);
+            var res = await _productRepo.GetProductsByOwnerIdAsync(request.OwnerId, request.PageNumber);
 
             if (!res.success)
             {
@@ -48,7 +48,8 @@ namespace ProductService.Grpc
             return new GetAllProductsByOwnerIdResponse
             {
                 Status = new StatusResponse { Status = true },
-                Products = { _mapper.Map<IEnumerable<ProductGrpc>>(res.Value) }
+                Products = { _mapper.Map<IEnumerable<ProductGrpc>>(res.Value.Item1) },
+                TotalPages = res.Value.Item2
             };
         }
 

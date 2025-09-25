@@ -94,12 +94,14 @@ message GetProductsByIdsResponse
 message GetAllProductsByOwnerIdRequest
 {
     string ownerId = 1;
+    int32 pageNumber = 2;
 }
 
 message GetAllProductsByOwnerIdResponse
 {  
     StatusResponse status = 1;
     repeated ProductGrpc products = 2;
+    int32 totalPages = 3;
 }
 
 message DeleteProductsRequest
