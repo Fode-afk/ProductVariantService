@@ -19,6 +19,9 @@ namespace ProductService.Profiles
                 .ForMember(dest => dest.UpdatedAt, opt => opt.MapFrom(src => DateTimeUtil.ParseDate(src.UpdatedAt)));
 
             CreateMap<Product, ProductGrpc>()
+                //TODO: parent card id убрать отсюда когда доделаешь логику с карточкой
+                .ForMember(dest => dest.ParentCardId, opt => opt.MapFrom(src => src.ParentCardId ?? string.Empty))
+                .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description ?? string.Empty))
                 .ForMember(dest => dest.Attributes, opt => opt.MapFrom(src => src.Attributes))
                 .ForMember(dest => dest.ImageURLs, opt => opt.MapFrom(src => src.ImageURLs))
                 .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(src => src.CreatedAt.ToString("o")))

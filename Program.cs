@@ -12,7 +12,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 
-builder.Services.AddScoped<IProductRepo, ProductRepo>();
+builder.Services.AddScoped<IProductRepo, CachedProductRepo>();
 builder.Services.AddScoped<ICacheRepo, CacheRepo>();
 
 builder.Services.AddGrpc();

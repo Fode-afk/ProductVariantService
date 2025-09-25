@@ -2,7 +2,6 @@
 using migApp.Shared.Enums.Image;
 using migApp.Shared.EventDtos;
 using migApp.Shared.MsgBus;
-using migApp.Shared.MsgBus.Dtos;
 using migApp.Shared.MsgBus.Dtos.Images;
 using migApp.Shared.MsgBus.Dtos.Product;
 using migApp.Shared.MsgBus.Enums;

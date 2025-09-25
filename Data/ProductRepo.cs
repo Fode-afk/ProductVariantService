@@ -9,8 +9,6 @@ namespace ProductService.Data
         private readonly IMongoCollection<Product> _products = database.GetCollection<Product>("Products");
         private readonly ILogger _logger = logger;
 
-
-
         public async Task<ExecutionResult<string>> CreateProductModelAsync(string ownerId, DateTimeOffset createdAt)
         {
             try

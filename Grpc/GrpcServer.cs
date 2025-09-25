@@ -71,12 +71,8 @@ namespace ProductService.Grpc
 
             var product = _mapper.Map<Product>(request);
             product.UpdatedAt = localTime;
-
-            await _messageBusClient.PublishEventAsync(_mapper.Map<ProductPublishedDto>(product), ProductEvents.Published,
-               [ServicesEnum.SEARCH_SERVICE, ServicesEnum.REVIEW_SERVICE, ServicesEnum.RECOMMENDATION_SERVICE]);
-
+        
             var res = await _productRepo.CreateProductAsync(product);
-
 
             //CardService call
             //Вообще тут должна быть достаточно крепкая связь между продуктом и карточкой.
@@ -139,14 +135,12 @@ namespace ProductService.Grpc
                     .Where(s => s != null)!
                     .Cast<ServicesEnum>()]);
 
-                    if (product.ImageURLs.Count > 0)
+                    if (product.ImageURLs != null && product.ImageURLs.Count > 0)
                     {
-
                         foreach (var url in product.ImageURLs)
                         {
                             var imageEvent = new ImageDeletedDto { Id = product.ProductId, Url = url };
                             await _messageBusClient.PublishEventAsync(imageEvent, ImageEvents.Deleted, [ServicesEnum.IMAGE_SERVICE]);
-
                         }
                     }
                 }         
