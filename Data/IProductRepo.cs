@@ -4,17 +4,18 @@ namespace ProductService.Data
 {
     public interface IProductRepo
     {
-        Task<ExecutionResult<string>> CreateProductModelAsync(string ownerId, DateTimeOffset createdAt); //Через AUTH удалять токены, если вендор удален
-        Task<ExecutionResult<Product>> CreateProductAsync(Product product); //Через AUTH удалять токены, если вендор удален
+        Task<ExecutionResult<string>> CreateProductModelAsync(string ownerId, DateTimeOffset createdAt);                            //Через AUTH удалять токены, если вендор удален
+        Task<ExecutionResult<Product>> CreateProductAsync(Product product);                                                         //Через AUTH удалять токены, если вендор удален
 
 
 
-        Task<ExecutionResult<IEnumerable<Product>>> GetProductsByIdsAsync(string[] productIds);
-        Task<ExecutionResult<IEnumerable<Product>>> GetProductsByOwnerIdAsync(string ownerId);
+        Task<ExecutionResult<Product>> GetProductModelAsync(string productModelId);                                                 //DONE
+        Task<ExecutionResult<IEnumerable<Product>>> GetProductsByIdsAsync(string[] productIds);                                     //DONE
+        Task<ExecutionResult<IEnumerable<Product>>> GetProductsByOwnerIdAsync(string ownerId);                                      //DONE
 
 
 
-        Task<ExecutionResult<Product>> UpdateProductAsync(Product product);
+        Task<ExecutionResult<Product>> UpdateProductAsync(Product product);                                                         //Вынести проверки на Model.IsValidState
         Task<ExecutionResult<Product>> UpdateParentCardIdAsync(string productId, string parentCardId, DateTimeOffset updatedAt);
 
 

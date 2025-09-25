@@ -12,14 +12,61 @@ using ProductService.Utils;
 
 namespace ProductService.Grpc
 {
-    public class GrpcServer(IProductRepo productRepo, IMapper mapper, IMessageBusClient messageBusClient,
+    public class GrpcServer(IProductRepo productRepo, ICardRepo cardRepo, IMapper mapper, IMessageBusClient messageBusClient,
         IConfiguration config, ILogger logger) : GrpcProducts.GrpcProductsBase
     {
         private readonly IProductRepo _productRepo = productRepo;      
+        private readonly ICardRepo _cardRepo = cardRepo;      
         private readonly IMapper _mapper = mapper;
         private readonly IMessageBusClient _messageBusClient = messageBusClient;
         private readonly IConfiguration _config = config;
-        private readonly ILogger _logger = logger;      
+        private readonly ILogger _logger = logger;
+
+
+        public override async Task<CreateProductModelResponse> CreateProductModel(CreateProductModelRequest request, ServerCallContext context)
+        {
+            _logger.Log($"\"CreateProductModel\" with params {request.ToJson()} has noticed. Caller: {context.Peer}");
+
+            var localTime = DateTimeUtil.GetCurrentTimeFormatted(_config);
+
+            var res = await _productRepo.CreateProductModelAsync(request.OwnerId, localTime);
+
+            return new CreateProductModelResponse { Status = new StatusResponse { Status = res.success, Reason = res.message }, ProductId = res.Value };
+        }
+
+        public override async Task<StatusResponse> CreateProduct(CreateProductRequest request, ServerCallContext context)
+        {
+            _logger.Log($"\"CreateProduct\" with params {request.ToJson()} has noticed. Caller: {context.Peer}");
+            var localTime = DateTimeUtil.GetCurrentTimeFormatted(_config);
+
+
+            var modelResult = await _productRepo.GetProductModelAsync(request.ProductId);
+            if (!modelResult.success)
+                return new StatusResponse { Status = false, Reason = modelResult.message };
+
+
+            var cardRes = await _cardRepo.CreateCardAsync(new Card { OwnerId = modelResult.Value.OwnerId, ProductIds = { request.ProductId } });
+            if (!cardRes.success)
+                return new StatusResponse { Status = false, Reason = cardRes.message };
+
+
+            var product = _mapper.Map<Product>(request);
+            product.UpdatedAt = localTime;
+            product.ParentCardId = cardRes.Value;
+
+            var productRes = await _productRepo.CreateProductAsync(product);
+
+            if (!productRes.success)
+                return new StatusResponse { Status = false, Reason = productRes.message };
+
+            await _messageBusClient.PublishEventAsync(_mapper.Map<ProductPublishedDto>(productRes.Value), ProductEvents.Published,
+                [ServicesEnum.SEARCH_SERVICE, ServicesEnum.REVIEW_SERVICE, ServicesEnum.RECOMMENDATION_SERVICE]);
+
+            return new StatusResponse { Status = productRes.success, Reason = productRes.message };
+        }
+
+
+
 
         public async override Task<GetProductsByIdsResponse> GetProductsByIds(GetProductsByIdsRequest request, ServerCallContext context)
         {
@@ -50,46 +97,10 @@ namespace ProductService.Grpc
                 Status = new StatusResponse { Status = true },
                 Products = { _mapper.Map<IEnumerable<ProductGrpc>>(res.Value) }
             };
-        }
-
-        public override async Task<CreateProductModelResponse> CreateProductModel(CreateProductModelRequest request, ServerCallContext context)
-        {
-            _logger.Log($"\"CreateProductModel\" with params {request.ToJson()} has noticed. Caller: {context.Peer}");
-
-            var localTime = DateTimeUtil.GetCurrentTimeFormatted(_config);
-
-            var res = await _productRepo.CreateProductModelAsync(request.OwnerId, localTime);
-
-            return new CreateProductModelResponse { Status = new StatusResponse { Status = res.success, Reason = res.message }, ProductId = res.Value };
-        }
-
-        public override async Task<StatusResponse> CreateProduct(CreateProductRequest request, ServerCallContext context)
-        {
-            _logger.Log($"\"CreateProduct\" with params {request.ToJson()} has noticed. Caller: {context.Peer}");
-
-            var localTime = DateTimeUtil.GetCurrentTimeFormatted(_config);
-
-            var product = _mapper.Map<Product>(request);
-            product.UpdatedAt = localTime;
-
-            await _messageBusClient.PublishEventAsync(_mapper.Map<ProductPublishedDto>(product), ProductEvents.Published,
-               [ServicesEnum.SEARCH_SERVICE, ServicesEnum.REVIEW_SERVICE, ServicesEnum.RECOMMENDATION_SERVICE]);
-
-            var res = await _productRepo.CreateProductAsync(product);
+        }   
 
 
-            //CardService call
-            //Вообще тут должна быть достаточно крепкая связь между продуктом и карточкой.
-            //По сути, карточка становится главней продукта 
-            
-            if (!res.success)
-                return new StatusResponse { Status = false, Reason = res.message };
 
-            await _messageBusClient.PublishEventAsync(_mapper.Map<ProductPublishedDto>(res.Value), ProductEvents.Published,
-                [ServicesEnum.SEARCH_SERVICE, ServicesEnum.REVIEW_SERVICE, ServicesEnum.RECOMMENDATION_SERVICE]);     
-
-            return new StatusResponse { Status = res.success, Reason = res.message };
-        }
 
         public override async Task<StatusResponse> UpdateProductById(UpdateProductRequest request, ServerCallContext context)
         {
@@ -101,7 +112,7 @@ namespace ProductService.Grpc
 
             product.UpdatedAt = localTime;
 
-            var res = await _productRepo.UpdateProductAsync(product);
+            var res = await _productRepo.UpdateProductAsync(product); //Брать OwnerId из AUTH (ищменить proto файл)
             
             if (res.success)
             {              

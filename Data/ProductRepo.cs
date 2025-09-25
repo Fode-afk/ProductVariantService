@@ -7,6 +7,7 @@ namespace ProductService.Data
     public class ProductRepo(IMongoDatabase database, ILogger logger) : IProductRepo
     {
         private readonly IMongoCollection<Product> _products = database.GetCollection<Product>("Products");
+        private readonly IMongoCollection<Card> _cards = database.GetCollection<Card>("Cards");
         private readonly ILogger _logger = logger;
 
 
@@ -54,7 +55,7 @@ namespace ProductService.Data
                 updates.Add(updateBuilder.Set(p => p.Description, product.Description));
                 updates.Add(updateBuilder.Set(p => p.StockQuantity, product.StockQuantity));
                 updates.Add(updateBuilder.Set(p => p.ParentCardId, product.ParentCardId));
-                updates.Add(updateBuilder.Set(p => p.CanBeOrdered, product.CanBeOrdered));
+                updates.Add(updateBuilder.Set(p => p.CanBeOrdered, true));
                 updates.Add(updateBuilder.Set(p => p.ImageURLs, product.ImageURLs));
                 updates.Add(updateBuilder.Set(p => p.Attributes, product.Attributes));
                 updates.Add(updateBuilder.Set(p => p.UpdatedAt, product.UpdatedAt));
@@ -82,6 +83,25 @@ namespace ProductService.Data
         }
 
 
+
+
+        public async Task<ExecutionResult<Product>> GetProductModelAsync(string productModelId)
+        {
+            try
+            {
+                var existingProduct = await _products.Find(p => p.ProductId == productModelId && p.ExpiresAt != null).FirstOrDefaultAsync();
+
+                if (existingProduct == null)
+                    return new ExecutionResult<Product>(false, "Product not found", null);
+
+                return new ExecutionResult<Product>(true, string.Empty, existingProduct);
+            }
+            catch (Exception ex)
+            {
+                _logger.Log(ex.Message, LogLevel.Error);
+                return new ExecutionResult<Product>(false, ex.Message, null);
+            }
+        }
 
         public async Task<ExecutionResult<IEnumerable<Product>>> GetProductsByIdsAsync(string[] productIds)
         {
@@ -125,7 +145,8 @@ namespace ProductService.Data
             try
             {
                 var filter = Builders<Product>.Filter.Eq(p => p.ProductId, product.ProductId) &
-                Builders<Product>.Filter.Eq(p => p.ExpiresAt, null);
+                    Builders<Product>.Filter.Eq(p => p.OwnerId, product.OwnerId) &
+                    Builders<Product>.Filter.Eq(p => p.ExpiresAt, null);
 
                 var existingProduct = await _products.Find(filter).FirstOrDefaultAsync();
                 if (existingProduct == null)
@@ -164,9 +185,6 @@ namespace ProductService.Data
 
                 if (product.StockQuantity != existingProduct.StockQuantity)
                     updates.Add(updateBuilder.Set(p => p.StockQuantity, product.StockQuantity));
-
-                if (product.ParentCardId != existingProduct.ParentCardId)
-                    updates.Add(updateBuilder.Set(p => p.ParentCardId, product.ParentCardId));
 
                 if (!AreListsEqual(product.Attributes, existingProduct.Attributes))
                     updates.Add(updateBuilder.Set(p => p.Attributes, product.Attributes));

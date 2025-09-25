@@ -48,4 +48,8 @@
 			<HintPath>..\migApp.Shared\bin\Debug\net8.0\migApp.Shared.dll</HintPath>
 		</Reference>
 	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Logs\" />
+	</ItemGroup>
 </Project>
