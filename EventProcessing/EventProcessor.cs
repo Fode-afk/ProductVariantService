@@ -2,6 +2,7 @@
 using migApp.Shared.Enums.Image;
 using migApp.Shared.EventDtos;
 using migApp.Shared.MsgBus;
+using migApp.Shared.MsgBus.Dtos;
 using migApp.Shared.MsgBus.Dtos.Images;
 using migApp.Shared.MsgBus.Dtos.Product;
 using migApp.Shared.MsgBus.Enums;
@@ -19,17 +20,17 @@ namespace ProductService.EventProcessing
         private readonly IConfiguration _config = config;
         private readonly IMapper _mapper = mapper;
         private readonly IMessageBusClient _messageBusClient = messageBusClient;
-        private readonly JsonSerializerOptions jsonSerializerOptions = new()
+        private readonly JsonSerializerOptions _jsonSerializerOptions = new()
         {
             PropertyNamingPolicy = JsonNamingPolicy.CamelCase
         };
 
         public async Task ProcessEventAsync(string message)
         {
-            /*BaseEventDto baseEvent;
+            BaseEventDto<object> baseEvent;
             try
             {
-                baseEvent = JsonSerializer.Deserialize<BaseEventDto>(message, jsonSerializerOptions);
+                baseEvent = JsonSerializer.Deserialize<BaseEventDto<object>>(message, _jsonSerializerOptions);
                 if (baseEvent == null)
                 {
                     Console.WriteLine("--> Failed to parse GenericEventDto");
@@ -51,21 +52,25 @@ namespace ProductService.EventProcessing
             switch (baseEvent.Category)
             {
                 case EventCategory.Image:
-                    await HandleImageEvent(message);
+                    await HandleImageEvent(message, Enum.Parse<ImageEvents>(baseEvent.EventType));
                     break;
-
                 default:
                     Console.WriteLine($"--> Unknown event category: {baseEvent.Category}");
                     break;
-            }*/
+            }
         }
 
-        private async Task HandleImageEvent(string message)
+        private async Task HandleImageEvent(string message, ImageEvents eventType)
         {
-            ImageEventDto<ImageDtoClass>? imageEvent;
+            object signature;
+
             try
             {
-                imageEvent = JsonSerializer.Deserialize<ImageEventDto<ImageDtoClass>>(message, jsonSerializerOptions);
+                signature = eventType switch
+                {
+                    ImageEvents.Published => JsonSerializer.Deserialize<BaseEventDto<ImagePublishedDto>>(message, _jsonSerializerOptions)!,
+                    _ => throw new NotImplementedException()
+                };
             }
             catch (Exception ex)
             {
@@ -73,23 +78,17 @@ namespace ProductService.EventProcessing
                 return;
             }
 
-            if (imageEvent == null)
+            if (signature == null)
                 return;
 
-            switch (imageEvent.EventType)
+            switch (eventType)
             {
                 case ImageEvents.Published:
-                    var published = (ImagePublishedDto)imageEvent.Data;
-                    await AddProductImage(published);
-                    break;
-
-                case ImageEvents.Deleted:
-                    //var updated = (ProductUpdatePublishedDto)productEvent.Data;
-                    //await UpdateProduct(updated);
-                    break;
-
+                    var publishedDto = (BaseEventDto<ImagePublishedDto>)signature;
+                    await AddProductImage(publishedDto.Event);
+                    break;              
                 default:
-                    Console.WriteLine($"--> Unhandled product event type: {imageEvent.EventType}");
+                    Console.WriteLine($"--> Unhandled product event type: {signature}");
                     break;
             }
         }
@@ -109,12 +108,7 @@ namespace ProductService.EventProcessing
                 UpdatedAt = DateTimeUtil.GetCurrentTimeFormatted(_config)
             };
 
-            var res = await repo.AddImagesToProductAsync(product);
-
-            if (res.success)
-            {
-                var productPub = _mapper.Map<ProductPublishedDto>(res.Value);
-            }
+            await repo.AddImagesToProductAsync(product);
         }      
 
         private async Task DeleteProductsByVendorId(VendorPublishedDto publishedDto) //TOWATCH

@@ -25,7 +25,7 @@ namespace ProductService.Models
 
         public int StockQuantity { get; set; }
 
-        public List<string> ImageURLs { get; set; }
+        public List<string> ImageURLs { get; set; } = [];
 
         public List<ProductAttribute> Attributes { get; set; }
 

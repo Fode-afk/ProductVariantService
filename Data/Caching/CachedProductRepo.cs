@@ -45,20 +45,19 @@ namespace ProductService.Data.Caching
 
                 var filter = Builders<Product>.Filter.Eq(p => p.ProductId, product.ProductId);
                 var updateBuilder = Builders<Product>.Update;
-                var updates = new List<UpdateDefinition<Product>>();
-
-                updates.Add(updateBuilder.Set(p => p.Name, product.Name));
-                updates.Add(updateBuilder.Set(p => p.Type, product.Type));
-                updates.Add(updateBuilder.Set(p => p.Price, product.Price));
-                updates.Add(updateBuilder.Set(p => p.Description, product.Description));
-                updates.Add(updateBuilder.Set(p => p.StockQuantity, product.StockQuantity));
-                updates.Add(updateBuilder.Set(p => p.ParentCardId, product.ParentCardId));
-                updates.Add(updateBuilder.Set(p => p.CanBeOrdered, product.CanBeOrdered));
-                updates.Add(updateBuilder.Set(p => p.ImageURLs, product.ImageURLs));
-                updates.Add(updateBuilder.Set(p => p.Attributes, product.Attributes));
-                updates.Add(updateBuilder.Set(p => p.UpdatedAt, product.UpdatedAt));
-
-                updates.Add(updateBuilder.Set(p => p.ExpiresAt, (DateTime?)null));
+                var updates = new List<UpdateDefinition<Product>>
+                {
+                    updateBuilder.Set(p => p.Name, product.Name),
+                    updateBuilder.Set(p => p.Type, product.Type),
+                    updateBuilder.Set(p => p.Price, product.Price),
+                    updateBuilder.Set(p => p.Description, product.Description),
+                    updateBuilder.Set(p => p.StockQuantity, product.StockQuantity),
+                    updateBuilder.Set(p => p.ParentCardId, product.ParentCardId),
+                    updateBuilder.Set(p => p.CanBeOrdered, product.CanBeOrdered),
+                    updateBuilder.Set(p => p.Attributes, product.Attributes),
+                    updateBuilder.Set(p => p.UpdatedAt, product.UpdatedAt),
+                    updateBuilder.Set(p => p.ExpiresAt, null)
+                };
 
                 var update = updateBuilder.Combine(updates);
                 var result = await _products.FindOneAndUpdateAsync(filter, update, new FindOneAndUpdateOptions<Product>
@@ -410,6 +409,7 @@ namespace ProductService.Data.Caching
                 var updates = new List<UpdateDefinition<Product>>();
 
                 if (product.ImageURLs != null && product.ImageURLs.Count != 0)
+                    
                     updates.Add(updateBuilder.AddToSetEach(p => p.ImageURLs, product.ImageURLs));
 
                 if (updates.Count == 0)
