@@ -68,7 +68,7 @@ namespace ProductService.Grpc
 
 
 
-        public async override Task<GetProductsByIdsResponse> GetProductsByIds(GetProductsByIdsRequest request, ServerCallContext context)
+        public override async Task<GetProductsByIdsResponse> GetProductsByIds(GetProductsByIdsRequest request, ServerCallContext context)
         {
             _logger.Log($"\"GetProductsByIds\" with params {request.ToJson()} has noticed. Caller: {context.Peer}");
             
@@ -124,6 +124,25 @@ namespace ProductService.Grpc
 
             return new StatusResponse { Status = res.success, Reason = res.message };
         }
+
+        public override async Task<StatusResponse> ReassignProductWithCard(ReassignProductWithCardRequest request, ServerCallContext context)
+        {
+            _logger.Log($"\"ReassignProductWithCard\" with params {request.ToJson()} has noticed. Caller: {context.Peer}");
+
+            var localTime = DateTimeUtil.GetCurrentTimeFormatted(_config);
+            var cardRes = await _cardRepo.ReassignCard(request.CardId, request.ProductId, localTime);
+            
+            if(!cardRes.success)
+                return new StatusResponse { Status = false, Reason = cardRes.message };
+            
+            var productRes = await _productRepo.ReassignProduct(request.CardId, request.ProductId, localTime);
+            
+            if(!productRes.success)
+                return new StatusResponse { Status = false, Reason = productRes.message };
+            
+            return new StatusResponse { Status = productRes.success,  Reason = string.Empty };
+        }
+
 
         public override async Task<StatusResponse> DeleteProductsByIds(DeleteProductsRequest request, ServerCallContext context)
         {    

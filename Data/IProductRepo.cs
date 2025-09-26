@@ -12,20 +12,21 @@ namespace ProductService.Data
         Task<ExecutionResult<Product>> GetProductModelAsync(string productModelId);                                                 //DONE
         Task<ExecutionResult<IEnumerable<Product>>> GetProductsByIdsAsync(string[] productIds);                                     //DONE
         Task<ExecutionResult<IEnumerable<Product>>> GetProductsByOwnerIdAsync(string ownerId);                                      //DONE
+        Task<ExecutionResult<IEnumerable<string>>> GetProductsRawByOwnerId(string ownerId);
 
 
 
         Task<ExecutionResult<Product>> UpdateProductAsync(Product product);                                                         //Вынести проверки на Model.IsValidState
-        Task<ExecutionResult<Product>> UpdateParentCardIdAsync(string productId, string parentCardId, DateTimeOffset updatedAt);
+        Task<ExecutionResult<Product>> ReassignProduct(string productId, string parentCardId, string ownerId, DateTimeOffset updatedAt);
 
 
 
-        Task<ExecutionResult<Product>> ArchiveProductAsync(string productId, DateTimeOffset updatedAt);
-        Task<ExecutionResult<Product>> UnarchiveProductAsync(string productId, DateTimeOffset updatedAt);
+        Task<ExecutionResult<Product>> ArchiveProductAsync(string productId, string ownerId, DateTimeOffset updatedAt);
+        Task<ExecutionResult<Product>> UnarchiveProductAsync(string productId, string ownerId, DateTimeOffset updatedAt);
 
 
 
-        Task<ExecutionResult<IEnumerable<Product>>> DeleteProductsAsync(string[] productIds);
+        Task<ExecutionResult<IEnumerable<Product>>> DeleteProductsAsync(string[] productIds, string ownerId);
         Task<ExecutionResult<IEnumerable<Product>>> DeleteProductsByOwnerIdAsync(string ownerId);
 
 

@@ -9,5 +9,9 @@ namespace ProductService.Data
 
 
         Task<ExecutionResult<IEnumerable<Card>>> GetCardsAsync(string[] cardIds);
+        
+        
+        
+        Task<ExecutionResult> ReassignCard(string cardId, string productId, string ownerId, DateTimeOffset updatedAt);
     }
 }

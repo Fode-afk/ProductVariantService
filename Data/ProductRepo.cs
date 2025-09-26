@@ -138,6 +138,16 @@ namespace ProductService.Data
             }
         }
 
+        public async Task<ExecutionResult<IEnumerable<string>>> GetProductsRawByOwnerId(string ownerId)
+        {
+            var res = await _products.Find(p => p.OwnerId == ownerId && p.ExpiresAt == null).ToListAsync();
+            
+            if (res.Count == 0)
+                return new ExecutionResult<IEnumerable<string>>(false, "Products not found", null);
+            
+            return new ExecutionResult<IEnumerable<string>>(true, string.Empty, res.Select(p => p.ProductId));
+        }
+
 
 
         public async Task<ExecutionResult<Product>> UpdateProductAsync(Product product)
@@ -212,27 +222,20 @@ namespace ProductService.Data
             }
         }
 
-        public async Task<ExecutionResult<Product>> UpdateParentCardIdAsync(string productId, string parentCardId, DateTimeOffset updatedAt)
+        public async Task<ExecutionResult<Product>> ReassignProduct(string productId, string parentCardId, string ownerId, DateTimeOffset updatedAt)
         {
             try
             {
                 var filter = Builders<Product>.Filter.Eq(p => p.ProductId, productId) &
-                Builders<Product>.Filter.Eq(p => p.ExpiresAt, null);
-
-                var existingProduct = await _products.Find(filter).FirstOrDefaultAsync();
-                if (existingProduct == null)
-                    return new ExecutionResult<Product>(false, "Product not found", null);
-
+                             Builders<Product>.Filter.Eq(p => p.OwnerId, ownerId) &  
+                    Builders<Product>.Filter.Eq(p => p.ExpiresAt, null);
+                
                 var updateBuilder = Builders<Product>.Update;
-                var updates = new List<UpdateDefinition<Product>>();
-
-                if (parentCardId != existingProduct.ParentCardId)
-                    updates.Add(updateBuilder.Set(p => p.ParentCardId, parentCardId));
-
-                if (updates.Count == 0)
-                    return new ExecutionResult<Product>(false, "Nothing to update", null);
-
-                updates.Add(updateBuilder.Set(p => p.UpdatedAt, updatedAt));
+                var updates = new List<UpdateDefinition<Product>>
+                {
+                    updateBuilder.Set(p => p.ParentCardId, parentCardId),
+                    updateBuilder.Set(p => p.UpdatedAt, updatedAt)
+                };
 
                 var update = updateBuilder.Combine(updates);
                 var updatedProduct = await _products.FindOneAndUpdateAsync(
@@ -254,11 +257,12 @@ namespace ProductService.Data
 
 
 
-        public async Task<ExecutionResult<Product>> ArchiveProductAsync(string productId, DateTimeOffset updatedAt)
+        public async Task<ExecutionResult<Product>> ArchiveProductAsync(string productId, string ownerId, DateTimeOffset updatedAt)
         {
             try
             {
                 var filter = Builders<Product>.Filter.Eq(p => p.ProductId, productId) &
+                             Builders<Product>.Filter.Eq(p => p.OwnerId, ownerId) &
                                 Builders<Product>.Filter.Eq(p => p.ExpiresAt, null);
 
                 var updateBuilder = Builders<Product>.Update;
@@ -286,11 +290,12 @@ namespace ProductService.Data
             }
         }
 
-        public async Task<ExecutionResult<Product>> UnarchiveProductAsync(string productId, DateTimeOffset updatedAt)
+        public async Task<ExecutionResult<Product>> UnarchiveProductAsync(string productId, string ownerId, DateTimeOffset updatedAt)
         {
             try
             {
                 var filter = Builders<Product>.Filter.Eq(p => p.ProductId, productId) &
+                             Builders<Product>.Filter.Eq(p => p.OwnerId, ownerId) &
                                 Builders<Product>.Filter.Eq(p => p.ExpiresAt, null);
 
                 var updateBuilder = Builders<Product>.Update;
@@ -320,11 +325,11 @@ namespace ProductService.Data
 
 
 
-        public async Task<ExecutionResult<IEnumerable<Product>>> DeleteProductsAsync(string[] productIds)
+        public async Task<ExecutionResult<IEnumerable<Product>>> DeleteProductsAsync(string[] productIds, string ownerId)
         {
             try
             {
-                var res = await _products.Find(p => productIds.Contains(p.ProductId) && p.ExpiresAt == null).ToListAsync();
+                var res = await _products.Find(p => productIds.Contains(p.ProductId) && p.ExpiresAt == null && p.OwnerId == ownerId).ToListAsync();
                 return new ExecutionResult<IEnumerable<Product>>(res != null, string.Empty, res);
             }
             catch (Exception ex)

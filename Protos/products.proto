@@ -4,16 +4,24 @@ option csharp_namespace = "ProductService.Protos";
 
 service GrpcProducts
 {
-    rpc CreateProductModel(CreateProductModelRequest) returns (CreateProductModelResponse);                 //DONE
-    rpc CreateProduct(CreateProductRequest) returns (StatusResponse);                                       //DONE
+    rpc CreateProductModel(CreateProductModelRequest) returns (CreateProductModelResponse);                     //DONE
+    rpc CreateProduct(CreateProductRequest) returns (StatusResponse);                                           //DONE
 
-    rpc GetProductsByIds(GetProductsByIdsRequest) returns (GetProductsByIdsResponse);
-    rpc GetAllProductsByOwnerId(GetAllProductsByOwnerIdRequest) returns (GetAllProductsByOwnerIdResponse);
-
+    rpc GetProductsByIds(GetProductsByIdsRequest) returns (GetProductsByIdsResponse);                           //DONE
+    rpc GetAllProductsByOwnerId(GetAllProductsByOwnerIdRequest) returns (GetAllProductsByOwnerIdResponse);      //DONE
+    
+    rpc ReassignProductWithCard(ReassignProductWithCardRequest) returns (StatusResponse);
     rpc UpdateProductById(UpdateProductRequest) returns (StatusResponse);
-
+    
+    rpc ArchiveProduct() returns ();
+    rpc UnarchiveProduct() returns ();
+    
     rpc DeleteProductsByIds(DeleteProductsRequest) returns (StatusResponse);
     rpc DeleteImagesFromProduct(DeleteImagesFromProductRequest) returns (StatusResponse);
+    
+    
+    rpc GetCards() returns();
+    rpc GetCardsRaw() returns();
 }
 
 message ProductGrpc
@@ -101,6 +109,20 @@ message GetAllProductsByOwnerIdResponse
     StatusResponse status = 1;
     repeated ProductGrpc products = 2;
 }
+
+message ReassignProductWithCardRequest{
+    string productId = 1;
+    string cardId = 2;
+}
+
+
+
+
+
+
+
+
+
 
 message DeleteProductsRequest
 {

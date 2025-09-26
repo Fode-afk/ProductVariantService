@@ -1,5 +1,6 @@
 ﻿using MongoDB.Driver;
 using ProductService.Models;
+using ZstdSharp.Unsafe;
 
 namespace ProductService.Data
 {
@@ -33,7 +34,9 @@ namespace ProductService.Data
             }
         }
 
-        public async Task<ExecutionResult<IEnumerable<Card>>> GetCardsByIdsAsync(string[] cardIds)
+        
+        
+        public async Task<ExecutionResult<IEnumerable<Card>>> GetCardsAsync(string[] cardIds)
         {
             try
             {
@@ -45,6 +48,38 @@ namespace ProductService.Data
             {
                 _logger.Log(ex.Message, LogLevel.Error);
                 return new ExecutionResult<IEnumerable<Card>>(false, ex.Message, null);
+            }
+        }
+
+        
+        
+        public async Task<ExecutionResult> ReassignCard(string cardId, string productId, string ownerId, DateTimeOffset updatedAt)
+        {
+            try
+            {
+                var filter = Builders<Card>.Filter.Eq(p => p.CardId, cardId) & 
+                             Builders<Card>.Filter.Nin(productId, p => p.ProductIds) & 
+                             Builders<Card>.Filter.Eq(p => p.OwnerId, ownerId);
+
+                var updateBuilder = Builders<Card>.Update;
+                var updates = new List<UpdateDefinition<Card>>();
+
+                updates.Add(updateBuilder.AddToSet(p => p.ProductIds, productId));
+                
+                var update = updateBuilder.Combine(updates);
+
+                var res = await _cards.FindOneAndUpdateAsync(filter, update, 
+                    new FindOneAndUpdateOptions<Card>
+                    {
+                        ReturnDocument = ReturnDocument.After
+                    });
+
+                return new ExecutionResult(res != null, string.Empty);
+            }
+            catch (Exception ex)
+            {
+                _logger.Log(ex.Message, LogLevel.Error);
+                return new ExecutionResult(false, ex.Message);
             }
         }
     }
