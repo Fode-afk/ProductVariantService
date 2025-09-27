@@ -20,7 +20,7 @@ namespace ProductService.Profiles
 
             CreateMap<Product, ProductGrpc>()
                 //TODO: parent card id убрать отсюда когда доделаешь логику с карточкой
-                .ForMember(dest => dest.ParentCardId, opt => opt.MapFrom(src => src.ParentCardId ?? string.Empty))
+                .ForMember(dest => dest.ParentCardId, opt => opt.MapFrom(src => src.ParentCardId ?? "123456789"))
                 .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description ?? string.Empty))
                 .ForMember(dest => dest.Attributes, opt => opt.MapFrom(src => src.Attributes))
                 .ForMember(dest => dest.ImageURLs, opt => opt.MapFrom(src => src.ImageURLs))

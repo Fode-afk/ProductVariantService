@@ -45,20 +45,19 @@ namespace ProductService.Data
 
                 var filter = Builders<Product>.Filter.Eq(p => p.ProductId, product.ProductId);
                 var updateBuilder = Builders<Product>.Update;
-                var updates = new List<UpdateDefinition<Product>>();
-
-                updates.Add(updateBuilder.Set(p => p.Name, product.Name));
-                updates.Add(updateBuilder.Set(p => p.Type, product.Type));
-                updates.Add(updateBuilder.Set(p => p.Price, product.Price));
-                updates.Add(updateBuilder.Set(p => p.Description, product.Description));
-                updates.Add(updateBuilder.Set(p => p.StockQuantity, product.StockQuantity));
-                updates.Add(updateBuilder.Set(p => p.ParentCardId, product.ParentCardId));
-                updates.Add(updateBuilder.Set(p => p.CanBeOrdered, product.CanBeOrdered));
-                updates.Add(updateBuilder.Set(p => p.ImageURLs, product.ImageURLs));
-                updates.Add(updateBuilder.Set(p => p.Attributes, product.Attributes));
-                updates.Add(updateBuilder.Set(p => p.UpdatedAt, product.UpdatedAt));
-
-                updates.Add(updateBuilder.Set(p => p.ExpiresAt, (DateTime?)null));
+                var updates = new List<UpdateDefinition<Product>>
+                {
+                    updateBuilder.Set(p => p.Name, product.Name),
+                    updateBuilder.Set(p => p.Type, product.Type),
+                    updateBuilder.Set(p => p.Price, product.Price),
+                    updateBuilder.Set(p => p.Description, product.Description),
+                    updateBuilder.Set(p => p.StockQuantity, product.StockQuantity),
+                    updateBuilder.Set(p => p.ParentCardId, product.ParentCardId),
+                    updateBuilder.Set(p => p.CanBeOrdered, product.CanBeOrdered),
+                    updateBuilder.Set(p => p.Attributes, product.Attributes),
+                    updateBuilder.Set(p => p.UpdatedAt, product.UpdatedAt),
+                    updateBuilder.Set(p => p.ExpiresAt, null)
+                };
 
                 var update = updateBuilder.Combine(updates);
                 var result = await _products.FindOneAndUpdateAsync(filter, update, new FindOneAndUpdateOptions<Product>
@@ -80,18 +79,16 @@ namespace ProductService.Data
             }
         }
 
-
-
         public async Task<ExecutionResult<IEnumerable<Product>>> GetProductsByIdsAsync(string[] productIds)
         {
             try
-            {
-                var res = await _products.Find(p => productIds.Contains(p.ProductId) && p.ExpiresAt == null).ToListAsync();
+            {               
+                var productRes = await _products.Find(p => productIds.Contains(p.ProductId) && p.ExpiresAt == null).ToListAsync();
 
-                if (res.Count == 0)
+                if (productRes.Count == 0)
                     return new ExecutionResult<IEnumerable<Product>>(false, "Products not found", null);
-
-                return new ExecutionResult<IEnumerable<Product>>(true, string.Empty, res);
+              
+                return new ExecutionResult<IEnumerable<Product>>(true, string.Empty, productRes);
             }
             catch (Exception ex)
             {
@@ -239,7 +236,7 @@ namespace ProductService.Data
                     new FindOneAndUpdateOptions<Product>
                     {
                         ReturnDocument = ReturnDocument.After
-                    });
+                    });           
 
                 return new ExecutionResult<Product>(updatedProduct != null, string.Empty, updatedProduct);
             }
@@ -249,8 +246,6 @@ namespace ProductService.Data
                 return new ExecutionResult<Product>(false, ex.Message, null);
             }
         }
-
-
 
         public async Task<ExecutionResult<Product>> ArchiveProductAsync(string productId, DateTimeOffset updatedAt)
         {
@@ -273,7 +268,7 @@ namespace ProductService.Data
                     new FindOneAndUpdateOptions<Product>
                     {
                         ReturnDocument = ReturnDocument.After
-                    });
+                    });              
 
                 return new ExecutionResult<Product>(updatedProduct != null, string.Empty, updatedProduct);
             }
@@ -316,14 +311,14 @@ namespace ProductService.Data
             }
         }
 
-
-
         public async Task<ExecutionResult<IEnumerable<Product>>> DeleteProductsAsync(string[] productIds)
         {
             try
             {
                 var res = await _products.Find(p => productIds.Contains(p.ProductId) && p.ExpiresAt == null).ToListAsync();
-                return new ExecutionResult<IEnumerable<Product>>(res != null, string.Empty, res);
+                var deleteRes = await _products.DeleteManyAsync(p => productIds.Contains(p.ProductId) && p.ExpiresAt == null);               
+
+                return new ExecutionResult<IEnumerable<Product>>(deleteRes.DeletedCount > 0, string.Empty, res);
             }
             catch (Exception ex)
             {
@@ -338,6 +333,7 @@ namespace ProductService.Data
             {
                 var products = await _products.FindAsync(p => p.OwnerId == ownerId);
                 var res = await _products.DeleteManyAsync(p => p.OwnerId == ownerId);
+
                 return new ExecutionResult<IEnumerable<Product>>(res.DeletedCount > 0, string.Empty, products.ToList());
             }
             catch (Exception ex)
@@ -346,8 +342,6 @@ namespace ProductService.Data
                 return new ExecutionResult<IEnumerable<Product>>(false, ex.Message, null);
             }
         }
-
-
 
         public async Task<ExecutionResult<Product>> AddImagesToProductAsync(Product product)
         {
@@ -413,15 +407,12 @@ namespace ProductService.Data
             }
         }
 
-
-
-
         private bool AreListsEqual<T>(List<T>? list1, List<T>? list2)
         {
             if (list1 == null && list2 == null) return true;
             if (list1 == null || list2 == null) return false;
             if (list1.Count != list2.Count) return false;
-            
+
             for (int i = 0; i < list1.Count; i++)
             {
                 if (!EqualityComparer<T>.Default.Equals(list1[i], list2[i]))
@@ -429,8 +420,6 @@ namespace ProductService.Data
             }
             return true;
         }
-
-
 
         public async Task<ExecutionResult<Product>> SetCanBeOrderedAsync(string productId, bool canBeOrdered, DateTimeOffset updatedAt)
         {
@@ -440,7 +429,7 @@ namespace ProductService.Data
                                 Builders<Product>.Filter.Eq(p => p.ExpiresAt, null);
 
                 var updateBuilder = Builders<Product>.Update;
-                var updates = new List<UpdateDefinition<Product>>();              
+                var updates = new List<UpdateDefinition<Product>>();
 
                 if (!await HasParentCard(productId))
                     return new ExecutionResult<Product>(false, "Product must have an assigned card", null);
@@ -456,7 +445,7 @@ namespace ProductService.Data
                     new FindOneAndUpdateOptions<Product>
                     {
                         ReturnDocument = ReturnDocument.After
-                    });
+                    });             
 
                 return new ExecutionResult<Product>(updatedProduct != null, string.Empty, updatedProduct);
             }
@@ -468,7 +457,7 @@ namespace ProductService.Data
         }
 
         private async Task<bool> HasParentCard(string productId) //TOREFACTOR
-        {           
+        {
             var result = await _products.Find(p => p.ProductId == productId && p.ParentCardId != string.Empty && p.ExpiresAt == null).FirstOrDefaultAsync();
             return result != null;
         }
