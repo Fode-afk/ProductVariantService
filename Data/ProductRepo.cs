@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using MongoDB.Driver;
 using ProductService.Models;
 
@@ -36,6 +37,18 @@ namespace ProductService.Data
         {
             try
             {
+                if (product.Price < 0)
+                    return new ExecutionResult<Product>(false, "Price cannot be negative", null);
+
+                if (product.StockQuantity < 0)
+                    return new ExecutionResult<Product>(false, "Stock quantity cannot be negative", null);
+
+                if (string.IsNullOrWhiteSpace(product.Name))
+                    return new ExecutionResult<Product>(false, "Name cannot be empty", null);
+
+                if (string.IsNullOrWhiteSpace(product.Description))
+                    return new ExecutionResult<Product>(false, "Description cannot be empty", null);
+
                 var existingProduct = await _products.Find(p => p.ProductId == product.ProductId && p.ExpiresAt != null).FirstOrDefaultAsync();
 
                 if (existingProduct == null)
@@ -137,15 +150,6 @@ namespace ProductService.Data
         {
             try
             {
-                var filter = Builders<Product>.Filter.Eq(p => p.ProductId, product.ProductId) &
-                Builders<Product>.Filter.Eq(p => p.ExpiresAt, null);
-
-                var existingProduct = await _products.Find(filter).FirstOrDefaultAsync();
-                if (existingProduct == null)
-                    return new ExecutionResult<Product>(false, "Product not found", null);
-
-
-
                 if (product.Price < 0)
                     return new ExecutionResult<Product>(false, "Price cannot be negative", null);
 
@@ -158,8 +162,13 @@ namespace ProductService.Data
                 if (string.IsNullOrWhiteSpace(product.Description))
                     return new ExecutionResult<Product>(false, "Description cannot be empty", null);
 
+                var filter = Builders<Product>.Filter.Eq(p => p.ProductId, product.ProductId) &
+                Builders<Product>.Filter.Eq(p => p.ExpiresAt, null);
 
-
+                var existingProduct = await _products.Find(filter).FirstOrDefaultAsync();
+                if (existingProduct == null)
+                    return new ExecutionResult<Product>(false, "Product not found", null);
+             
                 var updateBuilder = Builders<Product>.Update;
                 var updates = new List<UpdateDefinition<Product>>();
 
