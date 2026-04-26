@@ -1,13 +1,13 @@
-﻿using migApp.Shared.Results;
+﻿using migApp.Shared.Domain.Primitives;
+using migApp.Shared.Results;
 using ProductService.Domain.Errors;
-using ProductService.Domain.Primitives;
 using static migApp.Shared.Results.ResultFactory;
 
 namespace ProductService.Domain.ValueObjects;
 
 public sealed class Dimensions : ValueObject
 {
-    private const double MaxDimension = 9999.99;
+    public const double MaxDimension = 9999.99;
 
     public double Length { get; }
     public double Width { get; }

@@ -2,4 +2,4 @@
 
 namespace ProductService.Domain.DomainEvents;
 
-public sealed record ProductImageAltUpdatedDomainEvent(Guid ProductId) : IDomainEvent;
+public sealed record ProductImageAltUpdatedDomainEvent(Guid ProductId, Guid ProductCardId) : IDomainEvent;

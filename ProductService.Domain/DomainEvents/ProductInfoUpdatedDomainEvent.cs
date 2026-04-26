@@ -2,4 +2,4 @@
 
 namespace ProductService.Domain.DomainEvents;
 
-public sealed record ProductInfoUpdatedDomainEvent(Guid ProductId) : IDomainEvent;
+public sealed record ProductInfoUpdatedDomainEvent(Guid ProductId, Guid ProductCardId) : IDomainEvent;

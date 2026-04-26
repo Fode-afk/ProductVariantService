@@ -1,5 +1,5 @@
-﻿using migApp.Shared.Results;
-using ProductService.Domain.Primitives;
+﻿using migApp.Shared.Domain.Primitives;
+using migApp.Shared.Results;
 using static migApp.Shared.Results.ResultFactory;
 
 namespace ProductService.Domain.ValueObjects;
@@ -8,6 +8,8 @@ public sealed class ProductAttribute : ValueObject
 {
     public AttributeName Name { get; }
     public AttributeValue Value { get; }
+
+    private ProductAttribute() { }
 
     private ProductAttribute(AttributeName name, AttributeValue value)
     {

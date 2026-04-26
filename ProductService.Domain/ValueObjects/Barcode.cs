@@ -1,6 +1,6 @@
-﻿using migApp.Shared.Results;
+﻿using migApp.Shared.Domain.Primitives;
+using migApp.Shared.Results;
 using ProductService.Domain.Errors;
-using ProductService.Domain.Primitives;
 using System.Text.RegularExpressions;
 using static migApp.Shared.Results.ResultFactory;
 

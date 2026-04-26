@@ -1,13 +1,13 @@
-﻿using migApp.Shared.Results;
+﻿using migApp.Shared.Domain.Primitives;
+using migApp.Shared.Results;
 using ProductService.Domain.Errors;
-using ProductService.Domain.Primitives;
 using static migApp.Shared.Results.ResultFactory;
 
 namespace ProductService.Domain.ValueObjects;
 
 public sealed class AltText : ValueObject
 {
-    private const int MaxLength = 200;
+    public const int MaxLength = 200;
 
     public string Value { get; }
 

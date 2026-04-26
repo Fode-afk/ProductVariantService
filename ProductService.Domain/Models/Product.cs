@@ -9,6 +9,8 @@ namespace ProductService.Domain.Models;
 
 public sealed class Product : AggregateRoot
 {
+    private Product() : base(Guid.Empty) { }
+
     private Product(
         Guid id,
         Guid productCardId,
@@ -19,7 +21,7 @@ public sealed class Product : AggregateRoot
         Barcode barcode,
         bool isDefault,
         List<ProductAttribute> attributes,
-        List<string> tags,
+        List<Tag> tags,
         DateTimeOffset createdAt) : base(id)
     {
         ProductCardId = productCardId;
@@ -47,7 +49,7 @@ public sealed class Product : AggregateRoot
     public bool IsDefault { get; private set; }
 
     public DateTimeOffset CreatedAt { get; private set; }
-    public DateTimeOffset UpdatedAt { get; private set; }
+    public DateTimeOffset? UpdatedAt { get; private set; }
 
     private List<ProductAttribute> _attributes = [];
     public IReadOnlyCollection<ProductAttribute> Attributes => _attributes;
@@ -55,10 +57,11 @@ public sealed class Product : AggregateRoot
     private readonly List<ProductImage> _images = [];
     public IReadOnlyCollection<ProductImage> Images => _images;
 
-    private List<string> _tags = [];
-    public IReadOnlyCollection<string> Tags => _tags;
+    private List<Tag> _tags = [];
+    public IReadOnlyCollection<Tag> Tags => _tags;
 
     public static IResult<Product> Create(
+        Guid vendorId,
         Guid productCardId,
         Sku sku,
         Name name,
@@ -67,7 +70,7 @@ public sealed class Product : AggregateRoot
         Barcode barcode,
         bool isDefault,
         List<ProductAttribute> attributes,
-        List<string> tags,
+        List<Tag> tags,
         DateTimeOffset now)
     {
         if (attributes is null || attributes.Count == 0)
@@ -90,7 +93,7 @@ public sealed class Product : AggregateRoot
                 tags,
                 now);
 
-        product.RaiseDomainEvent(new ProductCreatedDomainEvent(product.Id));
+        product.RaiseDomainEvent(new ProductCreatedDomainEvent(product, vendorId));
 
         return Ok(product);
     }
@@ -111,20 +114,33 @@ public sealed class Product : AggregateRoot
         Weight = weight;
         UpdatedAt = now;
 
-        RaiseDomainEvent(new ProductInfoUpdatedDomainEvent(Id));
+        RaiseDomainEvent(new ProductInfoUpdatedDomainEvent(Id, ProductCardId));
 
         return Ok();
     }
 
-    public IResult SetDefault(bool isDefault, DateTimeOffset now)
+    public IResult MarkAsDefault(DateTimeOffset now)
     {
-        if (IsDefault == isDefault)
+        if (IsDefault == true)
             return Ok();
 
-        IsDefault = isDefault;
+        IsDefault = true;
         UpdatedAt = now;
 
-        RaiseDomainEvent(new ProductSetDefaultDomainEvent(Id));
+        RaiseDomainEvent(new ProductMarkAsDefaultDomainEvent(Id, ProductCardId));
+
+        return Ok();
+    }
+
+    public IResult UnmarkAsDefault(DateTimeOffset now)
+    {
+        if (IsDefault == false)
+            return Ok();
+
+        IsDefault = false;
+        UpdatedAt = now;
+
+        RaiseDomainEvent(new ProductUnmarkAsDefaultDomainEvent(Id, ProductCardId));
 
         return Ok();
     }
@@ -136,23 +152,29 @@ public sealed class Product : AggregateRoot
         if (attributes is null || attributes.Count == 0)
             return Fail<Product>(ProductErrors.AttributesRequired());
 
+        if (attributes.Count > 30)
+            return Fail(ProductErrors.MaxAttributesReached());
+
         if (_attributes.SequenceEqual(attributes))
             return Ok();
 
         _attributes = [.. attributes];
         UpdatedAt = now;
 
-        RaiseDomainEvent(new ProductAttributesReplacedDomainEvent(Id));
+        RaiseDomainEvent(new ProductAttributesReplacedDomainEvent(Id, ProductCardId));
 
         return Ok();
     }
 
     public IResult ReplaceTags(
-        List<string> tags,
+        List<Tag> tags,
         DateTimeOffset now)
     {
         if (tags is null || tags.Count == 0)
             return Fail<Product>(ProductErrors.TagsRequired());
+
+        if (tags.Count > 50)
+            return Fail(ProductErrors.MaxTagsReached());
 
         if (_tags.SequenceEqual(tags))
             return Ok();
@@ -160,7 +182,7 @@ public sealed class Product : AggregateRoot
         _tags = [.. tags];
         UpdatedAt = now;
 
-        RaiseDomainEvent(new ProductTagsReplacedDomainEvent(Id));
+        RaiseDomainEvent(new ProductTagsReplacedDomainEvent(Id, ProductCardId));
 
         return Ok();
     }
@@ -171,6 +193,9 @@ public sealed class Product : AggregateRoot
         bool isMain,
         DateTimeOffset now)
     {
+        if (_images.Count >= 10)
+            return Fail(ProductImageErrors.MaxImagesReached());
+
         var imageResult = ProductImage.Create(Id, url, alt, _images.Count, isMain);
 
         if (imageResult.IsFailure)
@@ -192,13 +217,13 @@ public sealed class Product : AggregateRoot
 
         UpdatedAt = now;
 
-        RaiseDomainEvent(new ProductImageAddedDomainEvent(Id));
+        RaiseDomainEvent(new ProductImageAddedDomainEvent(Id, ProductCardId));
         return Ok();
     }
 
-    public IResult RemoveProductImage(Guid imageId, DateTimeOffset now)
+    public IResult RemoveProductImage(ImageUrl url, DateTimeOffset now)
     {
-        var image = _images.FirstOrDefault(x => x.Id == imageId);
+        var image = _images.FirstOrDefault(x => x.Url == url);
         if (image is null)
             return Fail(ProductErrors.ImageNotFound());
 
@@ -212,13 +237,13 @@ public sealed class Product : AggregateRoot
 
         UpdatedAt = now;
 
-        RaiseDomainEvent(new ProductImageRemovedDomainEvent(Id));
+        RaiseDomainEvent(new ProductImageRemovedDomainEvent(Id, ProductCardId));
         return Ok();
     }
 
-    public IResult ChangeImageOrder(Guid imageId, int newOrder, DateTimeOffset now)
+    public IResult ChangeImageOrder(ImageUrl url, int newOrder, DateTimeOffset now)
     {
-        var image = _images.FirstOrDefault(x => x.Id == imageId);
+        var image = _images.FirstOrDefault(x => x.Url == url);
         if (image is null)
             return Fail(ProductErrors.ImageNotFound());
 
@@ -232,7 +257,7 @@ public sealed class Product : AggregateRoot
 
         UpdatedAt = now;
 
-        RaiseDomainEvent(new ProductImageOrderChangedDomainEvent(Id));
+        RaiseDomainEvent(new ProductImageOrderChangedDomainEvent(Id, ProductCardId));
         return Ok();
     }
 
@@ -242,9 +267,9 @@ public sealed class Product : AggregateRoot
             _images[i].ChangeOrder(i);
     }
 
-    public IResult SetMainImage(Guid imageId, DateTimeOffset now)
+    public IResult SetMainImage(ImageUrl url, DateTimeOffset now)
     {
-        var image = _images.FirstOrDefault(x => x.Id == imageId);
+        var image = _images.FirstOrDefault(x => x.Url == url);
 
         if (image is null)
             return Fail(ProductErrors.ImageNotFound());
@@ -256,14 +281,14 @@ public sealed class Product : AggregateRoot
 
         UpdatedAt = now;
 
-        RaiseDomainEvent(new ProductImageSetMainDomainEvent(Id));
+        RaiseDomainEvent(new ProductImageSetMainDomainEvent(Id, ProductCardId));
 
         return Ok();
     }
 
-    public IResult UpdateImageAlt(Guid imageId, AltText alt, DateTimeOffset now)
+    public IResult UpdateImageAlt(ImageUrl url, AltText alt, DateTimeOffset now)
     {
-        var image = _images.FirstOrDefault(x => x.Id == imageId);
+        var image = _images.FirstOrDefault(x => x.Url == url);
 
         if (image is null)
             return Fail(ProductErrors.ImageNotFound());
@@ -275,7 +300,7 @@ public sealed class Product : AggregateRoot
 
         UpdatedAt = now;
 
-        RaiseDomainEvent(new ProductImageAltUpdatedDomainEvent(Id));
+        RaiseDomainEvent(new ProductImageAltUpdatedDomainEvent(Id, ProductCardId));
 
         return Ok();
     }

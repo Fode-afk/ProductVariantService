@@ -1,4 +1,4 @@
-﻿using ProductService.Domain.Primitives;
+﻿using migApp.Shared.Domain.Primitives;
 
 namespace ProductService.Domain.ValueObjects;
 
