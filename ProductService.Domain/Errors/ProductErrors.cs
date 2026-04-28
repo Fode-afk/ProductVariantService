@@ -9,9 +9,14 @@ public static class ProductErrors
     public static Error ImageNotFound() => Error.NotFound(ProductErrorCodes.ImageNotFound);
     public static Error DuplicateSku() => Error.AlreadyExists(ProductErrorCodes.DuplicateSku);
     public static Error NotFound() => Error.NotFound(ProductErrorCodes.NotFound);
-    public static Error DefaultProductAlreadyExists() => Error.AlreadyExists(ProductErrorCodes.DefaultProductAlreadyExists);
+    public static Error DefaultProductAlreadyExists() =>
+        Error.AlreadyExists(ProductErrorCodes.DefaultProductAlreadyExists);
     public static Error MaxAttributesReached() => Error.InvalidArgument(ProductErrorCodes.MaxAttributesReached);
     public static Error MaxTagsReached() => Error.InvalidArgument(ProductErrorCodes.MaxTagsReached);
+    public static Error InvalidPrice() => Error.InvalidArgument(ProductErrorCodes.InvalidPrice);
+    public static Error InvalidOldPrice() => Error.InvalidArgument(ProductErrorCodes.InvalidOldPrice);
+    public static Error InvalidAvailableQuantity() =>
+        Error.InvalidArgument(ProductErrorCodes.InvalidAvailableQuantity);
 }
 
 public static class ProductErrorCodes
@@ -24,4 +29,7 @@ public static class ProductErrorCodes
     public const string DefaultProductAlreadyExists = "Product.DefaultProductAlreadyExists";
     public const string MaxAttributesReached = "Product.MaxAttributesReached";
     public const string MaxTagsReached = "Product.MaxTagsReached";
+    public const string InvalidPrice = "Product.InvalidPrice";
+    public const string InvalidOldPrice = "Product.InvalidOldPrice";
+    public const string InvalidAvailableQuantity = "Product.InvalidAvailableQuantity";
 }

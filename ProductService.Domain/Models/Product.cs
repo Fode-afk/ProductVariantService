@@ -1,5 +1,7 @@
-﻿using migApp.Shared.Results;
+﻿using migApp.Shared.Domain.ValueObjects;
+using migApp.Shared.Results;
 using ProductService.Domain.DomainEvents;
+using ProductService.Domain.Enums;
 using ProductService.Domain.Errors;
 using ProductService.Domain.Primitives;
 using ProductService.Domain.ValueObjects;
@@ -47,6 +49,14 @@ public sealed class Product : AggregateRoot
     public Barcode Barcode { get; private set; }
 
     public bool IsDefault { get; private set; }
+
+    public Money? PriceSnapshot { get; private set; }
+    public Money? OldPriceSnapshot { get; private set; }
+    public DateTimeOffset? PriceUpdatedAt { get; private set; }
+
+    public StockStatus Status { get; private set; } = StockStatus.OutOfStock;
+    public int AvailableQuantitySnapshot { get; private set; }
+    public DateTimeOffset? StockUpdatedAt { get; private set; }
 
     public DateTimeOffset CreatedAt { get; private set; }
     public DateTimeOffset? UpdatedAt { get; private set; }
@@ -114,7 +124,13 @@ public sealed class Product : AggregateRoot
         Weight = weight;
         UpdatedAt = now;
 
-        RaiseDomainEvent(new ProductInfoUpdatedDomainEvent(Id, ProductCardId));
+        RaiseDomainEvent(new ProductInfoUpdatedDomainEvent(
+            Id,
+            ProductCardId,
+            Name,
+            Dimensions,
+            Weight,
+            UpdatedAt.Value));
 
         return Ok();
     }
@@ -127,7 +143,11 @@ public sealed class Product : AggregateRoot
         IsDefault = true;
         UpdatedAt = now;
 
-        RaiseDomainEvent(new ProductMarkAsDefaultDomainEvent(Id, ProductCardId));
+        RaiseDomainEvent(new ProductMarkAsDefaultDomainEvent(
+            Id, 
+            ProductCardId,
+            IsDefault,
+            UpdatedAt.Value));
 
         return Ok();
     }
@@ -140,7 +160,11 @@ public sealed class Product : AggregateRoot
         IsDefault = false;
         UpdatedAt = now;
 
-        RaiseDomainEvent(new ProductUnmarkAsDefaultDomainEvent(Id, ProductCardId));
+        RaiseDomainEvent(new ProductUnmarkAsDefaultDomainEvent(
+            Id,
+            ProductCardId,
+            IsDefault,
+            UpdatedAt.Value));
 
         return Ok();
     }
@@ -161,7 +185,11 @@ public sealed class Product : AggregateRoot
         _attributes = [.. attributes];
         UpdatedAt = now;
 
-        RaiseDomainEvent(new ProductAttributesReplacedDomainEvent(Id, ProductCardId));
+        RaiseDomainEvent(new ProductAttributesReplacedDomainEvent(
+            Id,
+            ProductCardId,
+            [..Attributes],
+            UpdatedAt.Value));
 
         return Ok();
     }
@@ -182,7 +210,11 @@ public sealed class Product : AggregateRoot
         _tags = [.. tags];
         UpdatedAt = now;
 
-        RaiseDomainEvent(new ProductTagsReplacedDomainEvent(Id, ProductCardId));
+        RaiseDomainEvent(new ProductTagsReplacedDomainEvent(
+            Id,
+            ProductCardId,
+            [..Tags],
+            UpdatedAt.Value));
 
         return Ok();
     }
@@ -217,7 +249,12 @@ public sealed class Product : AggregateRoot
 
         UpdatedAt = now;
 
-        RaiseDomainEvent(new ProductImageAddedDomainEvent(Id, ProductCardId));
+        RaiseDomainEvent(new ProductImageAddedDomainEvent(
+            Id,
+            ProductCardId,
+            [..Images],
+            UpdatedAt.Value));
+
         return Ok();
     }
 
@@ -237,7 +274,12 @@ public sealed class Product : AggregateRoot
 
         UpdatedAt = now;
 
-        RaiseDomainEvent(new ProductImageRemovedDomainEvent(Id, ProductCardId));
+        RaiseDomainEvent(new ProductImageRemovedDomainEvent(
+            Id,
+            ProductCardId,
+            [..Images],
+            UpdatedAt.Value));
+
         return Ok();
     }
 
@@ -257,7 +299,12 @@ public sealed class Product : AggregateRoot
 
         UpdatedAt = now;
 
-        RaiseDomainEvent(new ProductImageOrderChangedDomainEvent(Id, ProductCardId));
+        RaiseDomainEvent(new ProductImageOrderChangedDomainEvent(
+            Id, 
+            ProductCardId,
+            [..Images],
+            UpdatedAt.Value));
+
         return Ok();
     }
 
@@ -281,7 +328,11 @@ public sealed class Product : AggregateRoot
 
         UpdatedAt = now;
 
-        RaiseDomainEvent(new ProductImageSetMainDomainEvent(Id, ProductCardId));
+        RaiseDomainEvent(new ProductImageSetMainDomainEvent(
+            Id,
+            ProductCardId,
+            [..Images],
+            UpdatedAt.Value));
 
         return Ok();
     }
@@ -300,7 +351,72 @@ public sealed class Product : AggregateRoot
 
         UpdatedAt = now;
 
-        RaiseDomainEvent(new ProductImageAltUpdatedDomainEvent(Id, ProductCardId));
+        RaiseDomainEvent(new ProductImageAltUpdatedDomainEvent(
+            Id,
+            ProductCardId,
+            [..Images],
+            UpdatedAt.Value));
+
+        return Ok();
+    }
+
+    public IResult UpdatePriceSnapshot(
+        Money newPrice,
+        Money? oldPrice,
+        DateTimeOffset now)
+    {
+        if (newPrice is null)
+            return Fail(ProductErrors.InvalidPrice());
+
+        if (oldPrice is not null && oldPrice.Amount < newPrice.Amount)
+            return Fail(ProductErrors.InvalidOldPrice());
+
+        if (PriceSnapshot == newPrice &&
+            OldPriceSnapshot == oldPrice)
+            return Ok();
+
+        OldPriceSnapshot = oldPrice;
+        PriceSnapshot = newPrice;
+        PriceUpdatedAt = now;
+        UpdatedAt = now;
+
+        RaiseDomainEvent(
+            new ProductPriceSnapshotUpdatedDomainEvent(
+                Id,
+                ProductCardId,
+                PriceSnapshot,
+                OldPriceSnapshot,
+                PriceUpdatedAt.Value,
+                UpdatedAt.Value));
+
+        return Ok();
+    }
+
+    public IResult UpdateStockSnapshot(
+        StockStatus status,
+        int availableQuantity,
+        DateTimeOffset now)
+    {
+        if (availableQuantity < 0)
+            return Fail(ProductErrors.InvalidAvailableQuantity());
+
+        if (Status == status &&
+            AvailableQuantitySnapshot == availableQuantity)
+            return Ok();
+
+        Status = status;
+        AvailableQuantitySnapshot = availableQuantity;
+        StockUpdatedAt = now;
+        UpdatedAt = now;
+
+        RaiseDomainEvent(
+            new ProductStockSnapshotUpdatedDomainEvent(
+                Id,
+                ProductCardId,
+                Status,
+                AvailableQuantitySnapshot,
+                StockUpdatedAt.Value,
+                UpdatedAt.Value));
 
         return Ok();
     }

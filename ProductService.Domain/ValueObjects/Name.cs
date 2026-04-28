@@ -36,6 +36,12 @@ public sealed class Name : ValueObject
         return Ok(new Name(value.Trim()));
     }
 
+    public static string Normalize(Name name) =>
+        name.Value
+            .ToLower()
+            .Replace(" ", "")
+            .Trim();
+
     public override string ToString() => Value;
 
     public static implicit operator string(Name name) => name.ToString();

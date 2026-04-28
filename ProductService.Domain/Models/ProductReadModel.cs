@@ -1,4 +1,6 @@
-﻿namespace ProductService.Domain.Models;
+﻿using ProductService.Domain.Enums;
+
+namespace ProductService.Domain.Models;
 
 public sealed class ProductReadModel
 {
@@ -26,6 +28,14 @@ public sealed class ProductReadModel
     public required string ImagesJson { get; set; }
 
     public bool IsDefault { get; set; }
+
+    public decimal? PriceAmount { get; set; }
+    public decimal? OldPriceAmount { get; set; }
+    public DateTimeOffset? PriceUpdatedAt { get; set; }
+
+    public StockStatus Status { get; set; }
+    public int AvailableQuantity { get; set; }
+    public DateTimeOffset? StockUpdatedAt { get; set; }
 
     public DateTimeOffset CreatedAt { get; set; }
     public DateTimeOffset? UpdatedAt { get; set; }

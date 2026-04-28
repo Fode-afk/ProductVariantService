@@ -33,9 +33,13 @@ message ProductDto {
     string barcode = 4;
     DimensionsDto dimensions = 5;
     WeightDto weight = 6;
-    map<string, string> attributes = 7;
-    repeated string tags = 8;
-    repeated ProductImageDto images = 9;
+    int64 price_minor = 7;
+    int64 old_price_minor = 8;
+    StockStatus stock_status = 9;
+    int32 available_quantity = 10;
+    map<string, string> attributes = 11;
+    repeated string tags = 12;
+    repeated ProductImageDto images = 13;
 }
 
 message DimensionsDto {
@@ -55,6 +59,13 @@ message ProductImageDto {
     string alt = 2;
     bool is_main = 3;
     int32 sort_order = 4;
+}
+
+enum StockStatus {
+    IN_STOCK = 0;
+    OUT_OF_STOCK = 1;
+    PREORDER = 2;
+    BLOCKED = 3;
 }
 
 message CreateProductRequest {
@@ -141,6 +152,7 @@ message UpdateProductImageAltRequest {
 
 message GetProductsByCardIdRequest {
     string product_card_id = 1;
+    string currency_code = 2;
 }
 
 message GetProductsByCardIdResponse {

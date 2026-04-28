@@ -22,7 +22,7 @@ internal sealed class GrpcServer(IMediator mediator) :  Protos.ProductService.Pr
     public override async Task<GetProductsByCardIdResponse> GetProductsByCardId(GetProductsByCardIdRequest request, ServerCallContext context)
     {
         var result = await mediator.Send(
-            new GetProductsByCardIdQuery(Guid.Parse(request.ProductCardId)),
+            new GetProductsByCardIdQuery(Guid.Parse(request.ProductCardId), request.CurrencyCode),
             context.CancellationToken);
         var productDtos = result.ThrowIfFailure();
 

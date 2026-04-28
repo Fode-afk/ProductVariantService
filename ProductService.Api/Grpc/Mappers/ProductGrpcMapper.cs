@@ -107,6 +107,12 @@ internal static class ProductGrpcMapper
             Dimensions = FromDimensions(product.Dimensions),
             Weight = FromWeight(product.Weight),
 
+            PriceMinor = product.PriceMinorAmount,
+            OldPriceMinor = product.OldPriceMinorAmount,
+
+            StockStatus = (StockStatus)product.Status,
+            AvailableQuantity = product.AvailableQuantity,
+
             Attributes = { product.Attributes },
             Tags = { product.Tags },
             Images = { product.Images.Select(FromProductImage) }

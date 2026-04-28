@@ -14,7 +14,9 @@ public sealed class InvalidateProductCacheHandlers(IFusionCache cache) :
     IPostCommitDomainEventHandler<ProductImageRemovedDomainEvent>,
     IPostCommitDomainEventHandler<ProductImageOrderChangedDomainEvent>,
     IPostCommitDomainEventHandler<ProductImageAltUpdatedDomainEvent>,
-    IPostCommitDomainEventHandler<ProductImageSetMainDomainEvent>
+    IPostCommitDomainEventHandler<ProductImageSetMainDomainEvent>,
+    IPostCommitDomainEventHandler<ProductPriceSnapshotUpdatedDomainEvent>,
+    IPostCommitDomainEventHandler<ProductStockSnapshotUpdatedDomainEvent>
 
 {
     public async Task Handle(ProductInfoUpdatedDomainEvent notification, CancellationToken cancellationToken) => 
@@ -47,6 +49,12 @@ public sealed class InvalidateProductCacheHandlers(IFusionCache cache) :
     public async Task Handle(ProductImageSetMainDomainEvent notification, CancellationToken cancellationToken) =>
         await HandleInternal(notification.ProductCardId, cancellationToken);
 
+    public async Task Handle(ProductPriceSnapshotUpdatedDomainEvent notification, CancellationToken cancellationToken) =>
+        await HandleInternal(notification.ProductCardId, cancellationToken);
+
+    public async Task Handle(ProductStockSnapshotUpdatedDomainEvent notification, CancellationToken cancellationToken) =>
+        await HandleInternal(notification.ProductCardId, cancellationToken);
+
     private async Task HandleInternal(Guid productCardId, CancellationToken cancellationToken) =>
-        await cache.RemoveAsync(CacheKeys.ProductsByCardId(productCardId), token: cancellationToken);
+        await cache.RemoveByTagAsync(CacheTags.ProductsByCardId(productCardId), token: cancellationToken);
 }

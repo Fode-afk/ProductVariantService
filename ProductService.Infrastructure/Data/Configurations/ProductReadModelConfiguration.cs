@@ -61,6 +61,12 @@ internal sealed class ProductReadModelConfiguration : IEntityTypeConfiguration<P
         builder.Property(x => x.CreatedAt)
             .IsRequired();
 
+        builder.Property(x => x.PriceAmount)
+            .HasPrecision(18, 4);
+        builder.Property(x => x.OldPriceAmount)
+            .HasPrecision(18, 4);
+        builder.Property(x => x.PriceUpdatedAt);
+
         builder.Property(x => x.UpdatedAt);
 
         builder.HasIndex(x => x.ProductCardId);

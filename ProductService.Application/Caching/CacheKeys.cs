@@ -1,6 +1,9 @@
 ﻿namespace ProductService.Application.Caching;
 
-internal static class CacheKeys
+public static class CacheKeys
 {
-    public static string ProductsByCardId(Guid productCardId) => $"Products:{productCardId}";
+    public static string ProductsByCardId(Guid productCardId, string currency) =>
+        $"Products:{productCardId}:{currency}";
+
+    public static string ExchangeRateByCurrency(string currency) => $"ExchangeRate:{currency}";
 }

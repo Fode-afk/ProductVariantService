@@ -199,6 +199,9 @@ namespace ProductService.Infrastructure.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<int>("AvailableQuantitySnapshot")
+                        .HasColumnType("int");
+
                     b.Property<string>("Barcode")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
@@ -214,6 +217,15 @@ namespace ProductService.Infrastructure.Data.Migrations
                         .HasMaxLength(40)
                         .HasColumnType("nvarchar(40)");
 
+                    b.Property<decimal?>("OldPriceSnapshot")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal?>("PriceSnapshot")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTimeOffset?>("PriceUpdatedAt")
+                        .HasColumnType("datetimeoffset");
+
                     b.Property<Guid>("ProductCardId")
                         .HasColumnType("uniqueidentifier");
 
@@ -226,6 +238,12 @@ namespace ProductService.Infrastructure.Data.Migrations
                     b.Property<string>("SKU")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<DateTimeOffset?>("StockUpdatedAt")
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<DateTimeOffset?>("UpdatedAt")
                         .HasColumnType("datetimeoffset");
@@ -318,6 +336,9 @@ namespace ProductService.Infrastructure.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("AvailableQuantity")
+                        .HasColumnType("int");
+
                     b.Property<string>("Barcode")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -359,6 +380,17 @@ namespace ProductService.Infrastructure.Data.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
+                    b.Property<decimal?>("OldPriceAmount")
+                        .HasPrecision(18, 4)
+                        .HasColumnType("decimal(18,4)");
+
+                    b.Property<decimal?>("PriceAmount")
+                        .HasPrecision(18, 4)
+                        .HasColumnType("decimal(18,4)");
+
+                    b.Property<DateTimeOffset?>("PriceUpdatedAt")
+                        .HasColumnType("datetimeoffset");
+
                     b.Property<Guid>("ProductCardId")
                         .HasColumnType("uniqueidentifier");
 
@@ -371,6 +403,12 @@ namespace ProductService.Infrastructure.Data.Migrations
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<DateTimeOffset?>("StockUpdatedAt")
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<string>("TagsFlat")
                         .IsRequired()

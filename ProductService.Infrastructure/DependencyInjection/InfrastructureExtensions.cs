@@ -4,18 +4,25 @@ using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Microsoft.Extensions.Logging;
 using migApp.Shared.Caching;
 using migApp.Shared.Grpc;
+using migApp.Shared.Utils;
+using Polly;
 using ProductService.Application.Interfaces.Data;
+using ProductService.Application.Interfaces.Services;
 using ProductService.Domain.Primitives;
 using ProductService.Infrastructure.Data;
 using ProductService.Infrastructure.DependencyInjection;
 using ProductService.Infrastructure.DomainEvents;
 using ProductService.Infrastructure.Messaging.Consumers;
 using ProductService.Infrastructure.Messaging.IntegrationEvents;
+using ProductService.Infrastructure.Services;
+using ProductService.Infrastructure.Services.Grpc.Clients;
 using RabbitMQ.Client;
 using ZiggyCreatures.Caching.Fusion;
 using ZiggyCreatures.Caching.Fusion.Backplane.StackExchangeRedis;
+using Protos = CurrencyService.Api.Grpc.V1.Protos;
 
 namespace ProductService.Infrastructure.DependencyInjection;
 
@@ -29,12 +36,21 @@ public static class InfrastructureExtensions
             .AddDatabase(configuration)
             .AddCache(configuration)
             .AddGrpc(configuration)
+            .AddCircuitBreaker()
             .AddHealthChecks(configuration)
             .AddMassTransit(configuration)
             .AddIntegrationEventHandlers();
 
-    private static IServiceCollection AddServices(this IServiceCollection services) =>
+    private static IServiceCollection AddServices(this IServiceCollection services)
+    {
+        services.AddScoped<ICurrencyService, CurrencyServiceClient>();
+        services.AddScoped<IExchangeRateService, ExchangeRateService>();
+        services.AddScoped<IMoneyConverter, MoneyConverter>();
+
         services.AddTransient<IDomainEventsDispatcher, DomainEventsDispatcher>();
+
+        return services;
+    }
 
     private static IServiceCollection AddDatabase(this IServiceCollection services, IConfiguration configuration)
     {
@@ -102,8 +118,20 @@ public static class InfrastructureExtensions
             options.Interceptors.Add<GrpcExceptionInterceptor>();
         });
 
+        services.AddGrpcClient<Protos.CurrencyService.CurrencyServiceClient>(options =>
+        {
+            options.Address = new Uri(configuration.GetConnectionString("CurrencyService")!);
+        });
+
         return services;
     }
+
+    private static IServiceCollection AddCircuitBreaker(this IServiceCollection services) =>
+     services.AddSingleton(sp =>
+         CircuitBreakerPolicy.GetCircuitBreakerPolicy(
+             sp.GetRequiredService<ILogger<IAsyncPolicy>>()
+         )
+     );
 
     private static IServiceCollection AddHealthChecks(this IServiceCollection services, IConfiguration configuration)
     {

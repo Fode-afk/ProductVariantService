@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using migApp.Shared.Domain.ValueObjects;
 using ProductService.Domain.Models;
 using ProductService.Domain.ValueObjects;
 
@@ -63,6 +64,16 @@ internal sealed class ProductConfiguration : IEntityTypeConfiguration<Product>
             .HasConversion(
                 barcode => barcode.Value,
                 value => Barcode.Create(value).Value);
+
+        builder.Property(x => x.PriceSnapshot)
+            .HasConversion(
+                price => price == null ? (decimal?)null : price.Amount,
+                value => value == null ? null : Money.Create(value.Value, Currency.USD).Value);
+
+        builder.Property(x => x.OldPriceSnapshot)
+            .HasConversion(
+                price => price == null ? (decimal?)null : price.Amount,
+                value => value == null ? null : Money.Create(value.Value, Currency.USD).Value);
 
         builder.OwnsMany(p => p.Attributes, a =>
         {

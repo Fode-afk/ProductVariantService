@@ -1,6 +1,6 @@
 ﻿namespace ProductService.Application.Caching;
 
-internal static class CacheTags
+public static class CacheTags
 {
-
+    public static string ProductsByCardId(Guid productCardId) => $"Products:{productCardId}";
 }

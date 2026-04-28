@@ -2,6 +2,7 @@
 using ProductService.Domain.DomainEvents;
 using ProductService.Domain.Models;
 using ProductService.Domain.Primitives;
+using ProductService.Domain.ValueObjects;
 using System.Text.Json;
 
 namespace ProductService.Application.DomainEventHandlers;
@@ -39,7 +40,7 @@ public sealed class ProductCreatedDomainEventHandler(IAppDbContext context) : IP
             ProductCardId = product.ProductCardId,
             SKU = product.SKU.Value,
             Name = product.Name.Value,
-            NameNormalized = Normalize(product.Name.Value),
+            NameNormalized = Name.Normalize(product.Name),
             Barcode = product.Barcode.Value,
             Length = product.Dimensions.Length,
             Width = product.Dimensions.Width,
@@ -60,13 +61,5 @@ public sealed class ProductCreatedDomainEventHandler(IAppDbContext context) : IP
         context.ProductReadModels.Add(readModel);
 
         return Task.CompletedTask;
-    }
-
-    private static string Normalize(string value)
-    {
-        return value
-            .ToLower()
-            .Replace(" ", "")
-            .Trim();
     }
 }
