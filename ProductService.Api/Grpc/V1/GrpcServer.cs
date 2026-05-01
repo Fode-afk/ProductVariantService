@@ -8,7 +8,7 @@ using ProductService.Application.Features.Queries.GetProductsByCardId;
 
 namespace ProductService.Api.Grpc.V1;
 
-internal sealed class GrpcServer(IMediator mediator) :  Protos.ProductService.ProductServiceBase
+internal sealed class GrpcServer(IMediator mediator) : Protos.ProductService.ProductServiceBase
 {
     public override async Task<Empty> CreateProduct(CreateProductRequest request, ServerCallContext context)
     {

@@ -48,6 +48,7 @@ public sealed class ProductCreatedDomainEventHandler(IAppDbContext context) : IP
             DimensionUnit = product.Dimensions.Unit.Code,
             Weight = product.Weight.Value,
             WeightUnit = product.Weight.Unit.Code,
+            Status = product.Status,
             MainImage = mainImage ?? string.Empty,
             AttributesJson = JsonSerializer.Serialize(attributesDict),
             TagsJson = JsonSerializer.Serialize(tags),
@@ -55,7 +56,7 @@ public sealed class ProductCreatedDomainEventHandler(IAppDbContext context) : IP
             ImagesJson= JsonSerializer.Serialize(images),
             IsDefault = product.IsDefault,
             CreatedAt = product.CreatedAt,
-            UpdatedAt = product.UpdatedAt
+            UpdatedAt = product.UpdatedAt,
         };
 
         context.ProductReadModels.Add(readModel);

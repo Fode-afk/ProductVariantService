@@ -13,6 +13,7 @@ using ProductService.Application.Interfaces.Data;
 using ProductService.Application.Interfaces.Services;
 using ProductService.Domain.Primitives;
 using ProductService.Infrastructure.Data;
+using ProductService.Infrastructure.Data.Repositories;
 using ProductService.Infrastructure.DependencyInjection;
 using ProductService.Infrastructure.DomainEvents;
 using ProductService.Infrastructure.Messaging.Consumers;
@@ -46,6 +47,9 @@ public static class InfrastructureExtensions
         services.AddScoped<ICurrencyService, CurrencyServiceClient>();
         services.AddScoped<IExchangeRateService, ExchangeRateService>();
         services.AddScoped<IMoneyConverter, MoneyConverter>();
+
+        services.AddScoped<IDbConnectionFactory, DbConnectionFactory>();
+        services.AddScoped<IProductReadRepository, ProductReadRepository>();
 
         services.AddTransient<IDomainEventsDispatcher, DomainEventsDispatcher>();
 

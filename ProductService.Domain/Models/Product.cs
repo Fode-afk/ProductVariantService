@@ -52,7 +52,7 @@ public sealed class Product : AggregateRoot
 
     public Money? PriceSnapshot { get; private set; }
     public Money? OldPriceSnapshot { get; private set; }
-    public DateTimeOffset? PriceUpdatedAt { get; private set; }
+    public DateTimeOffset? PriceUpdatedAt { get; private set; } = null;
 
     public StockStatus Status { get; private set; } = StockStatus.OutOfStock;
     public int AvailableQuantitySnapshot { get; private set; }

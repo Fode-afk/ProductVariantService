@@ -1,5 +1,4 @@
 ﻿using MediatR;
-using Microsoft.EntityFrameworkCore;
 using migApp.Shared.Domain.ValueObjects;
 using migApp.Shared.Results;
 using ProductService.Application.Caching;
@@ -15,17 +14,23 @@ using static migApp.Shared.Results.ResultFactory;
 namespace ProductService.Application.Features.Queries.GetProductsByCardId;
 
 public sealed class GetProductsByCardIdQueryHandler(
-    IAppDbContext context,
+    IProductReadRepository productReadRepository,
     IMoneyConverter moneyConverter,
     IFusionCache cache) : IRequestHandler<GetProductsByCardIdQuery, IResult<IEnumerable<ProductDto>>>
 {
     public async Task<IResult<IEnumerable<ProductDto>>> Handle(GetProductsByCardIdQuery request, CancellationToken cancellationToken)
     {
+        var currencyResult = Currency.Create(request.Currency);
+        if (currencyResult.IsFailure)
+            return Fail<IEnumerable<ProductDto>>(currencyResult.Error);
+
+        var currency = currencyResult.Value;
+
         var productDtos = await cache.GetOrSetAsync<IEnumerable<ProductDto>>(
-            CacheKeys.ProductsByCardId(request.ProductCardId, request.Currency),
+            CacheKeys.ProductsByCardId(request.ProductCardId, currency.Code),
             async (entry, ct) => await GetProductDtos(
                 request.ProductCardId,
-                request.Currency,
+                currency,
                 ct),
             tags: [CacheTags.ProductsByCardId(request.ProductCardId)],
             token: cancellationToken);
@@ -37,24 +42,15 @@ public sealed class GetProductsByCardIdQueryHandler(
 
     private async Task<IEnumerable<ProductDto>> GetProductDtos(
         Guid productCardId,
-        string currency,
+        Currency currency,
         CancellationToken cancellationToken = default)
     {
-        var products = await context.ProductReadModels
-            .AsNoTracking()
-            .Where(p => p.ProductCardId == productCardId)
-            .ToListAsync(cancellationToken);
-
-        var currencyResult = Currency.Create(currency);
-        if (currencyResult.IsFailure)
-            return [];
-
-        var targetCurrency = currencyResult.Value;
+        var products = await productReadRepository.GetByCardIdAsync(productCardId, cancellationToken);   
 
         var dtoTasks = products.Select(
             product => MapToProductDtoAsync(
                 product,
-                targetCurrency,
+                currency,
                 cancellationToken));
 
         var dtos = await Task.WhenAll(dtoTasks);
