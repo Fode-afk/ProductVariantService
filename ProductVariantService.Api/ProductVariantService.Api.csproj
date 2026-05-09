@@ -1,0 +1,35 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>c91cc6ac-7949-4c52-9842-e8a55589b476</UserSecretsId>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Grpc.AspNetCore" Version="2.76.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.7">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.23.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ProductVariantService.Application\ProductVariantService.Application.csproj" />
+    <ProjectReference Include="..\ProductVariantService.Infrastructure\ProductVariantService.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+  	<Protobuf Include="Grpc\V1\Protos\ProductVariantService.proto" GrpcServices="Server" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="migApp.Shared">
+      <HintPath>..\..\migApp.Shared\bin\Debug\net10.0\migApp.Shared.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>
