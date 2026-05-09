@@ -82,20 +82,31 @@ internal static class ProductVariantCreationDataBuilder
                 groupName = groupResult.Value;
             }
 
-            var attrResult = VariantAttribute.Create(
-                characteristicId,
-                snapshot.Name,
-                value,
-                snapshot.CharType,
-                groupName);
+            var nameResult = AttributeName.Create(snapshot.Name);
+            if (nameResult.IsFailure)
+                errors.Add(nameResult.Error);
 
-            if (attrResult.IsFailure)
+            var valueResult = AttributeValue.Create(value);
+            if (valueResult.IsFailure)
+                errors.Add(valueResult.Error);
+
+            if (nameResult.IsSuccess && valueResult.IsSuccess)
             {
-                errors.Add(attrResult.Error);
-                continue;
-            }
+                var attrResult = VariantAttribute.Create(
+                    characteristicId,
+                    nameResult.Value,
+                    valueResult.Value,
+                    snapshot.CharType,
+                    groupName);
 
-            attributes.Add(attrResult.Value);
+                if (attrResult.IsFailure)
+                {
+                    errors.Add(attrResult.Error);
+                    continue;
+                }
+
+                attributes.Add(attrResult.Value);
+            }
         }
 
         if (errors.Count > 0)

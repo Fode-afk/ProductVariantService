@@ -31,23 +31,15 @@ public sealed class VariantAttribute : ValueObject
 
     public static IResult<VariantAttribute> Create(
         Guid characteristicId,
-        string name,
-        string value,
+        AttributeName name,
+        AttributeValue value,
         AttributeCharType charType,
         AttributeGroupName? groupName = null)
     {
-        var nameResult = AttributeName.Create(name);
-        if (nameResult.IsFailure)
-            return Fail<VariantAttribute>(nameResult.Error);
-
-        var valueResult = AttributeValue.Create(value);
-        if (valueResult.IsFailure)
-            return Fail<VariantAttribute>(valueResult.Error);
-
         return Ok(new VariantAttribute(
             characteristicId,
-            nameResult.Value,
-            valueResult.Value,
+            name,
+            value,
             charType,
             groupName));
     }
