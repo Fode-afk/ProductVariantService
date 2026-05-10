@@ -17,8 +17,7 @@ public sealed class CreateProductVariantCommandValidator : AbstractValidator<Cre
             .NotEmpty().WithErrorCode(BarcodeErrorCodes.NullOrEmpty);
 
         RuleFor(x => x.SKU)
-            .NotEmpty().WithErrorCode(SkuErrorCodes.NullOrEmpty)
-            .Matches(@"^[A-Z0-9\-]{3,50}$").WithErrorCode(SkuErrorCodes.InvalidFormat);
+            .NotEmpty().WithErrorCode(SkuErrorCodes.NullOrEmpty);
 
         RuleFor(x => x.Dimensions)
             .NotNull().WithErrorCode(DimensionsErrorCodes.Invalid);

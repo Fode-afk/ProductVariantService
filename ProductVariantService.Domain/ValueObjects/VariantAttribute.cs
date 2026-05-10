@@ -1,6 +1,6 @@
 ﻿using migApp.Shared.Domain.Primitives;
+using migApp.Shared.Enums.Characteristics;
 using migApp.Shared.Results;
-using ProductVariantService.Domain.Enums;
 using static migApp.Shared.Results.ResultFactory;
 
 namespace ProductVariantService.Domain.ValueObjects;

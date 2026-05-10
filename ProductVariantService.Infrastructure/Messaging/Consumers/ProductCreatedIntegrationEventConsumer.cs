@@ -2,6 +2,7 @@
 using MediatR;
 using migApp.Shared.Messaging.IntegrationEvents.Products;
 using ProductVariantService.Application.Features.Commands.AddProductSnapshot;
+using ProductVariantService.Application.Features.IntegrationEventHandlers.ProductSnapshot.AddProductSnapshot;
 
 namespace ProductVariantService.Infrastructure.Messaging.Consumers;
 
@@ -12,5 +13,6 @@ public sealed class ProductCreatedIntegrationEventConsumer(IMediator mediator) :
             context.Message.ProductId,
             context.Message.VendorId,
             context.Message.CategoryId,
-            context.Message.CanBeModified), context.CancellationToken);
+            context.Message.CanBeModified,
+            context.Message.Version), context.CancellationToken);
 }

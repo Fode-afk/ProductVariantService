@@ -4,7 +4,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using migApp.Shared.Validation;
 using ProductVariantService.Application.DependencyInjection;
-using ProductVariantService.Domain.Primitives;
 
 namespace ProductVariantService.Application.DependencyInjection;
 
@@ -14,8 +13,6 @@ public static class ApplicationExtensions
         services
             .AddValidators()
             .AddMediatR()
-            .AddDomainEventHandlers()
-            .AddAutoMapper(configuration)
             .AddTimeProvider();
 
     private static IServiceCollection AddValidators(this IServiceCollection services) =>
@@ -32,29 +29,6 @@ public static class ApplicationExtensions
 
         return services;
     }
-
-    private static IServiceCollection AddDomainEventHandlers(this IServiceCollection services)
-    {
-        var assembly = typeof(ApplicationAssemblyMarker).Assembly;
-
-        services.Scan(scan => scan
-            .FromAssemblies(assembly)
-            .AddClasses(classes => classes.AssignableTo(typeof(IPostCommitDomainEventHandler<>)))
-            .AsImplementedInterfaces()
-            .WithScopedLifetime());
-
-        services.Scan(scan => scan
-            .FromAssemblies(assembly)
-            .AddClasses(classes => classes.AssignableTo(typeof(IPreCommitDomainEventHandler<>)))
-            .AsImplementedInterfaces()
-            .WithScopedLifetime());
-
-        return services;
-    }
-
-    private static IServiceCollection AddAutoMapper(this IServiceCollection services, IConfiguration configuration) =>
-        services.AddAutoMapper(c => c.LicenseKey = configuration["MapperLicenceKey"],
-            AppDomain.CurrentDomain.GetAssemblies());
 
     private static IServiceCollection AddTimeProvider(this IServiceCollection services) =>
         services.AddSingleton(TimeProvider.System);

@@ -1,10 +1,8 @@
-﻿using ProductVariantService.Domain.Models;
-using ProductVariantService.Domain.Primitives;
+﻿using ProductVariantService.Domain.Primitives;
 
 namespace ProductVariantService.Domain.DomainEvents;
 
 public sealed record ProductImageRemovedDomainEvent(
-    Guid ProductId,
-    Guid ProductCardId,
-    IReadOnlyList<ProductVariantImage> Images,
-    DateTimeOffset UpdatedAt) : IDomainEvent;
+    Guid ProductVariantId,
+    bool HasMainImage,
+    long Version) : IDomainEvent;

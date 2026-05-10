@@ -1,29 +1,18 @@
 ﻿using MassTransit;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
-using Microsoft.Extensions.Logging;
-using migApp.Shared.Caching;
 using migApp.Shared.Grpc;
-using migApp.Shared.Utils;
 using Polly;
 using ProductVariantService.Application.Interfaces.Data;
-using ProductVariantService.Application.Interfaces.Services;
 using ProductVariantService.Domain.Primitives;
 using ProductVariantService.Infrastructure.Data;
-using ProductVariantService.Infrastructure.Data.Repositories;
 using ProductVariantService.Infrastructure.DependencyInjection;
 using ProductVariantService.Infrastructure.DomainEvents;
 using ProductVariantService.Infrastructure.Messaging.Consumers;
 using ProductVariantService.Infrastructure.Messaging.IntegrationEvents;
-using ProductVariantService.Infrastructure.Services;
-using ProductVariantService.Infrastructure.Services.Grpc.Clients;
 using RabbitMQ.Client;
-using ZiggyCreatures.Caching.Fusion;
-using ZiggyCreatures.Caching.Fusion.Backplane.StackExchangeRedis;
-using Protos = CurrencyService.Api.Grpc.V1.Protos;
 
 namespace ProductVariantService.Infrastructure.DependencyInjection;
 
@@ -35,22 +24,13 @@ public static class InfrastructureExtensions
         services
             .AddServices()
             .AddDatabase(configuration)
-            .AddCache(configuration)
             .AddGrpc(configuration)
-            .AddCircuitBreaker()
             .AddHealthChecks(configuration)
             .AddMassTransit(configuration)
             .AddIntegrationEventHandlers();
 
     private static IServiceCollection AddServices(this IServiceCollection services)
     {
-        services.AddScoped<ICurrencyService, CurrencyServiceClient>();
-        services.AddScoped<IExchangeRateService, ExchangeRateService>();
-        services.AddScoped<IMoneyConverter, MoneyConverter>();
-
-        services.AddScoped<IDbConnectionFactory, DbConnectionFactory>();
-        services.AddScoped<IProductVariantReadRepository, ProductVariantReadRepository>();
-
         services.AddTransient<IDomainEventsDispatcher, DomainEventsDispatcher>();
 
         return services;
@@ -71,50 +51,6 @@ public static class InfrastructureExtensions
         return services;
     }
 
-    private static IServiceCollection AddCache(this IServiceCollection services, IConfiguration configuration)
-    {
-        var redisConnection = configuration.GetConnectionString("Redis")
-           ?? throw new InvalidOperationException("Redis connection string is missing");
-
-        services.AddStackExchangeRedisCache(options =>
-        {
-            options.Configuration = redisConnection;
-            options.InstanceName = "ProductVariantService:";
-        });
-
-        services
-            .AddFusionCache()
-            .WithOptions(options =>
-            {
-                options.DefaultEntryOptions = new FusionCacheEntryOptions
-                {
-                    Duration = TimeSpan.FromMinutes(5),
-
-                    IsFailSafeEnabled = false,
-
-                    AllowBackgroundDistributedCacheOperations = true,
-                    AllowBackgroundBackplaneOperations = true,
-
-                    SkipBackplaneNotifications = false,
-                    JitterMaxDuration = TimeSpan.Zero,
-
-                    FactorySoftTimeout = TimeSpan.FromMilliseconds(300),
-                    FactoryHardTimeout = TimeSpan.FromSeconds(3)
-                };
-            })
-            .WithDistributedCache(sp =>
-                sp.GetRequiredService<IDistributedCache>())
-            .WithBackplane(sp => new RedisBackplane(
-                new RedisBackplaneOptions
-                {
-                    Configuration = redisConnection
-                }))
-            .WithSerializer(new JsonFusionCacheSerializer())
-            .TryWithAutoSetup();
-
-        return services;
-    }
-
     private static IServiceCollection AddGrpc(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddGrpc(options =>
@@ -122,20 +58,8 @@ public static class InfrastructureExtensions
             options.Interceptors.Add<GrpcExceptionInterceptor>();
         });
 
-        services.AddGrpcClient<Protos.CurrencyService.CurrencyServiceClient>(options =>
-        {
-            options.Address = new Uri(configuration.GetConnectionString("CurrencyService")!);
-        });
-
         return services;
     }
-
-    private static IServiceCollection AddCircuitBreaker(this IServiceCollection services) =>
-     services.AddSingleton(sp =>
-         CircuitBreakerPolicy.GetCircuitBreakerPolicy(
-             sp.GetRequiredService<ILogger<IAsyncPolicy>>()
-         )
-     );
 
     private static IServiceCollection AddHealthChecks(this IServiceCollection services, IConfiguration configuration)
     {

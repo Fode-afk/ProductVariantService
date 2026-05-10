@@ -109,7 +109,10 @@ internal sealed class ProductVariantConfiguration : IEntityTypeConfiguration<Pro
         builder.Navigation(p => p.Images)
             .UsePropertyAccessMode(PropertyAccessMode.Field);
 
-        builder.Property<byte[]>("RowVersion")
+        builder.Property(x => x.Version)
+            .IsRequired();
+
+        builder.Property(x => x.RowVersion)
             .IsRowVersion()
             .IsConcurrencyToken();
     }

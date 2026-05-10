@@ -2,4 +2,6 @@
 
 namespace ProductVariantService.Domain.Contexts;
 
-public sealed record ProductVariantUpdateInfoContext(bool VendorIsActive) : IVendorContext;
+public sealed record ProductVariantUpdateInfoContext(
+    bool VendorIsActive,
+    bool ProductCanBeModified) : IVendorContext, IProductContext;

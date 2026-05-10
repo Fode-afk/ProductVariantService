@@ -1,4 +1,4 @@
-﻿using ProductVariantService.Domain.Enums;
+﻿using migApp.Shared.Enums.Characteristics;
 
 namespace ProductVariantService.Domain.Snapshots;
 

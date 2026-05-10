@@ -4,6 +4,7 @@ using ProductVariantService.Domain.Contexts;
 using ProductVariantService.Domain.DomainEvents;
 using ProductVariantService.Domain.Errors;
 using ProductVariantService.Domain.Primitives;
+using ProductVariantService.Domain.RequestData;
 using ProductVariantService.Domain.Specifications.ProductVariant;
 using ProductVariantService.Domain.ValueObjects;
 using static migApp.Shared.Results.ResultFactory;
@@ -43,6 +44,9 @@ public sealed class ProductVariant : AggregateRoot
     public DateTimeOffset CreatedAt { get; private set; }
     public DateTimeOffset? UpdatedAt { get; private set; }
 
+    public bool IsDeleted { get; private set; }
+    public DateTimeOffset? DeletedAt { get; private set; }
+
     public static int MaxAttributes => 30;
     private readonly List<VariantAttribute> _attributes = [];
     public IReadOnlyCollection<VariantAttribute> Attributes => _attributes;
@@ -50,16 +54,12 @@ public sealed class ProductVariant : AggregateRoot
     public static int MaxImages => 30;
     private readonly List<ProductVariantImage> _images = [];
     public IReadOnlyCollection<ProductVariantImage> Images => _images;
-    public bool HasMainImage => _images.Any(x => x.IsMain);
+    public bool HasMainImage => _images.Count > 0;
 
     public static IResult<ProductVariant> Create(
         ProductVariantCreationContext ctx,
+        ProductVariantCreationData data,
         Guid productId,
-        Sku sku,
-        Dimensions dimensions,
-        Weight weight,
-        Barcode barcode,
-        List<VariantAttribute> attributes,
         DateTimeOffset now)
     {
         var result = ProductVariantCreationSpecification.Spec.IsSatisfiedBy(ctx);
@@ -69,11 +69,11 @@ public sealed class ProductVariant : AggregateRoot
         var productVariant = new ProductVariant(
             Guid.NewGuid(),
             productId,
-            sku,
-            dimensions,
-            weight,
-            barcode,
-            attributes,
+            data.Sku,
+            data.Dimensions,
+            data.Weight,
+            data.Barcode,
+            data.Attributes,
             now);
 
         productVariant.RaiseDomainEvent(new ProductVariantCreatedDomainEvent(
@@ -87,26 +87,23 @@ public sealed class ProductVariant : AggregateRoot
 
     public IResult UpdateInfo(
         ProductVariantUpdateInfoContext ctx,
-        Sku sku,
-        Dimensions dimensions,
-        Weight weight,
-        Barcode barcode,
+        ProductVariantUpdateInfoData data,
         DateTimeOffset now)
     {
-        if (SKU == sku &&
-            Dimensions == dimensions &&
-            Weight == weight &&
-            Barcode == barcode)
+        if (SKU == data.Sku &&
+            Dimensions == data.Dimensions &&
+            Weight == data.Weight &&
+            Barcode == data.Barcode)
             return Ok();
 
         var result = ProductVariantUpdateInfoSpecification.Spec.IsSatisfiedBy(ctx);
         if (result.IsFailure)
             return result;
 
-        SKU = sku;
-        Dimensions = dimensions;
-        Weight = weight;
-        Barcode = barcode;
+        SKU = data.Sku;
+        Dimensions = data.Dimensions;
+        Weight = data.Weight;
+        Barcode = data.Barcode;
         UpdatedAt = now;
 
         RaiseDomainEvent(new ProductVariantUpdatedDomainEvent(
@@ -118,145 +115,122 @@ public sealed class ProductVariant : AggregateRoot
         return Ok();
     }
 
-    public IResult AddProductImage(
-        ImageUrl url,
-        AltText alt,
-        bool isMain,
+    public IResult AddImage(
+        ProductVariantAddImageContext ctx,
+        ProductVariantAddImageData data,
         DateTimeOffset now)
     {
-        if (_images.Count >= 10)
-            return Fail(ProductImageErrors.MaxImagesReached());
+        var result = ProductVariantAddImageSpecification.Spec.IsSatisfiedBy(ctx);
+        if (result.IsFailure)
+            return result;
 
-        var imageResult = ProductVariantImage.Create(Id, url, alt, _images.Count, isMain);
+        var alreadyExists = _images.Any(x => x.Url == data.Url);
+        if (alreadyExists)
+            return Fail(ProductVariantImageErrors.AlreadyExists());
 
-        if (imageResult.IsFailure)
-            return imageResult;
-
-        var image = imageResult.Value;
-
-        if (isMain || _images.Count == 0)
-        {
-            foreach (var img in _images)
-                img.SetAsMain(false);
-
-            image.SetAsMain(true);
-        }
+        var image = ProductVariantImage.Create(
+            Id,
+            data.Url,
+            data.Alt,
+            _images.Count);
 
         _images.Add(image);
-
-        RecalculateImageOrder();
-
         UpdatedAt = now;
 
         RaiseDomainEvent(new ProductImageAddedDomainEvent(
             Id,
-            ProductId,
-            [..Images],
-            UpdatedAt.Value));
+            HasMainImage,
+            Version));
 
         return Ok();
     }
 
-    public IResult RemoveProductImage(
-        ImageUrl url,
+    public IResult RemoveImage(
+        ProductVariantRemoveImageContext ctx,
+        Guid imageId,
         DateTimeOffset now)
     {
-        var image = _images.FirstOrDefault(x => x.Url == url);
+        var result = ProductVariantRemoveImageSpecification.Spec.IsSatisfiedBy(ctx);
+        if (result.IsFailure)
+            return result;
+
+        var image = _images.FirstOrDefault(x => x.Id == imageId);
         if (image is null)
-            return Fail(ProductVariantErrors.ImageNotFound());
+            return Fail(ProductVariantImageErrors.NotFound());
 
-        bool wasMain = image.IsMain;
         _images.Remove(image);
-
         RecalculateImageOrder();
-
-        if (wasMain && _images.Count > 0)
-            _images[0].SetAsMain(true);
-
         UpdatedAt = now;
 
         RaiseDomainEvent(new ProductImageRemovedDomainEvent(
             Id,
-            ProductId,
-            [..Images],
-            UpdatedAt.Value));
-
-        return Ok();
-    }
-
-    public IResult ChangeImageOrder(
-        ImageUrl url,
-        int newOrder,
-        DateTimeOffset now)
-    {
-        var image = _images.FirstOrDefault(x => x.Url == url);
-        if (image is null)
-            return Fail(ProductVariantErrors.ImageNotFound());
-
-        if (newOrder < 0 || newOrder >= _images.Count)
-            return Fail(ProductImageErrors.InvalidSortOrder());
-
-        _images.Remove(image);
-        _images.Insert(newOrder, image);
-
-        RecalculateImageOrder();
-
-        UpdatedAt = now;
-
-        RaiseDomainEvent(new ProductImageOrderChangedDomainEvent(
-            Id, 
-            ProductId,
-            [..Images],
-            UpdatedAt.Value));
+            HasMainImage,
+            Version));
 
         return Ok();
     }
 
     private void RecalculateImageOrder()
     {
-        for (int i = 0; i < _images.Count; i++)
-            _images[i].ChangeOrder(i);
+        var sorted = _images.OrderBy(x => x.SortOrder).ToList();
+        for (int i = 0; i < sorted.Count; i++)
+            sorted[i].ChangeOrder(i);
     }
 
-    public IResult SetMainImage(
-        ImageUrl url,
+    public IResult ReorderImages(
+        ProductVariantReorderImagesContext ctx,
+        List<Guid> imageIds,
         DateTimeOffset now)
     {
-        var image = _images.FirstOrDefault(x => x.Url == url);
+        var result = ProductVariantReorderImagesSpecification.Spec.IsSatisfiedBy(ctx);
+        if (result.IsFailure)
+            return result;
 
-        if (image is null)
-            return Fail(ProductVariantErrors.ImageNotFound());
+        if (imageIds.Count != _images.Count)
+            return Fail(ProductVariantImageErrors.InvalidImageCount());
 
-        foreach (var img in _images)
-            img.SetAsMain(false);
+        if (imageIds.Distinct().Count() != imageIds.Count)
+            return Fail(ProductVariantImageErrors.DuplicateImageIds());
 
-        image.SetAsMain(true);
+        foreach (var id in imageIds)
+            if (_images.All(x => x.Id != id))
+                return Fail(ProductVariantImageErrors.NotFound());
+
+        for (int i = 0; i < imageIds.Count; i++)
+        {
+            var image = _images.First(x => x.Id == imageIds[i]);
+            image.ChangeOrder(i);
+        }
+
+        _images.Sort((a, b) => a.SortOrder.CompareTo(b.SortOrder));
 
         UpdatedAt = now;
 
-        RaiseDomainEvent(new ProductImageSetMainDomainEvent(
+        RaiseDomainEvent(new ProductImagesReorderedDomainEvent(
             Id,
             ProductId,
-            [..Images],
+            [.. Images],
             UpdatedAt.Value));
 
         return Ok();
     }
 
     public IResult UpdateImageAlt(
-        ImageUrl url,
+        ProductVariantUpdateImageAltContext ctx,
+        Guid imageId,
         AltText alt,
         DateTimeOffset now)
     {
-        var image = _images.FirstOrDefault(x => x.Url == url);
+        var result = ProductVariantUpdateImageAltSpecification.Spec.IsSatisfiedBy(ctx);
+        if (result.IsFailure)
+            return result;
+
+        var image = _images.FirstOrDefault(x => x.Id == imageId);
 
         if (image is null)
             return Fail(ProductVariantErrors.ImageNotFound());
 
-        var result = image.UpdateAlt(alt);
-
-        if (result.IsFailure)
-            return result;
+        image.UpdateAlt(alt);
 
         UpdatedAt = now;
 
@@ -265,6 +239,38 @@ public sealed class ProductVariant : AggregateRoot
             ProductId,
             [..Images],
             UpdatedAt.Value));
+
+        return Ok();
+    }
+
+    public IResult Delete(
+        ProductVariantDeleteContext ctx,
+        DateTimeOffset now)
+    {
+        if (IsDeleted)
+            return Ok();
+
+        var result = ProductVariantDeleteSpecification.Spec.IsSatisfiedBy(ctx);
+        if (result.IsFailure)
+            return result;
+
+        IsDeleted = true;
+        DeletedAt = now;
+
+        RaiseDomainEvent(new ProductVariantDeletedDomainEvent(Id));
+
+        return Ok();
+    }
+
+    public IResult ForceDelete(DateTimeOffset now)
+    {
+        if (IsDeleted)
+            return Ok();
+
+        IsDeleted = true;
+        DeletedAt = now;
+
+        RaiseDomainEvent(new ProductVariantForceDeletedDomainEvent(Id));
 
         return Ok();
     }

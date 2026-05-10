@@ -5,6 +5,7 @@ using ProductVariantService.Application.Interfaces.Data;
 using ProductVariantService.Domain.Contexts;
 using ProductVariantService.Domain.Errors;
 using ProductVariantService.Domain.Models;
+using ProductVariantService.Domain.Specifications.Common;
 using static migApp.Shared.Results.ResultFactory;
 
 namespace ProductVariantService.Application.Features.Commands.CreateProductVariant;
@@ -27,8 +28,13 @@ public sealed class CreateProductVariantCommandHandler(
         if (productSnapshot is null)
             return Fail(ProductSnapshotErrors.NotFound());
 
-        if (productSnapshot.VendorId != request.VendorId)
-            return Fail(ProductSnapshotErrors.DoesNotBelongToVendor());
+        var ownershipCtx = new ProductVendorOwnershipContext(
+           request.VendorId,
+           productSnapshot.VendorId);
+
+        var ownershipResult = ProductBelongsToVendorSpec.Instance.IsSatisfiedBy(ownershipCtx);
+        if (ownershipResult.IsFailure)
+            return ownershipResult;
 
         var characteristicIds = request.Attributes.Keys.ToList();
         var characteristicSnapshots = await context.CharacteristicSnapshots
@@ -83,12 +89,8 @@ public sealed class CreateProductVariantCommandHandler(
 
         var result = ProductVariant.Create(
             ctx,
+            data,
             request.ProductId,
-            data.Sku,
-            data.Dimensions,
-            data.Weight,
-            data.Barcode,
-            data.Attributes,
             timeProvider.GetUtcNow());
         if (result.IsFailure)
             return result;

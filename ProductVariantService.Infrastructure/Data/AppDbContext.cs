@@ -15,7 +15,6 @@ internal sealed class AppDbContext(
 {
     public DbSet<ProductVariant> ProductVariants { get; set; }
     public DbSet<ProductVariantImage> ProductVariantImages { get; set; }
-    public DbSet<ProductVariantReadModel> ProductVariantReadModels { get; set; }
 
     public DbSet<ProductSnapshot> ProductSnapshots { get; set; }
     public DbSet<VendorSnapshot> VendorSnapshots { get; set; }
@@ -45,6 +44,10 @@ internal sealed class AppDbContext(
 
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
+        foreach (var entry in ChangeTracker.Entries<AggregateRoot>()
+          .Where(x => x.State == EntityState.Modified))
+            entry.Entity.IncreaseVersion();
+
         await PublishPreCommitDomainEventsEventsAsync(cancellationToken);
 
         int result = await base.SaveChangesAsync(cancellationToken);

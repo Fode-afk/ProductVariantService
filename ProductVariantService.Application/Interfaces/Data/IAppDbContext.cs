@@ -8,7 +8,6 @@ public interface IAppDbContext
 {
     DbSet<ProductVariant> ProductVariants { get; }
     DbSet<ProductVariantImage> ProductVariantImages { get; }
-    DbSet<ProductVariantReadModel> ProductVariantReadModels { get; }
 
     DbSet<ProductSnapshot> ProductSnapshots { get; }
     DbSet<VendorSnapshot> VendorSnapshots { get; }
