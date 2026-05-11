@@ -1,7 +1,6 @@
 ﻿using MassTransit;
 using MediatR;
 using migApp.Shared.Messaging.IntegrationEvents.Products;
-using ProductVariantService.Application.Features.Commands.AddProductSnapshot;
 using ProductVariantService.Application.Features.IntegrationEventHandlers.ProductSnapshot.AddProductSnapshot;
 
 namespace ProductVariantService.Infrastructure.Messaging.Consumers;

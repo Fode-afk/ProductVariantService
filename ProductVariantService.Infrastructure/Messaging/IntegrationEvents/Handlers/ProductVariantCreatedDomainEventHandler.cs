@@ -13,6 +13,7 @@ public sealed class ProductVariantCreatedDomainEventHandler(IPublishEndpoint pub
             notification.ProductVariantId,
             notification.ProductId,
             notification.HasMainImage,
+            notification.Version,
             [.. notification.Attributes.Select(a =>
                 new ProductVariantCharacteristicValue(
                     notification.ProductVariantId,

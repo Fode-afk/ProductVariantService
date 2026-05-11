@@ -1,16 +1,12 @@
 ﻿using MassTransit;
 using MediatR;
 using migApp.Shared.Messaging.IntegrationEvents.Products;
-using ProductVariantService.Application.Features.IntegrationEventHandlers.ProductSnapshot.UpdateProductSnapshot;
+using ProductVariantService.Application.Features.IntegrationEventHandlers.ProductSnapshot.DeleteProductSnapshot;
 
 namespace ProductVariantService.Infrastructure.Messaging.Consumers;
 
 public sealed class ProductDeletedIntegrationEventConsumer(IMediator mediator) : IConsumer<ProductDeletedIntegrationEvent>
 {
     public async Task Consume(ConsumeContext<ProductDeletedIntegrationEvent> context) =>
-        await mediator.Send(new UpdateProductSnapshotCommand(
-            context.Message.ProductId,
-            context.Message.CategoryId,
-            context.Message.CanBeModified,
-            context.Message.Version), context.CancellationToken);
+        await mediator.Send(new DeleteProductSnapshotCommand(context.Message.ProductId), context.CancellationToken);
 }

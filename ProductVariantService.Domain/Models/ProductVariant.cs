@@ -80,6 +80,7 @@ public sealed class ProductVariant : AggregateRoot
             productVariant.Id,
             productVariant.ProductId,
             productVariant.HasMainImage,
+            productVariant.Version,
             productVariant._attributes));
 
         return Ok(productVariant);

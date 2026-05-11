@@ -4,7 +4,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using migApp.Shared.Grpc;
-using Polly;
 using ProductVariantService.Application.Interfaces.Data;
 using ProductVariantService.Domain.Primitives;
 using ProductVariantService.Infrastructure.Data;

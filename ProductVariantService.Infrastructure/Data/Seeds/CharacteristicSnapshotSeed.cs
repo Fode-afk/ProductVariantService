@@ -1,4 +1,4 @@
-﻿using ProductVariantService.Domain.Enums;
+﻿using migApp.Shared.Enums.Characteristics;
 using ProductVariantService.Domain.Snapshots;
 
 namespace ProductVariantService.Infrastructure.Data.Seeds;

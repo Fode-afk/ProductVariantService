@@ -7,4 +7,5 @@ public sealed record ProductVariantCreatedDomainEvent(
     Guid ProductVariantId,
     Guid ProductId,
     bool HasMainImage,
+    long Version,
     IReadOnlyList<VariantAttribute> Attributes) : IDomainEvent;

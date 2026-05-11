@@ -1,5 +1,5 @@
 ﻿using MassTransit;
-using MassTransit.Mediator;
+using MediatR;
 using migApp.Shared.Messaging.IntegrationEvents.Products;
 using ProductVariantService.Application.Features.IntegrationEventHandlers.ProductSnapshot.UpdateProductSnapshot;
 
