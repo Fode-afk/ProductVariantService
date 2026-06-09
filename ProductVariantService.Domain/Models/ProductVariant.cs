@@ -138,7 +138,7 @@ public sealed class ProductVariant : AggregateRoot
         _images.Add(image);
         UpdatedAt = now;
 
-        RaiseDomainEvent(new ProductImageAddedDomainEvent(
+        RaiseDomainEvent(new ProductVariantImageAddedDomainEvent(
             Id,
             HasMainImage,
             Version));
@@ -163,7 +163,7 @@ public sealed class ProductVariant : AggregateRoot
         RecalculateImageOrder();
         UpdatedAt = now;
 
-        RaiseDomainEvent(new ProductImageRemovedDomainEvent(
+        RaiseDomainEvent(new ProductVariantImageRemovedDomainEvent(
             Id,
             HasMainImage,
             Version));
@@ -207,7 +207,7 @@ public sealed class ProductVariant : AggregateRoot
 
         UpdatedAt = now;
 
-        RaiseDomainEvent(new ProductImagesReorderedDomainEvent(
+        RaiseDomainEvent(new ProductVariantImagesReorderedDomainEvent(
             Id,
             ProductId,
             [.. Images],
@@ -235,7 +235,7 @@ public sealed class ProductVariant : AggregateRoot
 
         UpdatedAt = now;
 
-        RaiseDomainEvent(new ProductImageAltUpdatedDomainEvent(
+        RaiseDomainEvent(new ProductVariantImageAltUpdatedDomainEvent(
             Id,
             ProductId,
             [..Images],

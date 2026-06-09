@@ -5,10 +5,10 @@ using ProductVariantService.Domain.Primitives;
 
 namespace ProductVariantService.Infrastructure.Messaging.IntegrationEvents.Handlers;
 
-public sealed class ProductImageRemovedDomainEventHandler(IPublishEndpoint publish) : IPreCommitDomainEventHandler<ProductImageRemovedDomainEvent>
+public sealed class ProductVariantImageRemovedDomainEventHandler(IPublishEndpoint publish) : IPreCommitDomainEventHandler<ProductVariantImageRemovedDomainEvent>
 {
-    public async Task Handle(ProductImageRemovedDomainEvent notification, CancellationToken cancellationToken) =>
-        await publish.Publish(new ProductImageRemovedIntegrationEvent(
+    public async Task Handle(ProductVariantImageRemovedDomainEvent notification, CancellationToken cancellationToken) =>
+        await publish.Publish(new ProductVariantImageRemovedIntegrationEvent(
             notification.ProductVariantId,
             notification.HasMainImage,
             notification.Version), cancellationToken);

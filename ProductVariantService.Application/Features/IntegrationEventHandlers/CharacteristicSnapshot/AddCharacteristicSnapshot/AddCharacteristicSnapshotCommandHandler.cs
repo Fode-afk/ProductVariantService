@@ -1,21 +1,19 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
-using migApp.Shared.Results;
 using ProductVariantService.Application.Interfaces.Data;
-using static migApp.Shared.Results.ResultFactory;
 
 namespace ProductVariantService.Application.Features.IntegrationEventHandlers.CharacteristicSnapshot.AddCharacteristicSnapshot;
 
 public sealed class AddCharacteristicSnapshotCommandHandler(
     IAppDbContext context,
-    TimeProvider timeProvider) : IRequestHandler<AddCharacteristicSnapshotCommand, IResult>
+    TimeProvider timeProvider) : IRequestHandler<AddCharacteristicSnapshotCommand>
 {
-    public async Task<IResult> Handle(AddCharacteristicSnapshotCommand request, CancellationToken cancellationToken)
+    public async Task Handle(AddCharacteristicSnapshotCommand request, CancellationToken cancellationToken)
     {
         var exists = await context.CharacteristicSnapshots
             .AnyAsync(x => x.CharacteristicId == request.CharacteristicId, cancellationToken);
         if (exists)
-            return Ok();
+            return;
 
         context.CharacteristicSnapshots.Add(
             new Domain.Snapshots.CharacteristicSnapshot
@@ -31,7 +29,5 @@ public sealed class AddCharacteristicSnapshotCommandHandler(
             });
 
         await context.SaveChangesAsync(cancellationToken);
-
-        return Ok();
     }
 }

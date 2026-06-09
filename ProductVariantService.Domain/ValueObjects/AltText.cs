@@ -24,7 +24,7 @@ public sealed class AltText : ValueObject
         value = value.Trim();
 
         if (value.Length > MaxLength)
-            return Fail<AltText>(AltTextErrors.TooLong());
+            return Fail<AltText>(AltTextErrors.TooLong(MaxLength));
 
         return Ok(new AltText(value));
     }

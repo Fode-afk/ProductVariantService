@@ -20,7 +20,7 @@ public sealed class AttributeGroupName : ValueObject
         value = value.Trim();
 
         if (value.Length > MaxLength)
-            return Fail<AttributeGroupName>(AttributeGroupNameErrors.TooLong());
+            return Fail<AttributeGroupName>(AttributeGroupNameErrors.TooLong(MaxLength));
 
         return Ok(new AttributeGroupName(value));
     }

@@ -24,7 +24,7 @@ public sealed class AttributeValue : ValueObject
         value = value.Trim();
 
         if (value.Length > MaxLength)
-            return Fail<AttributeValue>(AttributeValueErrors.TooLong());
+            return Fail<AttributeValue>(AttributeValueErrors.TooLong(MaxLength));
 
         return Ok(new AttributeValue(value));
     }

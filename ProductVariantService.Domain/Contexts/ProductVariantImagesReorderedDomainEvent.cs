@@ -1,10 +1,10 @@
 ﻿using ProductVariantService.Domain.Models;
 using ProductVariantService.Domain.Primitives;
 
-namespace ProductVariantService.Domain.DomainEvents;
+namespace ProductVariantService.Domain.Contexts;
 
-public sealed record ProductImageAltUpdatedDomainEvent(
+public sealed record ProductVariantImagesReorderedDomainEvent(
+    Guid ProductVariantId,
     Guid ProductId,
-    Guid ProductCardId,
     IReadOnlyList<ProductVariantImage> Images,
     DateTimeOffset UpdatedAt) : IDomainEvent;

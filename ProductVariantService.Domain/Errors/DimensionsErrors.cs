@@ -4,7 +4,9 @@ namespace ProductVariantService.Domain.Errors;
 
 public static class DimensionsErrors
 {
-    public static Error Invalid() => Error.InvalidArgument(DimensionsErrorCodes.Invalid);
+    public static Error Invalid() => 
+        Error.InvalidArgument(DimensionsErrorCodes.Invalid,
+            "Dimensions are invalid.");
 } 
 
 public static class DimensionsErrorCodes

@@ -2,7 +2,7 @@
 
 namespace ProductVariantService.Domain.DomainEvents;
 
-public sealed record ProductImageRemovedDomainEvent(
+public sealed record ProductVariantImageAddedDomainEvent(
     Guid ProductVariantId,
     bool HasMainImage,
     long Version) : IDomainEvent;

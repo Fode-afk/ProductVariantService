@@ -1,21 +1,19 @@
 ﻿using MediatR;
-using migApp.Shared.Results;
 using Microsoft.EntityFrameworkCore;
 using ProductVariantService.Application.Interfaces.Data;
-using static migApp.Shared.Results.ResultFactory;
 
 namespace ProductVariantService.Application.Features.IntegrationEventHandlers.VendorSnapshot.AddVendorSnapshot;
 
 public sealed class AddVendorSnapshotCommandHandler(
     IAppDbContext context,
-    TimeProvider timeProvider) : IRequestHandler<AddVendorSnapshotCommand, IResult>
+    TimeProvider timeProvider) : IRequestHandler<AddVendorSnapshotCommand>
 {
-    public async Task<IResult> Handle(AddVendorSnapshotCommand request, CancellationToken cancellationToken)
+    public async Task Handle(AddVendorSnapshotCommand request, CancellationToken cancellationToken)
     {
         var exists = await context.VendorSnapshots
             .AnyAsync(x => x.VendorId == request.VendorId, cancellationToken);
         if (exists)
-            return Ok();
+            return;
 
         context.VendorSnapshots.Add(
             new Domain.Snapshots.VendorSnapshot
@@ -27,7 +25,5 @@ public sealed class AddVendorSnapshotCommandHandler(
             });
 
         await context.SaveChangesAsync(cancellationToken);
-
-        return Ok();
     }
 }

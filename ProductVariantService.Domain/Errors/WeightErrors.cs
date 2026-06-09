@@ -4,7 +4,9 @@ namespace ProductVariantService.Domain.Errors;
 
 public static class WeightErrors
 {
-    public static Error Invalid() => Error.InvalidArgument(WeightErrorCodes.Invalid);
+    public static Error Invalid() =>
+        Error.InvalidArgument(WeightErrorCodes.Invalid,
+            "Invalid weight");
 }
 
 public static class WeightErrorCodes

@@ -61,7 +61,14 @@ public sealed class UpdateProductVariantInfoCommandHandler(
         if (result.IsFailure)
             return result;
         
-        await context.SaveChangesAsync(cancellationToken);
+        try
+        {
+            await context.SaveChangesAsync(cancellationToken);
+        }
+        catch (DbUpdateException)
+        {
+            return Fail(ProductVariantErrors.DuplicateSkuOrBarcode());
+        }
 
         return Ok();
     }

@@ -4,8 +4,13 @@ namespace ProductVariantService.Domain.Errors;
 
 public static class SkuErrors
 {
-    public static Error NullOrEmpty() => Error.InvalidArgument(SkuErrorCodes.NullOrEmpty);
-    public static Error InvalidFormat() => Error.InvalidArgument(SkuErrorCodes.InvalidFormat);
+    public static Error NullOrEmpty() =>
+        Error.InvalidArgument(SkuErrorCodes.NullOrEmpty,
+            "SKU cannot be null or empty");
+
+    public static Error InvalidFormat() =>
+        Error.InvalidArgument(SkuErrorCodes.InvalidFormat,
+            "Invalid SKU format");
 }
 
 public static class SkuErrorCodes

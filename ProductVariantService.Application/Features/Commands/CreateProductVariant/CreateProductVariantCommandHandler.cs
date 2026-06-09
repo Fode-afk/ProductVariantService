@@ -96,7 +96,15 @@ public sealed class CreateProductVariantCommandHandler(
             return result;
 
         context.ProductVariants.Add(result.Value);
-        await context.SaveChangesAsync(cancellationToken);
+
+        try
+        {
+            await context.SaveChangesAsync(cancellationToken);
+        }
+        catch (DbUpdateException)
+        {
+            return Fail(ProductVariantErrors.AlreadyExists());
+        }
 
         return Ok();
     }

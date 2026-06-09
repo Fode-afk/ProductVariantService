@@ -12,5 +12,5 @@ public static class ProductVariantAddImageSpecification
             .And(new ProductCanBeModifiedSpec<ProductVariantAddImageContext>())
             .And(Specification<ProductVariantAddImageContext>.Create(
                 ctx => ctx.ImagesCount < Models.ProductVariant.MaxImages,
-                ProductVariantImageErrors.MaxImagesReached()));
+                ProductVariantImageErrors.MaxImagesReached(Models.ProductVariant.MaxImages)));
 }
