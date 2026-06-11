@@ -1,16 +1,23 @@
 ﻿using MassTransit;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using migApp.Shared.Behaviours;
 using migApp.Shared.Grpc;
+using OpenTelemetry.Metrics;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
 using ProductVariantService.Application.Interfaces.Data;
+using ProductVariantService.Application.Interfaces.Metrics;
 using ProductVariantService.Domain.Primitives;
 using ProductVariantService.Infrastructure.Data;
 using ProductVariantService.Infrastructure.DependencyInjection;
 using ProductVariantService.Infrastructure.DomainEvents;
 using ProductVariantService.Infrastructure.Messaging.Consumers;
 using ProductVariantService.Infrastructure.Messaging.IntegrationEvents;
+using ProductVariantService.Infrastructure.Observability;
 using RabbitMQ.Client;
 
 namespace ProductVariantService.Infrastructure.DependencyInjection;
@@ -26,7 +33,9 @@ public static class InfrastructureExtensions
             .AddGrpc(configuration)
             .AddHealthChecks(configuration)
             .AddMassTransit(configuration)
-            .AddIntegrationEventHandlers();
+            .AddIntegrationEventHandlers()
+            .AddObservability(configuration)
+            .AddBehaviours();
 
     private static IServiceCollection AddServices(this IServiceCollection services)
     {
@@ -127,4 +136,42 @@ public static class InfrastructureExtensions
 
         return services;
     }
+
+    private static IServiceCollection AddObservability(
+        this IServiceCollection services,
+        IConfiguration configuration)
+    {
+        var otlpEndpoint = configuration.GetConnectionString("OtlpEndpoint")
+            ?? throw new InvalidOperationException("OtlpEndpoint is not configured");
+
+        services.AddOpenTelemetry()
+            .WithTracing(tracing => tracing
+                .SetResourceBuilder(ResourceBuilder
+                    .CreateDefault()
+                    .AddService("ProductVariantService"))
+                .AddAspNetCoreInstrumentation(opts =>
+                    opts.Filter = ctx =>
+                        !ctx.Request.Path.StartsWithSegments("/health"))
+                .AddHttpClientInstrumentation()
+                .AddSource("MassTransit")
+                .AddSource("ProductVariantService")
+                .AddOtlpExporter(opts => opts.Endpoint = new Uri(otlpEndpoint)))
+            .WithMetrics(metrics => metrics
+                .SetResourceBuilder(ResourceBuilder
+                    .CreateDefault()
+                    .AddService("ProductVariantService"))
+                .AddAspNetCoreInstrumentation()
+                .AddHttpClientInstrumentation()
+                .AddRuntimeInstrumentation()
+                .AddMeter(ProductVariantServiceMetrics.MeterName)
+                .AddOtlpExporter(opts => opts.Endpoint = new Uri(otlpEndpoint)));
+
+        services.AddSingleton<IProductVariantMetrics, ProductVariantServiceMetrics>();
+        services.AddHostedService<ActiveVariantsMetricCollector>();
+
+        return services;
+    }
+
+    private static IServiceCollection AddBehaviours(this IServiceCollection services) =>
+        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
 }
