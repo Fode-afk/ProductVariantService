@@ -79,9 +79,13 @@ public sealed class ProductVariant : AggregateRoot
         productVariant.RaiseDomainEvent(new ProductVariantCreatedDomainEvent(
             productVariant.Id,
             productVariant.ProductId,
+            productVariant.SKU,
+            productVariant.Dimensions,
+            productVariant.Weight,
+            productVariant.Barcode,
             productVariant.HasMainImage,
-            productVariant.Version,
-            productVariant._attributes));
+            productVariant._attributes,
+            productVariant.Version));
 
         return Ok(productVariant);
     }
@@ -107,27 +111,32 @@ public sealed class ProductVariant : AggregateRoot
         Barcode = data.Barcode;
         UpdatedAt = now;
 
-        RaiseDomainEvent(new ProductVariantUpdatedDomainEvent(
+        IncreaseVersion();
+
+        RaiseDomainEvent(new ProductVariantInfoUpdatedDomainEvent(
             Id,
+            ProductId,
+            SKU,
             Dimensions,
             Weight,
-            UpdatedAt.Value));
+            Barcode,
+            Version));
 
         return Ok();
     }
 
-    public IResult AddImage(
+    public IResult<ProductVariantImage> AddImage(
         ProductVariantAddImageContext ctx,
         ProductVariantAddImageData data,
         DateTimeOffset now)
     {
         var result = ProductVariantAddImageSpecification.Spec.IsSatisfiedBy(ctx);
         if (result.IsFailure)
-            return result;
+            return Fail<ProductVariantImage>(result.Error);
 
         var alreadyExists = _images.Any(x => x.Url == data.Url);
         if (alreadyExists)
-            return Fail(ProductVariantImageErrors.AlreadyExists());
+            return Fail<ProductVariantImage>(ProductVariantImageErrors.AlreadyExists());
 
         var image = ProductVariantImage.Create(
             Id,
@@ -138,12 +147,16 @@ public sealed class ProductVariant : AggregateRoot
         _images.Add(image);
         UpdatedAt = now;
 
+        IncreaseVersion();
+
         RaiseDomainEvent(new ProductVariantImageAddedDomainEvent(
             Id,
+            ProductId,
+            _images,
             HasMainImage,
             Version));
 
-        return Ok();
+        return Ok(image);
     }
 
     public IResult RemoveImage(
@@ -163,8 +176,12 @@ public sealed class ProductVariant : AggregateRoot
         RecalculateImageOrder();
         UpdatedAt = now;
 
+        IncreaseVersion();
+
         RaiseDomainEvent(new ProductVariantImageRemovedDomainEvent(
             Id,
+            ProductId,
+            _images,
             HasMainImage,
             Version));
 
@@ -207,11 +224,13 @@ public sealed class ProductVariant : AggregateRoot
 
         UpdatedAt = now;
 
+        IncreaseVersion();
+
         RaiseDomainEvent(new ProductVariantImagesReorderedDomainEvent(
             Id,
             ProductId,
-            [.. Images],
-            UpdatedAt.Value));
+            _images,
+            Version));
 
         return Ok();
     }
@@ -235,11 +254,13 @@ public sealed class ProductVariant : AggregateRoot
 
         UpdatedAt = now;
 
+        IncreaseVersion();
+
         RaiseDomainEvent(new ProductVariantImageAltUpdatedDomainEvent(
             Id,
             ProductId,
-            [..Images],
-            UpdatedAt.Value));
+            _images,
+            Version));
 
         return Ok();
     }
@@ -258,7 +279,9 @@ public sealed class ProductVariant : AggregateRoot
         IsDeleted = true;
         DeletedAt = now;
 
-        RaiseDomainEvent(new ProductVariantDeletedDomainEvent(Id));
+        RaiseDomainEvent(new ProductVariantDeletedDomainEvent(
+            Id,
+            ProductId));
 
         return Ok();
     }
@@ -271,7 +294,9 @@ public sealed class ProductVariant : AggregateRoot
         IsDeleted = true;
         DeletedAt = now;
 
-        RaiseDomainEvent(new ProductVariantForceDeletedDomainEvent(Id));
+        RaiseDomainEvent(new ProductVariantForceDeletedDomainEvent(
+            Id,
+            ProductId));
 
         return Ok();
     }

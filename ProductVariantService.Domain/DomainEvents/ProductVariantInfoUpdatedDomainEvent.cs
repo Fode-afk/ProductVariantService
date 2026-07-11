@@ -4,13 +4,11 @@ using ProductVariantService.Domain.ValueObjects;
 
 namespace ProductVariantService.Domain.DomainEvents;
 
-public sealed record ProductVariantCreatedDomainEvent(
+public sealed record ProductVariantInfoUpdatedDomainEvent(
     Guid ProductVariantId,
     Guid ProductId,
-    Sku Sku,
+    Sku SKU,
     Dimensions Dimensions,
     Weight Weight,
     Barcode Barcode,
-    bool HasMainImage,
-    IReadOnlyList<VariantAttribute> Attributes,
     long Version) : IDomainEvent;

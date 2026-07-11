@@ -17,6 +17,7 @@ public sealed class UpdateProductVariantImageAltCommandHandler(
     public async Task<IResult> Handle(UpdateProductVariantImageAltCommand request, CancellationToken cancellationToken)
     {
         var productVariant = await context.ProductVariants
+            .Include(v => v.Images)
             .FirstOrDefaultAsync(p => p.Id == request.ProductVariantId, cancellationToken);
         if (productVariant == null)
             return Fail(ProductVariantErrors.NotFound());

@@ -6,10 +6,10 @@ using ProductVariantService.Domain.Primitives;
 
 namespace ProductVariantService.Infrastructure.Messaging.IntegrationEvents.Handlers;
 
-public sealed class ProductVariantImageRemovedDomainEventHandler(IPublishEndpoint publish) : IPreCommitDomainEventHandler<ProductVariantImageRemovedDomainEvent>
+public sealed class ProductVariantImageAltUpdatedDomainEventHandler(IPublishEndpoint publish) : IPreCommitDomainEventHandler<ProductVariantImageAltUpdatedDomainEvent>
 {
-    public async Task Handle(ProductVariantImageRemovedDomainEvent notification, CancellationToken cancellationToken) =>
-        await publish.Publish(new ProductVariantImageRemovedIntegrationEvent(
+    public async Task Handle(ProductVariantImageAltUpdatedDomainEvent notification, CancellationToken cancellationToken) =>
+        await publish.Publish(new ProductVariantImageAltUpdatedIntegrationEvent(
             notification.ProductVariantId,
             notification.ProductId,
             [.. notification.Images.Select(i =>
@@ -18,6 +18,5 @@ public sealed class ProductVariantImageRemovedDomainEventHandler(IPublishEndpoin
                    i.Alt,
                    i.SortOrder,
                    i.IsMain))],
-            notification.HasMainImage,
             notification.Version), cancellationToken);
 }

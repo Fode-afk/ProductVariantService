@@ -4,7 +4,7 @@ using ProductVariantService.Domain.Primitives;
 namespace ProductVariantService.Domain.DomainEvents;
 
 public sealed record ProductVariantImageAltUpdatedDomainEvent(
+    Guid ProductVariantId,
     Guid ProductId,
-    Guid ProductCardId,
     IReadOnlyList<ProductVariantImage> Images,
-    DateTimeOffset UpdatedAt) : IDomainEvent;
+    long Version) : IDomainEvent;

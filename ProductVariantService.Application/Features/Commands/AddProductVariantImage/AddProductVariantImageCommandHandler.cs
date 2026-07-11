@@ -16,6 +16,7 @@ public sealed class AddProductVariantImageCommandHandler(
     public async Task<IResult> Handle(AddProductVariantImageCommand request, CancellationToken cancellationToken)
     {
         var productVariant = await context.ProductVariants
+            .Include(v => v.Images)
             .FirstOrDefaultAsync(p => p.Id == request.ProductVariantId, cancellationToken);
         if (productVariant == null)
             return Fail(ProductVariantErrors.NotFound());
@@ -61,6 +62,8 @@ public sealed class AddProductVariantImageCommandHandler(
             timeProvider.GetUtcNow());
         if (result.IsFailure)
             return result;
+
+        context.ProductVariantImages.Add(result.Value);
 
         await context.SaveChangesAsync(cancellationToken);
 

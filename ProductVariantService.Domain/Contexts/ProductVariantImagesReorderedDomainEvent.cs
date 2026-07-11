@@ -7,4 +7,4 @@ public sealed record ProductVariantImagesReorderedDomainEvent(
     Guid ProductVariantId,
     Guid ProductId,
     IReadOnlyList<ProductVariantImage> Images,
-    DateTimeOffset UpdatedAt) : IDomainEvent;
+    long Version) : IDomainEvent;

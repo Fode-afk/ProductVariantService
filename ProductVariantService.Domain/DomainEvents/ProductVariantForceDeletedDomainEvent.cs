@@ -2,4 +2,6 @@
 
 namespace ProductVariantService.Domain.DomainEvents;
 
-public sealed record ProductVariantForceDeletedDomainEvent(Guid ProductVariantId) : IDomainEvent;
+public sealed record ProductVariantForceDeletedDomainEvent(
+    Guid ProductVariantId,
+    Guid ProductId) : IDomainEvent;

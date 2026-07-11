@@ -6,14 +6,13 @@ using ProductVariantService.Domain.Primitives;
 
 namespace ProductVariantService.Infrastructure.Messaging.IntegrationEvents.Handlers;
 
-public sealed class ProductVariantCreatedDomainEventHandler(IPublishEndpoint publish) : IPreCommitDomainEventHandler<ProductVariantCreatedDomainEvent>
+public sealed class ProductVariantInfoUpdatedDomainEventHandler(IPublishEndpoint publish) : IPreCommitDomainEventHandler<ProductVariantInfoUpdatedDomainEvent>
 {
-    public async Task Handle(ProductVariantCreatedDomainEvent notification, CancellationToken cancellationToken)
-    { 
-        await publish.Publish(new ProductVariantCreatedIntegrationEvent(
+    public async Task Handle(ProductVariantInfoUpdatedDomainEvent notification, CancellationToken cancellationToken) =>
+        await publish.Publish(new ProductVariantInfoUpdatedIntegrationEvent(
             notification.ProductVariantId,
             notification.ProductId,
-            notification.Sku,
+            notification.SKU,
             new DimensionsDto(
                 notification.Dimensions.Length,
                 notification.Dimensions.Width,
@@ -23,14 +22,5 @@ public sealed class ProductVariantCreatedDomainEventHandler(IPublishEndpoint pub
                 notification.Weight.Value,
                 notification.Weight.Unit),
             notification.Barcode,
-            notification.HasMainImage,
-            [.. notification.Attributes.Select(a =>
-                new VariantAttributeDto(
-                    a.CharacteristicId,
-                    a.Name,
-                    a.Value,
-                    a.CharType,
-                    a.GroupName?.Value))],
             notification.Version), cancellationToken);
-    }
 }
