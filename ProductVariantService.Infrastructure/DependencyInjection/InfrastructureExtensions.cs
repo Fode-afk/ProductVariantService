@@ -12,6 +12,7 @@ using OpenTelemetry.Trace;
 using ProductVariantService.Application.Interfaces.Data;
 using ProductVariantService.Application.Interfaces.Metrics;
 using ProductVariantService.Domain.Primitives;
+using ProductVariantService.Infrastructure.Behaviours;
 using ProductVariantService.Infrastructure.Data;
 using ProductVariantService.Infrastructure.DependencyInjection;
 using ProductVariantService.Infrastructure.DomainEvents;
@@ -172,6 +173,11 @@ public static class InfrastructureExtensions
         return services;
     }
 
-    private static IServiceCollection AddBehaviours(this IServiceCollection services) =>
+    private static IServiceCollection AddBehaviours(this IServiceCollection services)
+    {
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(TracingBehaviour<,>));
+
+        return services;
+    }
 }

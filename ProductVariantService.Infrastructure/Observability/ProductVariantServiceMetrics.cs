@@ -8,8 +8,6 @@ public sealed class ProductVariantServiceMetrics : IDisposable, IProductVariantM
     public const string MeterName = "ProductVariantService";
     private readonly Meter _meter;
 
-    private readonly Counter<long> _variantsCreated;
-    private readonly Counter<long> _variantsDeleted;
     private int _activeVariantsCount_value;
     private readonly ObservableGauge<int> _activeVariantsCount;
 
@@ -22,12 +20,6 @@ public sealed class ProductVariantServiceMetrics : IDisposable, IProductVariantM
     public ProductVariantServiceMetrics()
     {
         _meter = new Meter(MeterName);
-
-        _variantsCreated = _meter.CreateCounter<long>(
-            "product.variants.created");
-
-        _variantsDeleted = _meter.CreateCounter<long>(
-            "product.variants.deleted");
 
         _activeVariantsCount = _meter.CreateObservableGauge(
             "product.variants.active",
@@ -48,10 +40,6 @@ public sealed class ProductVariantServiceMetrics : IDisposable, IProductVariantM
             "product.variants.snapshots.outdated",
             description: "Projection skipped because version is outdated");
     }
-
-    public void RecordVariantCreated() => _variantsCreated.Add(1);
-
-    public void RecordVariantDeleted() => _variantsDeleted.Add(1);
 
     public void SetActiveVariantsCount(int count) =>
         _activeVariantsCount_value = count;
