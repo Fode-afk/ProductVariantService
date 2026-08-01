@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Microsoft.Extensions.Options;
 using migApp.Shared.Behaviours;
 using migApp.Shared.Grpc;
 using OpenTelemetry.Metrics;
@@ -12,6 +13,7 @@ using OpenTelemetry.Trace;
 using ProductVariantService.Application.Interfaces.Data;
 using ProductVariantService.Application.Interfaces.Metrics;
 using ProductVariantService.Domain.Primitives;
+using ProductVariantService.Infrastructure.BackgroundServices;
 using ProductVariantService.Infrastructure.Behaviours;
 using ProductVariantService.Infrastructure.Data;
 using ProductVariantService.Infrastructure.DependencyInjection;
@@ -29,7 +31,7 @@ public static class InfrastructureExtensions
         this IServiceCollection services,
         IConfiguration configuration) => 
         services
-            .AddServices()
+            .AddServices(configuration)
             .AddDatabase(configuration)
             .AddGrpc(configuration)
             .AddHealthChecks(configuration)
@@ -38,9 +40,14 @@ public static class InfrastructureExtensions
             .AddObservability(configuration)
             .AddBehaviours();
 
-    private static IServiceCollection AddServices(this IServiceCollection services)
+    private static IServiceCollection AddServices(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddTransient<IDomainEventsDispatcher, DomainEventsDispatcher>();
+
+        services.Configure<SoftDeletedProductVariantsCleanupOptions>(
+           configuration.GetSection(SoftDeletedProductVariantsCleanupOptions.SectionName));
+        services.AddSingleton(sp => sp.GetRequiredService<IOptions<SoftDeletedProductVariantsCleanupOptions>>().Value);
+        services.AddHostedService<SoftDeletedProductVariantsCleanupService>();
 
         return services;
     }

@@ -44,7 +44,7 @@ public sealed class ProductVariant : AggregateRoot
     public DateTimeOffset CreatedAt { get; private set; }
     public DateTimeOffset? UpdatedAt { get; private set; }
 
-    public bool IsDeleted { get; private set; }
+    public bool IsDeleted => DeletedAt.HasValue;
     public DateTimeOffset? DeletedAt { get; private set; }
 
     public static int MaxAttributes => 30;
@@ -276,7 +276,6 @@ public sealed class ProductVariant : AggregateRoot
         if (result.IsFailure)
             return result;
 
-        IsDeleted = true;
         DeletedAt = now;
 
         RaiseDomainEvent(new ProductVariantDeletedDomainEvent(
@@ -291,7 +290,6 @@ public sealed class ProductVariant : AggregateRoot
         if (IsDeleted)
             return Ok();
 
-        IsDeleted = true;
         DeletedAt = now;
 
         RaiseDomainEvent(new ProductVariantForceDeletedDomainEvent(

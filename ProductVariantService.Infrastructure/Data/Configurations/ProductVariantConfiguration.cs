@@ -115,5 +115,7 @@ internal sealed class ProductVariantConfiguration : IEntityTypeConfiguration<Pro
         builder.Property(x => x.RowVersion)
             .IsRowVersion()
             .IsConcurrencyToken();
+
+        builder.HasQueryFilter(x => !x.IsDeleted);
     }
 }
