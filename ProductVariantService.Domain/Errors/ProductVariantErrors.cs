@@ -6,31 +6,31 @@ public static class ProductVariantErrors
 {
     public static Error AttributesRequired() =>
         Error.InvalidArgument(ProductVariantErrorCodes.AttributesRequired,
-            "Attributes are required");
+            "Attributes are required.");
 
     public static Error ImageNotFound() =>
         Error.NotFound(ProductVariantErrorCodes.ImageNotFound,
-            "Image not found");
+            "Image not found.");
 
     public static Error NotFound() =>
         Error.NotFound(ProductVariantErrorCodes.NotFound,
-            "Product variant not found");
+            "Product variant not found.");
 
     public static Error MaxAttributesReached(int maxAttributes) =>
         Error.InvalidArgument(ProductVariantErrorCodes.MaxAttributesReached,
-            $"Maximum number of attributes ({maxAttributes}) reached");
+            $"Maximum number of attributes ({maxAttributes}) reached.");
 
     public static Error DuplicateCombination() =>
         Error.InvalidArgument(ProductVariantErrorCodes.DuplicateCombination,
-            "Duplicate attribute combination");
+            "Duplicate attribute combination.");
 
     public static Error AlreadyExists() =>
         Error.AlreadyExists(ProductVariantErrorCodes.AlreadyExists,
-            "Product variant already exists");
+            "Product variant already exists.");
 
     public static Error DuplicateSkuOrBarcode() =>
         Error.InvalidArgument(ProductVariantErrorCodes.DuplicateSkuOrBarcode,
-            "Duplicate SKU or barcode");
+            "Duplicate SKU or barcode.");
 }
 
 public static class ProductVariantErrorCodes

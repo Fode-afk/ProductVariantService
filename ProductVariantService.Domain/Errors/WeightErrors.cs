@@ -6,7 +6,7 @@ public static class WeightErrors
 {
     public static Error Invalid() =>
         Error.InvalidArgument(WeightErrorCodes.Invalid,
-            "Invalid weight");
+            "Invalid weight.");
 }
 
 public static class WeightErrorCodes

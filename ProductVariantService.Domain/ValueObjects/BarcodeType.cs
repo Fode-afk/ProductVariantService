@@ -6,10 +6,8 @@ public sealed class BarcodeType : ValueObject
 {
     public string Value { get; }
 
-    private BarcodeType(string value)
-    {
+    private BarcodeType(string value) => 
         Value = value;
-    }
 
     public static BarcodeType EAN8 => new("EAN-8");
     public static BarcodeType EAN13 => new("EAN-13");

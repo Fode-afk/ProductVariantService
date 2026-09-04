@@ -13,10 +13,8 @@ public sealed partial class Sku : ValueObject
 
     public string Value { get; }
 
-    private Sku(string value)
-    {
+    private Sku(string value) =>
         Value = value;
-    }
 
     public static IResult<Sku> Create(string value)
     {

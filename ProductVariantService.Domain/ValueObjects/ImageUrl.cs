@@ -9,10 +9,8 @@ public sealed class ImageUrl : ValueObject
 {
     public string Value { get; }
 
-    private ImageUrl(string value)
-    {
+    private ImageUrl(string value) =>
         Value = value;
-    }
 
     public static IResult<ImageUrl> Create(string value)
     {

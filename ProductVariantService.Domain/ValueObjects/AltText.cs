@@ -11,10 +11,8 @@ public sealed class AltText : ValueObject
 
     public string Value { get; }
 
-    private AltText(string value)
-    {
+    private AltText(string value) =>
         Value = value;
-    }
 
     public static IResult<AltText> Create(string value)
     {

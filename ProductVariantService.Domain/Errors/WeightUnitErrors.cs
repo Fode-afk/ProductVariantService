@@ -6,10 +6,10 @@ public static class WeightUnitErrors
 {
     public static Error NullOrEmpty() =>
         Error.InvalidArgument(WeightUnitErrorCodes.NullOrEmpty,
-            "Weight unit cannot be null or empty");
+            "Weight unit cannot be null or empty.");
     public static Error UnsupportedUnit() =>
         Error.InvalidArgument(WeightUnitErrorCodes.UnsupportedUnit,
-            "Unsupported weight unit");
+            "Unsupported weight unit.");
 }
 
 public static class WeightUnitErrorCodes

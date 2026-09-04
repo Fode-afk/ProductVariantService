@@ -10,7 +10,8 @@ public sealed class AttributeGroupName : ValueObject
     public static int MaxLength => 100;
     public string Value { get; }
 
-    private AttributeGroupName(string value) => Value = value;
+    private AttributeGroupName(string value) => 
+        Value = value;
 
     public static IResult<AttributeGroupName> Create(string value)
     {

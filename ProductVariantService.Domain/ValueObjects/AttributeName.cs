@@ -11,10 +11,8 @@ public sealed class AttributeName : ValueObject
 
     public string Value { get; }
 
-    private AttributeName(string value)
-    {
+    private AttributeName(string value) =>
         Value = value;
-    }
 
     public static IResult<AttributeName> Create(string value)
     {

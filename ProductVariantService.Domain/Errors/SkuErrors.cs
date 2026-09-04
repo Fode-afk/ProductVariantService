@@ -6,11 +6,11 @@ public static class SkuErrors
 {
     public static Error NullOrEmpty() =>
         Error.InvalidArgument(SkuErrorCodes.NullOrEmpty,
-            "SKU cannot be null or empty");
+            "SKU cannot be null or empty.");
 
     public static Error InvalidFormat() =>
         Error.InvalidArgument(SkuErrorCodes.InvalidFormat,
-            "Invalid SKU format");
+            "Invalid SKU format.");
 }
 
 public static class SkuErrorCodes

@@ -34,7 +34,7 @@ public sealed class ProductVariant : AggregateRoot
         CreatedAt = createdAt;
     }
 
-    public Guid ProductId { get; private set; }   
+    public Guid ProductId { get; private set; }
     public Sku SKU { get; private set; }
     public Dimensions Dimensions { get; private set; }
     public Weight Weight { get; private set; }

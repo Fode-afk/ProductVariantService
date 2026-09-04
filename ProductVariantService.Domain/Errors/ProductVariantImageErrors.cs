@@ -6,23 +6,23 @@ public static class ProductVariantImageErrors
 {
     public static Error MaxImagesReached(int maxImages) => 
         Error.InvalidArgument(ProductVariantImageErrorCodes.MaxImagesReached,
-            $"Maximum number of images ({maxImages}) reached");
+            $"Maximum number of images ({maxImages}) reached.");
 
     public static Error AlreadyExists() =>
         Error.AlreadyExists(ProductVariantImageErrorCodes.AlreadyExists,
-            "Image already exists");
+            "Image already exists.");
 
     public static Error NotFound() =>
         Error.NotFound(ProductVariantImageErrorCodes.NotFound,
-            "Image not found");
+            "Image not found.");
 
     public static Error InvalidImageCount() =>
         Error.InvalidArgument(ProductVariantImageErrorCodes.InvalidImageCount,
-            "Invalid image count");
+            "Invalid image count.");
 
     public static Error DuplicateImageIds() =>
         Error.InvalidArgument(ProductVariantImageErrorCodes.DuplicateImageIds,
-            "Duplicate image IDs");
+            "Duplicate image IDs.");
 }
 
 public static class ProductVariantImageErrorCodes

@@ -6,11 +6,11 @@ public static class VendorSnapshotErrors
 {
     public static Error NotFound() => 
         Error.NotFound(VendorSnapshotErrorCodes.NotFound,
-            "Vendor snapshot not found");
+            "Vendor snapshot not found.");
 
     public static Error CannotModify() =>
         Error.Unauthenticated(VendorSnapshotErrorCodes.CannotModify,
-            "Cannot modify vendor snapshot");
+            "Cannot modify vendor snapshot.");
 }
 
 public static class VendorSnapshotErrorCodes
