@@ -3,7 +3,7 @@ using MediatR;
 using migApp.Shared.Messaging.IntegrationEvents.Products;
 using ProductVariantService.Application.Features.IntegrationEventHandlers.ProductSnapshot.DeleteProductSnapshot;
 
-namespace ProductVariantService.Infrastructure.Messaging.Consumers;
+namespace ProductVariantService.Infrastructure.Messaging.Consumers.Product;
 
 public sealed class ProductDeletedIntegrationEventConsumer(IMediator mediator) : IConsumer<ProductDeletedIntegrationEvent>
 {

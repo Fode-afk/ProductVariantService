@@ -22,7 +22,7 @@ public sealed class AddProductSnapshotCommandHandler(
                 ProductId = request.ProductId,
                 VendorId = request.VendorId,
                 CategoryId = request.CategoryId,
-                CanBeModified = request.CanBeModified,
+                CanEditContent = request.CanEditContent,
                 UpdatedAt = timeProvider.GetUtcNow(),
                 Version = request.Version
             });

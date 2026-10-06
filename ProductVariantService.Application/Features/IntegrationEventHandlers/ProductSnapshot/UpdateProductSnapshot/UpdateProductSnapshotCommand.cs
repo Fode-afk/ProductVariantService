@@ -5,5 +5,5 @@ namespace ProductVariantService.Application.Features.IntegrationEventHandlers.Pr
 public sealed record UpdateProductSnapshotCommand(
     Guid ProductId,
     Guid CategoryId,
-    bool CanBeModified,
+    bool CanEditContent,
     long Version) : IRequest;

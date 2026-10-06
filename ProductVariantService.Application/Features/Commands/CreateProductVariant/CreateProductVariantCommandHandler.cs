@@ -84,7 +84,7 @@ public sealed class CreateProductVariantCommandHandler(
 
         var ctx = new ProductVariantCreationContext(
             vendorSnapshot.IsActive,
-            productSnapshot.CanBeModified,
+            productSnapshot.CanEditContent,
             data.Attributes);
 
         var result = ProductVariant.Create(

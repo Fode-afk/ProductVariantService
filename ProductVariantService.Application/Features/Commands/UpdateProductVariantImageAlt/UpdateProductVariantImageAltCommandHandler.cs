@@ -52,7 +52,7 @@ public sealed class UpdateProductVariantImageAltCommandHandler(
 
         var ctx = new ProductVariantUpdateImageAltContext(
             vendorSnapshot.IsActive,
-            productSnapshot.CanBeModified);
+            productSnapshot.CanEditContent);
 
         var result = productVariant.UpdateImageAlt(
             ctx,

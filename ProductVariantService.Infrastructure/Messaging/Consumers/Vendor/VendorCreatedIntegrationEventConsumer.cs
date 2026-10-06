@@ -2,7 +2,7 @@
 using MediatR;
 using migApp.Shared.Messaging.IntegrationEvents.Vendors;
 
-namespace ProductVariantService.Infrastructure.Messaging.Consumers;
+namespace ProductVariantService.Infrastructure.Messaging.Consumers.Vendor;
 
 //public sealed class VendorCreatedIntegrationEventConsumer(IMediator mediator) : //IConsumer<VendorCreatedIntegrationEvent>
 //{

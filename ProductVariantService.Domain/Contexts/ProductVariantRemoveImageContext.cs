@@ -4,4 +4,4 @@ namespace ProductVariantService.Domain.Contexts;
 
 public sealed record ProductVariantRemoveImageContext(
     bool VendorIsActive,
-    bool ProductCanBeModified) : IVendorContext, IProductContext;
+    bool ProductCanEditContent) : IVendorContext, IProductContext;

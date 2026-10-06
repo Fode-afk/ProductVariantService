@@ -8,5 +8,5 @@ public static class ProductVariantUpdateImageAltSpecification
 {
     public static readonly ISpecification<ProductVariantUpdateImageAltContext> Spec =
         new VendorIsActiveSpec<ProductVariantUpdateImageAltContext>()
-            .And(new ProductCanBeModifiedSpec<ProductVariantUpdateImageAltContext>());
+            .And(new ProductCanEditContentSpec<ProductVariantUpdateImageAltContext>());
 }

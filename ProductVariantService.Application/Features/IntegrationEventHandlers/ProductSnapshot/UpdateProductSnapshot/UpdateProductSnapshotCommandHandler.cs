@@ -29,7 +29,7 @@ public sealed class UpdateProductSnapshotCommandHandler(
         }
 
         snapshot.CategoryId = request.CategoryId;
-        snapshot.CanBeModified = request.CanBeModified;
+        snapshot.CanEditContent = request.CanEditContent;
         snapshot.UpdatedAt = timeProvider.GetUtcNow();
         snapshot.Version = request.Version;
 

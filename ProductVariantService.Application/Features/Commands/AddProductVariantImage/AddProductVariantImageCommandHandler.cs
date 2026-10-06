@@ -47,7 +47,7 @@ public sealed class AddProductVariantImageCommandHandler(
 
         var ctx = new ProductVariantAddImageContext(
             vendorSnapshot.IsActive,
-            productSnapshot.CanBeModified,
+            productSnapshot.CanEditContent,
             productVariant.Images.Count);
 
         var buildResult = ProductVariantAddImageDataBuilder.Build(request);

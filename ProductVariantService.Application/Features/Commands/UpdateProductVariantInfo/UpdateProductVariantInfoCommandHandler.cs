@@ -46,7 +46,7 @@ public sealed class UpdateProductVariantInfoCommandHandler(
 
         var ctx = new ProductVariantUpdateInfoContext(
             vendorSnapshot.IsActive,
-            productSnapshot.CanBeModified);
+            productSnapshot.CanEditContent);
 
         var buildResult = ProductVariantUpdateInfoDataBuilder.Build(request);
         if (buildResult.IsFailure)

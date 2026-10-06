@@ -47,7 +47,7 @@ public sealed class RemoveProductVariantImageCommandHandler(
 
         var ctx = new ProductVariantRemoveImageContext(
             vendorSnapshot.IsActive,
-            productSnapshot.CanBeModified);
+            productSnapshot.CanEditContent);
 
         var result = productVariant.RemoveImage(
             ctx,

@@ -6,13 +6,13 @@ using static migApp.Shared.Results.ResultFactory;
 
 namespace ProductVariantService.Domain.Specifications.Common;
 
-public sealed class ProductCanBeModifiedSpec<T> : Specification<T>
+public sealed class ProductCanEditContentSpec<T> : Specification<T>
     where T : IProductContext
 {
     public override IResult IsSatisfiedBy(T ctx)
     {
-        if (!ctx.ProductCanBeModified)
-            return Fail(ProductSnapshotErrors.CannotModify());
+        if (!ctx.ProductCanEditContent)
+            return Fail(ProductSnapshotErrors.CannotEditContent());
 
         return Ok();
     }

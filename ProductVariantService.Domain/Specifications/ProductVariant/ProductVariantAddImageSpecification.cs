@@ -9,7 +9,7 @@ public static class ProductVariantAddImageSpecification
 {
     public static readonly ISpecification<ProductVariantAddImageContext> Spec =
         new VendorIsActiveSpec<ProductVariantAddImageContext>()
-            .And(new ProductCanBeModifiedSpec<ProductVariantAddImageContext>())
+            .And(new ProductCanEditContentSpec<ProductVariantAddImageContext>())
             .And(Specification<ProductVariantAddImageContext>.Create(
                 ctx => ctx.ImagesCount < Models.ProductVariant.MaxImages,
                 ProductVariantImageErrors.MaxImagesReached(Models.ProductVariant.MaxImages)));

@@ -4,5 +4,5 @@ namespace ProductVariantService.Domain.Contexts;
 
 public sealed record ProductVariantAddImageContext(
     bool VendorIsActive,
-    bool ProductCanBeModified,
+    bool ProductCanEditContent,
     int ImagesCount) : IVendorContext, IProductContext;

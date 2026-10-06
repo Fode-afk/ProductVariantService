@@ -46,7 +46,7 @@ public sealed class DeleteProductVariantCommandHandler(
 
         var ctx = new ProductVariantDeleteContext(
             vendorSnapshot.IsActive,
-            productSnapshot.CanBeModified);
+            productSnapshot.CanEditContent);
 
         var result = productVariant.Delete(
             ctx,

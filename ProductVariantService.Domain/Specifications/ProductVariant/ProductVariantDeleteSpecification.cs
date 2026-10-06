@@ -8,5 +8,5 @@ public static class ProductVariantDeleteSpecification
 {
     public static readonly ISpecification<ProductVariantDeleteContext> Spec =
         new VendorIsActiveSpec<ProductVariantDeleteContext>()
-            .And(new ProductCanBeModifiedSpec<ProductVariantDeleteContext>());
+            .And(new ProductCanEditContentSpec<ProductVariantDeleteContext>());
 }

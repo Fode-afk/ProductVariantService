@@ -5,5 +5,5 @@ namespace ProductVariantService.Domain.Contexts;
 
 public sealed record ProductVariantCreationContext(
     bool VendorIsActive,
-    bool ProductCanBeModified,
+    bool ProductCanEditContent,
     IReadOnlyCollection<VariantAttribute> Attributes) : IVendorContext, IProductContext, IAttributesContext;

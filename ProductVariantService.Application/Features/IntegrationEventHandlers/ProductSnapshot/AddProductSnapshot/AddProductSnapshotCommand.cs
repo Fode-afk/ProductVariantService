@@ -6,5 +6,5 @@ public sealed record AddProductSnapshotCommand(
     Guid ProductId,
     Guid VendorId,
     Guid CategoryId,
-    bool CanBeModified,
+    bool CanEditContent,
     long Version) : IRequest;

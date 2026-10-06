@@ -47,7 +47,7 @@ public sealed class ReorderProductVariantImagesCommandHandler(
 
         var ctx = new ProductVariantReorderImagesContext(
             vendorSnapshot.IsActive,
-            productSnapshot.CanBeModified);
+            productSnapshot.CanEditContent);
 
         var result = productVariant.ReorderImages(
             ctx,

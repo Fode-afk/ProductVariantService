@@ -8,7 +8,7 @@ public static class ProductVariantCreationSpecification
 {
     public static readonly ISpecification<ProductVariantCreationContext> Spec =
         new VendorIsActiveSpec<ProductVariantCreationContext>()
-            .And(new ProductCanBeModifiedSpec<ProductVariantCreationContext>())
+            .And(new ProductCanEditContentSpec<ProductVariantCreationContext>())
             .And(new AttributesRequiredSpec<ProductVariantCreationContext>())
             .And(new AttributesLimitSpec<ProductVariantCreationContext>());
 }
