@@ -1,5 +1,5 @@
-﻿using ProductService.Domain.ValueObjects;
-using ProductVariantService.Domain.Primitives;
+﻿using migApp.Shared.Domain.Primitives;
+using ProductService.Domain.ValueObjects;
 using ProductVariantService.Domain.ValueObjects;
 
 namespace ProductVariantService.Domain.DomainEvents;

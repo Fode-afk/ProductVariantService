@@ -6,7 +6,7 @@ using static migApp.Shared.Results.ResultFactory;
 
 namespace ProductVariantService.Domain.Specifications.Common;
 
-public sealed class AttributesLimitSpec<T> : Specification<T>
+internal sealed class AttributesLimitSpec<T> : Specification<T>
     where T : IAttributesContext
 {
     public override IResult IsSatisfiedBy(T ctx)

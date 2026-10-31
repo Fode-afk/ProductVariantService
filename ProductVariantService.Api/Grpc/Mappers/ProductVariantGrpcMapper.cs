@@ -9,57 +9,61 @@ namespace ProductVariantService.Api.Grpc.Mappers;
 
 internal static class ProductVariantGrpcMapper
 {
-    public static CreateProductVariantCommand ToCreateProductVariantCommand(CreateProductVariantRequest request) =>
+    public static CreateProductVariantCommand ToCommand(this CreateProductVariantRequest request) =>
         new(
-            VendorId: Guid.Parse(request.VendorId),
-            ProductId: Guid.Parse(request.ProductId),
+            Guid.Parse(request.VendorId),
+            Guid.Parse(request.ProductId),
+            request.Dimensions.ToDto(),
+            request.Weight.ToDto(),
+            request.Barcode,
+            request.Sku,
+            request.Attributes.ToDictionary(a => Guid.Parse(a.Key), a => a.Value));
 
-            Dimensions: ToDimensions(request.Dimensions),
-            Weight: ToWeight(request.Weight),
-
-            Barcode: request.Barcode,
-            SKU: request.Sku,
-
-            Attributes: request.Attributes.ToDictionary(a => Guid.Parse(a.Key), a => a.Value));
-
-    public static UpdateProductVariantInfoCommand ToUpdateProductVariantInfoCommand(UpdateProductVariantInfoRequest request) =>
+    public static UpdateProductVariantInfoCommand ToCommand(this UpdateProductVariantInfoRequest request) =>
         new(
-            VendorId: Guid.Parse(request.VendorId),
-            ProductVariantId: Guid.Parse(request.ProductVariantId),
-            SKU: request.Sku,
-            Barcode: request.Barcode,
-            Dimensions: ToDimensions(request.Dimensions),
-            Weight: ToWeight(request.Weight));
+            Guid.Parse(request.VendorId),
+            Guid.Parse(request.ProductVariantId),
+            request.Sku,
+            request.Barcode,
+            request.Dimensions.ToDto(),
+            request.Weight.ToDto());
     
-    public static AddProductVariantImageCommand ToAddProductVariantImageCommand(AddProductVariantImageRequest request) =>
+    public static AddProductVariantImageCommand ToCommand(this AddProductVariantImageRequest request) =>
         new(
-            ProductVariantId: Guid.Parse(request.ProductVariantId),
-            VendorId: Guid.Parse(request.VendorId),
-            ImageUrl: request.Url,
-            AltText: request.Alt);
+            Guid.Parse(request.ProductVariantId),
+            Guid.Parse(request.VendorId),
+            request.Url,
+            request.Alt);
     
-    public static ReorderProductVariantImagesCommand ToReorderProductVariantImagesCommand(ReorderProductVariantImagesRequest request) =>
+    public static ReorderProductVariantImagesCommand ToCommand(this ReorderProductVariantImagesRequest request) =>
         new(
-            ProductVariantId: Guid.Parse(request.ProductVariantId),
-            VendorId: Guid.Parse(request.VendorId),
-            ImageIds: [.. request.OrderedImageIds.Select(Guid.Parse)]);
+            Guid.Parse(request.ProductVariantId),
+            Guid.Parse(request.VendorId),
+            [.. request.OrderedImageIds.Select(Guid.Parse)]);
 
-    public static UpdateProductVariantImageAltCommand ToUpdateProductVariantImageAltCommand(UpdateProductVariantImageAltRequest request) =>
+    public static UpdateProductVariantImageAltCommand ToCommand(this UpdateProductVariantImageAltRequest request) =>
         new(
-            ProductVariantId: Guid.Parse(request.ProductVariantId),
-            VendorId: Guid.Parse(request.VendorId),
-            ImageId: Guid.Parse(request.ImageId),
-            AltText: request.NewAlt);
+            Guid.Parse(request.ProductVariantId),
+            Guid.Parse(request.VendorId),
+            Guid.Parse(request.ImageId),
+            request.NewAlt);
 
-    private static Application.Dtos.DimensionsDto ToDimensions(DimensionsDto dto) =>
+    private static Application.Dtos.DimensionsDto ToDto(this DimensionsDto dto) =>
         new(
             dto.Length,
             dto.Width,
             dto.Height,
             dto.Unit);
 
-    private static Application.Dtos.WeightDto ToWeight(WeightDto dto) =>
+    private static Application.Dtos.WeightDto ToDto(this WeightDto dto) =>
         new(
             dto.Value,
             dto.Unit);
+
+    public static ProductVariantWriteAck ToResponse(this Application.Dtos.ProductVariantWriteAck ack) =>
+        new()
+        {
+            ProductVariantId = ack.ProductVariantId.ToString(),
+            Version = ack.Version
+        };
 }

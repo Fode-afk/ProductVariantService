@@ -12,4 +12,4 @@ public sealed record UpdateProductVariantInfoCommand(
     string Barcode,
 
     DimensionsDto Dimensions,
-    WeightDto Weight) : IRequest<IResult>;
+    WeightDto Weight) : IRequest<IResult<ProductVariantWriteAck>>;

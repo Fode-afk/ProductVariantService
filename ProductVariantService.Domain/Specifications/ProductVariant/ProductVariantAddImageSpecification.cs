@@ -5,7 +5,7 @@ using ProductVariantService.Domain.Specifications.Common;
 
 namespace ProductVariantService.Domain.Specifications.ProductVariant;
 
-public static class ProductVariantAddImageSpecification
+internal static class ProductVariantAddImageSpecification
 {
     public static readonly ISpecification<ProductVariantAddImageContext> Spec =
         new VendorIsActiveSpec<ProductVariantAddImageContext>()

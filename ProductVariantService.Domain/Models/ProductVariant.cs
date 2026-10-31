@@ -1,9 +1,9 @@
-﻿using migApp.Shared.Results;
+﻿using migApp.Shared.Domain.Primitives;
+using migApp.Shared.Results;
 using ProductService.Domain.ValueObjects;
 using ProductVariantService.Domain.Contexts;
 using ProductVariantService.Domain.DomainEvents;
 using ProductVariantService.Domain.Errors;
-using ProductVariantService.Domain.Primitives;
 using ProductVariantService.Domain.RequestData;
 using ProductVariantService.Domain.Specifications.ProductVariant;
 using ProductVariantService.Domain.ValueObjects;
@@ -14,7 +14,6 @@ namespace ProductVariantService.Domain.Models;
 public sealed class ProductVariant : AggregateRoot
 {
     private ProductVariant() : base(Guid.Empty) { }
-
     private ProductVariant(
         Guid id,
         Guid productId,
@@ -34,14 +33,14 @@ public sealed class ProductVariant : AggregateRoot
         CreatedAt = createdAt;
     }
 
-    public Guid ProductId { get; private set; }
+    public Guid ProductId { get; }
     public Sku SKU { get; private set; }
     public Dimensions Dimensions { get; private set; }
     public Weight Weight { get; private set; }
 
     public Barcode Barcode { get; private set; }
 
-    public DateTimeOffset CreatedAt { get; private set; }
+    public DateTimeOffset CreatedAt { get; }
     public DateTimeOffset? UpdatedAt { get; private set; }
 
     public bool IsDeleted => DeletedAt.HasValue;

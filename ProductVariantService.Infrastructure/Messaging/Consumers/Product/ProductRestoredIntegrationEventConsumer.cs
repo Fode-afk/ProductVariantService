@@ -5,10 +5,10 @@ using ProductVariantService.Application.Features.IntegrationEventHandlers.Produc
 
 namespace ProductVariantService.Infrastructure.Messaging.Consumers.Product;
 
-public sealed class ProductRestoredIntegrationEventConsumer(IMediator mediator) : IConsumer<ProductRestoredIntegrationEvent>
+public sealed class ProductRestoredIntegrationEventConsumer(ISender sender) : IConsumer<ProductRestoredIntegrationEvent>
 {
     public async Task Consume(ConsumeContext<ProductRestoredIntegrationEvent> context) =>
-        await mediator.Send(new UpdateProductSnapshotCommand(
+        await sender.Send(new UpdateProductSnapshotCommand(
             context.Message.ProductId,
             context.Message.CategoryId,
             context.Message.CanEditContent,

@@ -1,6 +1,6 @@
 ﻿namespace ProductVariantService.Domain.Abstractions;
 
-public interface IVendorContext
+internal interface IVendorContext
 {
     bool VendorIsActive { get; }
 }

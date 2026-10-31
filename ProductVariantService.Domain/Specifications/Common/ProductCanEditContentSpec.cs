@@ -6,7 +6,7 @@ using static migApp.Shared.Results.ResultFactory;
 
 namespace ProductVariantService.Domain.Specifications.Common;
 
-public sealed class ProductCanEditContentSpec<T> : Specification<T>
+internal sealed class ProductCanEditContentSpec<T> : Specification<T>
     where T : IProductContext
 {
     public override IResult IsSatisfiedBy(T ctx)

@@ -8,14 +8,14 @@ package productvariant.v1;
 option csharp_namespace = "ProductVariantService.Api.Grpc.V1.Protos";
 
 service ProductVariantService {
-	rpc CreateProductVariant(CreateProductVariantRequest) returns (google.protobuf.Empty);
-    rpc UpdateProductVariantInfo(UpdateProductVariantInfoRequest) returns (google.protobuf.Empty);
+	rpc CreateProductVariant(CreateProductVariantRequest) returns (ProductVariantWriteAck);
+    rpc UpdateProductVariantInfo(UpdateProductVariantInfoRequest) returns (ProductVariantWriteAck);
 
-    rpc AddProductVariantImage(AddProductVariantImageRequest) returns (google.protobuf.Empty);
-    rpc RemoveProductVariantImage(RemoveProductVariantImageRequest) returns (google.protobuf.Empty);
+    rpc AddProductVariantImage(AddProductVariantImageRequest) returns (ProductVariantWriteAck);
+    rpc RemoveProductVariantImage(RemoveProductVariantImageRequest) returns (ProductVariantWriteAck);
 
-    rpc ReorderProductVariantImages(ReorderProductVariantImagesRequest) returns (google.protobuf.Empty);
-    rpc UpdateProductVariantImageAlt(UpdateProductVariantImageAltRequest) returns (google.protobuf.Empty);
+    rpc ReorderProductVariantImages(ReorderProductVariantImagesRequest) returns (ProductVariantWriteAck);
+    rpc UpdateProductVariantImageAlt(UpdateProductVariantImageAltRequest) returns (ProductVariantWriteAck);
 
     rpc DeleteProductVariant(DeleteProductVariantRequest) returns (google.protobuf.Empty);
 }
@@ -83,4 +83,9 @@ message UpdateProductVariantImageAltRequest {
 message DeleteProductVariantRequest {
     string vendor_id = 1;
     string product_variant_id = 2;
+}
+
+message ProductVariantWriteAck {
+    string product_variant_id = 1;
+    int64 version = 2;
 }

@@ -1,6 +1,6 @@
 ﻿namespace ProductVariantService.Domain.Abstractions;
 
-public interface IProductContext
+internal interface IProductContext
 {
     bool ProductCanEditContent { get; }
 }

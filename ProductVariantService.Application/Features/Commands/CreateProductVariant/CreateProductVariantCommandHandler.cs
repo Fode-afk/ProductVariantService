@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using migApp.Shared.Results;
+using ProductVariantService.Application.Dtos;
 using ProductVariantService.Application.Interfaces.Data;
 using ProductVariantService.Domain.Contexts;
 using ProductVariantService.Domain.Errors;
@@ -12,21 +13,21 @@ namespace ProductVariantService.Application.Features.Commands.CreateProductVaria
 
 public sealed class CreateProductVariantCommandHandler(
     IAppDbContext context,
-    TimeProvider timeProvider) : IRequestHandler<CreateProductVariantCommand, IResult>
+    TimeProvider timeProvider) : IRequestHandler<CreateProductVariantCommand, IResult<ProductVariantWriteAck>>
 {
-    public async Task<IResult> Handle(CreateProductVariantCommand request, CancellationToken cancellationToken)
+    public async Task<IResult<ProductVariantWriteAck>> Handle(CreateProductVariantCommand request, CancellationToken cancellationToken)
     {
         var vendorSnapshot = await context.VendorSnapshots
             .AsNoTracking()
             .FirstOrDefaultAsync(v => v.VendorId == request.VendorId, cancellationToken);
         if (vendorSnapshot is null)
-            return Fail(VendorSnapshotErrors.NotFound());
+            return Fail<ProductVariantWriteAck>(VendorSnapshotErrors.NotFound());
 
         var productSnapshot = await context.ProductSnapshots
             .AsNoTracking()
             .FirstOrDefaultAsync(x => x.ProductId == request.ProductId, cancellationToken);
         if (productSnapshot is null)
-            return Fail(ProductSnapshotErrors.NotFound());
+            return Fail<ProductVariantWriteAck>(ProductSnapshotErrors.NotFound());
 
         var ownershipCtx = new ProductVendorOwnershipContext(
            request.VendorId,
@@ -34,7 +35,7 @@ public sealed class CreateProductVariantCommandHandler(
 
         var ownershipResult = ProductBelongsToVendorSpec.Instance.IsSatisfiedBy(ownershipCtx);
         if (ownershipResult.IsFailure)
-            return ownershipResult;
+            return Fail<ProductVariantWriteAck>(ownershipResult.Error);
 
         var characteristicIds = request.Attributes.Keys.ToList();
         var characteristicSnapshots = await context.CharacteristicSnapshots
@@ -48,11 +49,11 @@ public sealed class CreateProductVariantCommandHandler(
             .Except(characteristicSnapshots.Select(c => c.CharacteristicId))
             .ToList();
         if (missingIds.Count > 0)
-            return Fail(CharacteristicSnapshotErrors.NotFound());
+            return Fail<ProductVariantWriteAck>(CharacteristicSnapshotErrors.NotFound());
 
         var unifyingChar = characteristicSnapshots.FirstOrDefault(c => c.IsUnifying);
         if (unifyingChar is not null)
-            return Fail(CharacteristicSnapshotErrors.CannotUseUnifyingAsVariant());
+            return Fail<ProductVariantWriteAck>(CharacteristicSnapshotErrors.CannotUseUnifyingAsVariant());
 
         var existingVariants = await context.ProductVariants
             .Where(v => v.ProductId == request.ProductId)
@@ -74,11 +75,11 @@ public sealed class CreateProductVariantCommandHandler(
         });
 
         if (isDuplicate)
-            return Fail(ProductVariantErrors.DuplicateCombination());
+            return Fail<ProductVariantWriteAck>(ProductVariantErrors.DuplicateCombination());
 
         var buildResult = ProductVariantCreationDataBuilder.Build(request, characteristicSnapshots);
         if (buildResult.IsFailure)
-            return buildResult;
+            return Fail<ProductVariantWriteAck>(buildResult.Error);
 
         var data = buildResult.Value;
 
@@ -93,7 +94,7 @@ public sealed class CreateProductVariantCommandHandler(
             request.ProductId,
             timeProvider.GetUtcNow());
         if (result.IsFailure)
-            return result;
+            return Fail<ProductVariantWriteAck>(result.Error);
 
         context.ProductVariants.Add(result.Value);
 
@@ -103,9 +104,9 @@ public sealed class CreateProductVariantCommandHandler(
         }
         catch (DbUpdateException)
         {
-            return Fail(ProductVariantErrors.AlreadyExists());
+            return Fail<ProductVariantWriteAck>(ProductVariantErrors.AlreadyExists());
         }
 
-        return Ok();
+        return Ok(new ProductVariantWriteAck(result.Value.Id, result.Value.Version));
     }
 }

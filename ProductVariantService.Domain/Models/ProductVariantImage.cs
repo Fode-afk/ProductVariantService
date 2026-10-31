@@ -1,4 +1,4 @@
-﻿using ProductVariantService.Domain.Primitives;
+﻿using migApp.Shared.Domain.Primitives;
 using ProductVariantService.Domain.ValueObjects;
 
 namespace ProductVariantService.Domain.Models;
@@ -20,8 +20,8 @@ public sealed class ProductVariantImage : Entity
         SortOrder = sortOrder;
     }
 
-    public Guid ProductVariantId { get; private set; }
-    public ImageUrl Url { get; private set; }
+    public Guid ProductVariantId { get; }
+    public ImageUrl Url { get; }
     public AltText Alt { get; private set; }
     public int SortOrder { get; private set; }
     public bool IsMain => SortOrder == 0;

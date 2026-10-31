@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using ProductVariantService.Domain.Primitives;
+using migApp.Shared.Domain.Primitives;
 
 namespace ProductVariantService.Infrastructure.DomainEvents;
 

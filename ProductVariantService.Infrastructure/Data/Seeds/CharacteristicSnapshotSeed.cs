@@ -18,9 +18,7 @@ internal static class CharacteristicSnapshotSeed
             CharType = AttributeCharType.Numeric,
             GroupName = "Экран",
             IsUnifying = false,
-            CategoryId = Guid.Parse("60000000-0000-0000-0000-000000000001"),
-            UpdatedAt = DateTimeOffset.UtcNow,
-            Version = 1
+            CategoryId = Guid.Parse("60000000-0000-0000-0000-000000000001")
         },
 
         new()
@@ -30,9 +28,7 @@ internal static class CharacteristicSnapshotSeed
             CharType = AttributeCharType.Text,
             GroupName = "Экран",
             IsUnifying = false,
-            CategoryId = Guid.Parse("60000000-0000-0000-0000-000000000001"),
-            UpdatedAt = DateTimeOffset.UtcNow,
-            Version = 1
+            CategoryId = Guid.Parse("60000000-0000-0000-0000-000000000001")
         },
         
         // Единственный объединяющий атрибут
@@ -43,9 +39,7 @@ internal static class CharacteristicSnapshotSeed
             CharType = AttributeCharType.Text,
             GroupName = "Общие",
             IsUnifying = true,
-            CategoryId = Guid.Parse("60000000-0000-0000-0000-000000000001"),
-            UpdatedAt = DateTimeOffset.UtcNow,
-            Version = 1
+            CategoryId = Guid.Parse("60000000-0000-0000-0000-000000000001")
         },
 
         new()
@@ -55,9 +49,7 @@ internal static class CharacteristicSnapshotSeed
             CharType = AttributeCharType.Text,
             GroupName = "Общие",
             IsUnifying = false,
-            CategoryId = Guid.Parse("60000000-0000-0000-0000-000000000001"),
-            UpdatedAt = DateTimeOffset.UtcNow,
-            Version = 1
+            CategoryId = Guid.Parse("60000000-0000-0000-0000-000000000001")
         },
 
         new()
@@ -67,9 +59,7 @@ internal static class CharacteristicSnapshotSeed
             CharType = AttributeCharType.Numeric,
             GroupName = "Память",
             IsUnifying = false,
-            CategoryId = Guid.Parse("60000000-0000-0000-0000-000000000001"),
-            UpdatedAt = DateTimeOffset.UtcNow,
-            Version = 1
+            CategoryId = Guid.Parse("60000000-0000-0000-0000-000000000001")
         },
 
         new()
@@ -79,9 +69,7 @@ internal static class CharacteristicSnapshotSeed
             CharType = AttributeCharType.Boolean,
             GroupName = "Сеть",
             IsUnifying = false,
-            CategoryId = Guid.Parse("60000000-0000-0000-0000-000000000001"),
-            UpdatedAt = DateTimeOffset.UtcNow,
-            Version = 1
+            CategoryId = Guid.Parse("60000000-0000-0000-0000-000000000001")
         }
     ];
 }

@@ -1,5 +1,5 @@
-﻿using ProductVariantService.Domain.Models;
-using ProductVariantService.Domain.Primitives;
+﻿using migApp.Shared.Domain.Primitives;
+using ProductVariantService.Domain.Models;
 
 namespace ProductVariantService.Domain.Contexts;
 

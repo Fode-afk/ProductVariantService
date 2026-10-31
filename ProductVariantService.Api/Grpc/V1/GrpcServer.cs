@@ -9,67 +9,38 @@ using ProductVariantService.Application.Features.Commands.RemoveProductVariantIm
 
 namespace ProductVariantService.Api.Grpc.V1;
 
-internal sealed class GrpcServer(IMediator mediator) : Protos.ProductVariantService.ProductVariantServiceBase
+internal sealed class GrpcServer(ISender sender) : Protos.ProductVariantService.ProductVariantServiceBase
 {
-    public override async Task<Empty> CreateProductVariant(CreateProductVariantRequest request, ServerCallContext context)
-    {
-        var result = await mediator.Send(
-            ProductVariantGrpcMapper.ToCreateProductVariantCommand(request),
-            context.CancellationToken);
-        result.ThrowIfFailure();
-        return new Empty();
-    }
+    public override async Task<ProductVariantWriteAck> CreateProductVariant(CreateProductVariantRequest request, ServerCallContext context) =>
+        (await sender.Send(request.ToCommand(), context.CancellationToken))
+            .ThrowIfFailure().ToResponse();
     
-    public override async Task<Empty> UpdateProductVariantInfo(UpdateProductVariantInfoRequest request, ServerCallContext context)
-    {
-        var result = await mediator.Send(
-            ProductVariantGrpcMapper.ToUpdateProductVariantInfoCommand(request),
-            context.CancellationToken);
-        result.ThrowIfFailure();
-        return new Empty();
-    }
+    public override async Task<ProductVariantWriteAck> UpdateProductVariantInfo(UpdateProductVariantInfoRequest request, ServerCallContext context) =>
+        (await sender.Send(request.ToCommand(), context.CancellationToken))
+            .ThrowIfFailure().ToResponse();
 
-    public override async Task<Empty> AddProductVariantImage(AddProductVariantImageRequest request, ServerCallContext context)
-    {
-        var result = await mediator.Send(
-            ProductVariantGrpcMapper.ToAddProductVariantImageCommand(request),
-            context.CancellationToken); 
-        result.ThrowIfFailure();
-        return new Empty();
-    }
-    
-    public override async Task<Empty> RemoveProductVariantImage(RemoveProductVariantImageRequest request, ServerCallContext context)
-    {
-        var result = await mediator.Send(
+    public override async Task<ProductVariantWriteAck> AddProductVariantImage(AddProductVariantImageRequest request, ServerCallContext context) =>
+         (await sender.Send(request.ToCommand(), context.CancellationToken))
+            .ThrowIfFailure().ToResponse();
+
+    public override async Task<ProductVariantWriteAck> RemoveProductVariantImage(RemoveProductVariantImageRequest request, ServerCallContext context) =>
+        (await sender.Send(
             new RemoveProductVariantImageCommand(
                 Guid.Parse(request.ProductVariantId),
                 Guid.Parse(request.VendorId),
-                Guid.Parse(request.ImageId)), context.CancellationToken);
-        result.ThrowIfFailure();
-        return new Empty();
-    }
+                Guid.Parse(request.ImageId)), context.CancellationToken)).ThrowIfFailure().ToResponse();
 
-    public override async Task<Empty> ReorderProductVariantImages(ReorderProductVariantImagesRequest request, ServerCallContext context)
-    {
-        var result = await mediator.Send(
-            ProductVariantGrpcMapper.ToReorderProductVariantImagesCommand(request),
-            context.CancellationToken);
-        result.ThrowIfFailure();
-        return new Empty();
-    }
+    public override async Task<ProductVariantWriteAck> ReorderProductVariantImages(ReorderProductVariantImagesRequest request, ServerCallContext context) =>
+         (await sender.Send(request.ToCommand(), context.CancellationToken))
+            .ThrowIfFailure().ToResponse();
 
-    public override async Task<Empty> UpdateProductVariantImageAlt(UpdateProductVariantImageAltRequest request, ServerCallContext context)
-    {
-        var result = await mediator.Send(
-            ProductVariantGrpcMapper.ToUpdateProductVariantImageAltCommand(request),
-            context.CancellationToken); 
-        result.ThrowIfFailure();
-        return new Empty();
-    }
+    public override async Task<ProductVariantWriteAck> UpdateProductVariantImageAlt(UpdateProductVariantImageAltRequest request, ServerCallContext context) =>
+         (await sender.Send(request.ToCommand(), context.CancellationToken))
+            .ThrowIfFailure().ToResponse();
 
     public override async Task<Empty> DeleteProductVariant(DeleteProductVariantRequest request, ServerCallContext context)
     {
-        var result = await mediator.Send(
+        var result = await sender.Send(
             new DeleteProductVariantCommand(
                 Guid.Parse(request.ProductVariantId),
                 Guid.Parse(request.VendorId)), context.CancellationToken);

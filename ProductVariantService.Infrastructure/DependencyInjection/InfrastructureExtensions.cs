@@ -6,18 +6,20 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Options;
 using migApp.Shared.Behaviours;
+using migApp.Shared.Domain.Primitives;
 using migApp.Shared.Grpc;
+using OpenTelemetry;
+using OpenTelemetry.Exporter;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using ProductVariantService.Application.Interfaces.Data;
 using ProductVariantService.Application.Interfaces.Metrics;
-using ProductVariantService.Domain.Primitives;
 using ProductVariantService.Infrastructure.BackgroundServices;
 using ProductVariantService.Infrastructure.Behaviours;
 using ProductVariantService.Infrastructure.Data;
-using ProductVariantService.Infrastructure.DependencyInjection;
 using ProductVariantService.Infrastructure.DomainEvents;
+using ProductVariantService.Infrastructure.Messaging;
 using ProductVariantService.Infrastructure.Messaging.Consumers;
 using ProductVariantService.Infrastructure.Messaging.IntegrationEvents;
 using ProductVariantService.Infrastructure.Observability;
@@ -33,9 +35,9 @@ public static class InfrastructureExtensions
         services
             .AddServices(configuration)
             .AddDatabase(configuration)
-            .AddGrpc(configuration)
-            .AddHealthChecks(configuration)
-            .AddMassTransit(configuration)
+            .AddGrpcServices()
+            .AddHealth(configuration)
+            .AddMessaging(configuration)
             .AddIntegrationEventHandlers()
             .AddObservability(configuration)
             .AddBehaviours();
@@ -44,9 +46,23 @@ public static class InfrastructureExtensions
     {
         services.AddTransient<IDomainEventsDispatcher, DomainEventsDispatcher>();
 
-        services.Configure<SoftDeletedProductVariantsCleanupOptions>(
-           configuration.GetSection(SoftDeletedProductVariantsCleanupOptions.SectionName));
+        services
+            .AddOptions<SoftDeletedProductVariantsCleanupOptions>()
+            .Bind(configuration.GetSection(
+                SoftDeletedProductVariantsCleanupOptions.SectionName))
+            .Validate(
+                options => options.Interval > TimeSpan.Zero,
+                $"{nameof(SoftDeletedProductVariantsCleanupOptions.Interval)} must be greater than 0.")
+            .Validate(
+                options => options.RetentionPeriod > TimeSpan.Zero,
+                $"{nameof(SoftDeletedProductVariantsCleanupOptions.RetentionPeriod)} must be greater than 0.")
+            .Validate(
+                options => options.BatchSize > 0,
+                $"{nameof(SoftDeletedProductVariantsCleanupOptions.BatchSize)} must be greater than 0.")
+            .ValidateOnStart();
+
         services.AddSingleton(sp => sp.GetRequiredService<IOptions<SoftDeletedProductVariantsCleanupOptions>>().Value);
+
         services.AddHostedService<SoftDeletedProductVariantsCleanupService>();
 
         return services;
@@ -54,47 +70,56 @@ public static class InfrastructureExtensions
 
     private static IServiceCollection AddDatabase(this IServiceCollection services, IConfiguration configuration)
     {
-        string? connectionString = configuration.GetConnectionString("Database");
+        string connectionString = configuration.GetConnectionString("Database")
+            ?? throw new InvalidOperationException("Connection string 'Database' is missing");
 
         services.AddDbContext<AppDbContext>(options =>
             options.UseSqlServer(connectionString, sqlOptions =>
-            {
-                sqlOptions.MigrationsHistoryTable("__EFMigrationsHistory", Schemas.ProductVariantWrite);
-            }));
+                sqlOptions.MigrationsHistoryTable("__EFMigrationsHistory", Schemas.ProductVariantWrite)));
 
         services.AddScoped<IAppDbContext>(provider => provider.GetRequiredService<AppDbContext>());
 
         return services;
     }
 
-    private static IServiceCollection AddGrpc(this IServiceCollection services, IConfiguration configuration)
+    private static IServiceCollection AddGrpcServices(this IServiceCollection services)
     {
-        services.AddGrpc(options =>
-        {
-            options.Interceptors.Add<GrpcExceptionInterceptor>();
-        });
-
+        services.AddGrpc(options => options.Interceptors.Add<GrpcExceptionInterceptor>());
         return services;
     }
 
-    private static IServiceCollection AddHealthChecks(this IServiceCollection services, IConfiguration configuration)
+    private static IServiceCollection AddHealth(this IServiceCollection services, IConfiguration configuration)
     {
+        var databaseConnectionString = configuration.GetConnectionString("Database")
+            ?? throw new InvalidOperationException("Connection string 'Database' is missing");
+
+        var rabbitMq = configuration
+            .GetSection(RabbitMqOptions.SectionName)
+            .Get<RabbitMqOptions>()
+                ?? throw new InvalidOperationException("RabbitMQ configuration is missing.");
+
+        var redisConnectionString = configuration.GetConnectionString("Redis")
+            ?? throw new InvalidOperationException("Connection string 'Redis' is missing");
+
         services.AddGrpcHealthChecks()
             .AddCheck("self", () => HealthCheckResult.Healthy("Service is running"))
             .AddSqlServer(
-                connectionString: configuration.GetConnectionString("Database")!,
+                connectionString: databaseConnectionString,
                 name: "mssql",
                 failureStatus: HealthStatus.Unhealthy,
                 tags: ["ready"])
             .AddRabbitMQ(
-                factory: sp =>
+                factory: async sp =>
                 {
                     var factory = new ConnectionFactory()
                     {
-                        HostName = configuration["RabbitMQ:Host"]!,
-                        Port = int.Parse(configuration["RabbitMQ:Port"]!)
+                        HostName = rabbitMq.Host,
+                        Port = rabbitMq.Port,
+                        VirtualHost = rabbitMq.VirtualHost,
+                        UserName = rabbitMq.Username,
+                        Password = rabbitMq.Password
                     };
-                    return factory.CreateConnectionAsync().GetAwaiter().GetResult();
+                    return await factory.CreateConnectionAsync();
                 },
                 name: "rabbitmq",
                 failureStatus: HealthStatus.Unhealthy,
@@ -103,11 +128,28 @@ public static class InfrastructureExtensions
         return services;
     }
 
-    private static IServiceCollection AddMassTransit(this IServiceCollection services, IConfiguration configuration)
+    private static IServiceCollection AddMessaging(this IServiceCollection services, IConfiguration configuration)
     {
+        services
+           .AddOptions<RabbitMqOptions>()
+           .BindConfiguration(RabbitMqOptions.SectionName)
+           .Validate(
+               options => !string.IsNullOrWhiteSpace(options.Host),
+               "RabbitMQ:Host is required.")
+           .Validate(
+               options => options.Port > 0,
+               "RabbitMQ:Port must be greater than zero.")
+           .Validate(
+               options => !string.IsNullOrWhiteSpace(options.Username),
+               "RabbitMQ:Username is required.")
+           .Validate(
+               options => !string.IsNullOrWhiteSpace(options.Password),
+               "RabbitMQ:Password is required.")
+           .ValidateOnStart();
+
         services.AddMassTransit(x =>
         {
-            x.SetKebabCaseEndpointNameFormatter();
+            x.SetEndpointNameFormatter(new KebabCaseEndpointNameFormatter("product-variant-service", false));
 
             x.AddConsumersFromNamespaceContaining<ConsumersAssemblyMarker>();
 
@@ -119,60 +161,56 @@ public static class InfrastructureExtensions
 
             x.UsingRabbitMq((context, cfg) =>
             {
-                cfg.Host(configuration["RabbitMQ:Host"]!, "/", h =>
-                {
-                    h.Username("guest");
-                    h.Password("guest");
-                });
+                var options = context
+                    .GetRequiredService<IOptions<RabbitMqOptions>>()
+                    .Value;
 
-                cfg.ConfigureEndpoints(context, new KebabCaseEndpointNameFormatter("product-variant-service", false));
+                cfg.Host(options.Host,
+                    options.Port,
+                    options.VirtualHost,
+                    host =>
+                    {
+                        host.Username(options.Username);
+                        host.Password(options.Password);
+                    });
+
+                cfg.ConfigureEndpoints(context);
             });
         });
 
         return services;
     }
 
-    private static IServiceCollection AddIntegrationEventHandlers(this IServiceCollection services)
-    {
-        var assembly = typeof(IntegrationEventsAssemblyMarker).Assembly;
-
+    private static IServiceCollection AddIntegrationEventHandlers(this IServiceCollection services) =>
         services.Scan(scan => scan
-            .FromAssemblies(assembly)
+            .FromAssemblies(typeof(IntegrationEventsAssemblyMarker).Assembly)
             .AddClasses(classes => classes.AssignableTo(typeof(IPreCommitDomainEventHandler<>)))
             .AsImplementedInterfaces()
             .WithScopedLifetime());
-
-        return services;
-    }
 
     private static IServiceCollection AddObservability(
         this IServiceCollection services,
         IConfiguration configuration)
     {
-        var otlpEndpoint = configuration.GetConnectionString("OtlpEndpoint")
+        var otlpEndpoint = configuration["Otlp:Endpoint"]
             ?? throw new InvalidOperationException("OtlpEndpoint is not configured");
 
         services.AddOpenTelemetry()
+            .ConfigureResource(r => r.AddService("ProductVariantService"))
+            .UseOtlpExporter(OtlpExportProtocol.Grpc, new Uri(otlpEndpoint))
             .WithTracing(tracing => tracing
-                .SetResourceBuilder(ResourceBuilder
-                    .CreateDefault()
-                    .AddService("ProductVariantService"))
                 .AddAspNetCoreInstrumentation(opts =>
                     opts.Filter = ctx =>
                         !ctx.Request.Path.StartsWithSegments("/health"))
-                .AddHttpClientInstrumentation()
+                .AddHttpClientInstrumentation()             
                 .AddSource("MassTransit")
-                .AddSource("ProductVariantService")
-                .AddOtlpExporter(opts => opts.Endpoint = new Uri(otlpEndpoint)))
+                .AddSource("ProductVariantService"))
             .WithMetrics(metrics => metrics
-                .SetResourceBuilder(ResourceBuilder
-                    .CreateDefault()
-                    .AddService("ProductVariantService"))
                 .AddAspNetCoreInstrumentation()
                 .AddHttpClientInstrumentation()
                 .AddRuntimeInstrumentation()
-                .AddMeter(ProductVariantServiceMetrics.MeterName)
-                .AddOtlpExporter(opts => opts.Endpoint = new Uri(otlpEndpoint)));
+                .AddMeter("MassTransit")
+                .AddMeter(ProductVariantServiceMetrics.MeterName));
 
         services.AddSingleton<IProductVariantMetrics, ProductVariantServiceMetrics>();
         services.AddHostedService<ActiveVariantsMetricCollector>();
@@ -180,11 +218,8 @@ public static class InfrastructureExtensions
         return services;
     }
 
-    private static IServiceCollection AddBehaviours(this IServiceCollection services)
-    {
-        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
-        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(TracingBehaviour<,>));
-
-        return services;
-    }
+    private static IServiceCollection AddBehaviours(this IServiceCollection services) =>
+        services
+            .AddTransient(typeof(IPipelineBehavior<,>), typeof(TracingBehaviour<,>))
+            .AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
 }

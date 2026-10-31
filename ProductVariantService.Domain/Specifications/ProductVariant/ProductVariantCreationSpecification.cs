@@ -4,7 +4,7 @@ using ProductVariantService.Domain.Specifications.Common;
 
 namespace ProductVariantService.Domain.Specifications.ProductVariant;
 
-public static class ProductVariantCreationSpecification
+internal static class ProductVariantCreationSpecification
 {
     public static readonly ISpecification<ProductVariantCreationContext> Spec =
         new VendorIsActiveSpec<ProductVariantCreationContext>()

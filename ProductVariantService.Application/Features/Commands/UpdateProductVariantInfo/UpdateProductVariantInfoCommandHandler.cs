@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using migApp.Shared.Results;
+using ProductVariantService.Application.Dtos;
 using ProductVariantService.Application.Interfaces.Data;
 using ProductVariantService.Domain.Contexts;
 using ProductVariantService.Domain.Errors;
@@ -11,14 +12,14 @@ namespace ProductVariantService.Application.Features.Commands.UpdateProductVaria
 
 public sealed class UpdateProductVariantInfoCommandHandler(
     IAppDbContext context,
-    TimeProvider timeProvider) : IRequestHandler<UpdateProductVariantInfoCommand, IResult>
+    TimeProvider timeProvider) : IRequestHandler<UpdateProductVariantInfoCommand, IResult<ProductVariantWriteAck>>
 {
-    public async Task<IResult> Handle(UpdateProductVariantInfoCommand request, CancellationToken cancellationToken)
+    public async Task<IResult<ProductVariantWriteAck>> Handle(UpdateProductVariantInfoCommand request, CancellationToken cancellationToken)
     {
         var productVariant = await context.ProductVariants
             .FirstOrDefaultAsync(p => p.Id == request.ProductVariantId, cancellationToken);
         if (productVariant == null)
-            return Fail(ProductVariantErrors.NotFound());
+            return Fail<ProductVariantWriteAck>(ProductVariantErrors.NotFound());
 
         var productSnapshot = await context.ProductSnapshots
             .AsNoTracking()
@@ -26,7 +27,7 @@ public sealed class UpdateProductVariantInfoCommandHandler(
                 x.ProductId == productVariant.ProductId,
                 cancellationToken);
         if (productSnapshot is null)
-            return Fail(ProductSnapshotErrors.NotFound());
+            return Fail<ProductVariantWriteAck>(ProductSnapshotErrors.NotFound());
 
         var ownershipCtx = new ProductVendorOwnershipContext(
             request.VendorId,
@@ -34,7 +35,7 @@ public sealed class UpdateProductVariantInfoCommandHandler(
 
         var ownershipResult = ProductBelongsToVendorSpec.Instance.IsSatisfiedBy(ownershipCtx);
         if (ownershipResult.IsFailure)
-            return ownershipResult;
+            return Fail<ProductVariantWriteAck>(ownershipResult.Error);
 
         var vendorSnapshot = await context.VendorSnapshots
             .AsNoTracking()
@@ -42,7 +43,7 @@ public sealed class UpdateProductVariantInfoCommandHandler(
                 v.VendorId == request.VendorId,
                 cancellationToken: cancellationToken);
         if (vendorSnapshot == null)
-            return Fail(VendorSnapshotErrors.NotFound());
+            return Fail<ProductVariantWriteAck>(VendorSnapshotErrors.NotFound());
 
         var ctx = new ProductVariantUpdateInfoContext(
             vendorSnapshot.IsActive,
@@ -50,7 +51,7 @@ public sealed class UpdateProductVariantInfoCommandHandler(
 
         var buildResult = ProductVariantUpdateInfoDataBuilder.Build(request);
         if (buildResult.IsFailure)
-            return buildResult;
+            return Fail<ProductVariantWriteAck>(buildResult.Error);
         
         var data = buildResult.Value;
         
@@ -59,7 +60,7 @@ public sealed class UpdateProductVariantInfoCommandHandler(
             data,
             timeProvider.GetUtcNow());
         if (result.IsFailure)
-            return result;
+            return Fail<ProductVariantWriteAck>(result.Error);
         
         try
         {
@@ -67,9 +68,9 @@ public sealed class UpdateProductVariantInfoCommandHandler(
         }
         catch (DbUpdateException)
         {
-            return Fail(ProductVariantErrors.DuplicateSkuOrBarcode());
+            return Fail<ProductVariantWriteAck>(ProductVariantErrors.DuplicateSkuOrBarcode());
         }
 
-        return Ok();
+        return Ok(new ProductVariantWriteAck(productVariant.Id, productVariant.Version));
     }
 }

@@ -19,9 +19,7 @@ internal sealed class SoftDeletedProductVariantsCleanupService(
         await CleanupAsync(stoppingToken);
 
         while (await timer.WaitForNextTickAsync(stoppingToken))
-        {
             await CleanupAsync(stoppingToken);
-        }
     }
 
     private async Task CleanupAsync(CancellationToken cancellationToken)

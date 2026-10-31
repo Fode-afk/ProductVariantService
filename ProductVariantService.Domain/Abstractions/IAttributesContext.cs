@@ -2,7 +2,7 @@
 
 namespace ProductVariantService.Domain.Abstractions;
 
-public interface IAttributesContext
+internal interface IAttributesContext
 {
     IReadOnlyCollection<VariantAttribute> Attributes { get; }
 }

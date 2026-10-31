@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using migApp.Shared.Results;
+using ProductVariantService.Application.Dtos;
 using ProductVariantService.Application.Interfaces.Data;
 using ProductVariantService.Domain.Contexts;
 using ProductVariantService.Domain.Errors;
@@ -12,15 +13,15 @@ namespace ProductVariantService.Application.Features.Commands.UpdateProductVaria
 
 public sealed class UpdateProductVariantImageAltCommandHandler(
     IAppDbContext context,
-    TimeProvider timeProvider) : IRequestHandler<UpdateProductVariantImageAltCommand, IResult>
+    TimeProvider timeProvider) : IRequestHandler<UpdateProductVariantImageAltCommand, IResult<ProductVariantWriteAck>>
 {
-    public async Task<IResult> Handle(UpdateProductVariantImageAltCommand request, CancellationToken cancellationToken)
+    public async Task<IResult<ProductVariantWriteAck>> Handle(UpdateProductVariantImageAltCommand request, CancellationToken cancellationToken)
     {
         var productVariant = await context.ProductVariants
             .Include(v => v.Images)
             .FirstOrDefaultAsync(p => p.Id == request.ProductVariantId, cancellationToken);
         if (productVariant == null)
-            return Fail(ProductVariantErrors.NotFound());
+            return Fail<ProductVariantWriteAck>(ProductVariantErrors.NotFound());
 
         var productSnapshot = await context.ProductSnapshots
             .AsNoTracking()
@@ -28,7 +29,7 @@ public sealed class UpdateProductVariantImageAltCommandHandler(
                 x.ProductId == productVariant.ProductId,
                 cancellationToken);
         if (productSnapshot is null)
-            return Fail(ProductSnapshotErrors.NotFound());
+            return Fail<ProductVariantWriteAck>(ProductSnapshotErrors.NotFound());
 
         var ownershipCtx = new ProductVendorOwnershipContext(
             request.VendorId,
@@ -36,7 +37,7 @@ public sealed class UpdateProductVariantImageAltCommandHandler(
 
         var ownershipResult = ProductBelongsToVendorSpec.Instance.IsSatisfiedBy(ownershipCtx);
         if (ownershipResult.IsFailure)
-            return ownershipResult;
+            return Fail<ProductVariantWriteAck>(ownershipResult.Error);
 
         var vendorSnapshot = await context.VendorSnapshots
             .AsNoTracking()
@@ -44,11 +45,11 @@ public sealed class UpdateProductVariantImageAltCommandHandler(
                 v.VendorId == request.VendorId,
                 cancellationToken: cancellationToken);
         if (vendorSnapshot == null)
-            return Fail(VendorSnapshotErrors.NotFound());
+            return Fail<ProductVariantWriteAck>(VendorSnapshotErrors.NotFound());
 
         var altTextResult = AltText.Create(request.AltText);
         if (altTextResult.IsFailure)
-            return altTextResult;
+            return Fail<ProductVariantWriteAck>(altTextResult.Error);
 
         var ctx = new ProductVariantUpdateImageAltContext(
             vendorSnapshot.IsActive,
@@ -60,10 +61,10 @@ public sealed class UpdateProductVariantImageAltCommandHandler(
             altTextResult.Value,
             timeProvider.GetUtcNow());
         if (result.IsFailure)
-            return result;
+            return Fail<ProductVariantWriteAck>(result.Error);
 
         await context.SaveChangesAsync(cancellationToken);
 
-        return Ok();
+        return Ok(new ProductVariantWriteAck(productVariant.Id, productVariant.Version));
     }
 }

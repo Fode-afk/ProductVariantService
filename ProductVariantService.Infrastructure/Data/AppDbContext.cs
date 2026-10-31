@@ -1,9 +1,9 @@
 ﻿using MassTransit;
 using MassTransit.EntityFrameworkCoreIntegration;
 using Microsoft.EntityFrameworkCore;
+using migApp.Shared.Domain.Primitives;
 using ProductVariantService.Application.Interfaces.Data;
 using ProductVariantService.Domain.Models;
-using ProductVariantService.Domain.Primitives;
 using ProductVariantService.Domain.Snapshots;
 using ProductVariantService.Infrastructure.DomainEvents;
 

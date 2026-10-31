@@ -14,4 +14,4 @@ public sealed record CreateProductVariantCommand(
     string Barcode,
     string SKU,
 
-    Dictionary<Guid, string> Attributes) : IRequest<IResult>;
+    Dictionary<Guid, string> Attributes) : IRequest<IResult<ProductVariantWriteAck>>;
