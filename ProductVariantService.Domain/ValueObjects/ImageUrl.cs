@@ -9,8 +9,7 @@ public sealed class ImageUrl : ValueObject
 {
     public string Value { get; }
 
-    private ImageUrl(string value) =>
-        Value = value;
+    private ImageUrl(string value) => Value = value;
 
     public static IResult<ImageUrl> Create(string value)
     {
@@ -26,12 +25,8 @@ public sealed class ImageUrl : ValueObject
         return Ok(new ImageUrl(uriResult.ToString()));
     }
 
-    public override IEnumerable<object> GetAtomicValues()
-    {
-        yield return Value;
-    }
+    public override IEnumerable<object> GetAtomicValues() => [Value];
 
     public override string ToString() => Value;
-
     public static implicit operator string(ImageUrl imageUrl) => imageUrl.ToString();
 }

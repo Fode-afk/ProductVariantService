@@ -40,13 +40,8 @@ public sealed class DimensionUnit : ValueObject
         return Ok(unit);
     }
 
-    public override IEnumerable<object> GetAtomicValues()
-    {
-        yield return Code;
-        yield return ToCmFactor;
-    }
+    public override IEnumerable<object> GetAtomicValues() => [Code, ToCmFactor];
 
     public override string ToString() => Code;
-
     public static implicit operator string(DimensionUnit dimensionUnit) => dimensionUnit.ToString();
 }

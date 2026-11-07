@@ -23,28 +23,12 @@ public sealed partial class Barcode : ValueObject
         if (string.IsNullOrWhiteSpace(value))
             return Fail<Barcode>(BarcodeErrors.NullOrEmpty());
 
-        value = Normalize(value);
+        value = NormalizeRegex().Replace(value, "");
 
         if (!IsValid(value, out var type))
             return Fail<Barcode>(BarcodeErrors.InvalidFormat());
 
         return Ok(new Barcode(value, type));
-    }
-
-    public override IEnumerable<object> GetAtomicValues()
-    {
-        yield return Value;
-        yield return Type;
-    }
-
-    public override string ToString() => Value;
-
-    public static implicit operator string(Barcode barcode)
-        => barcode.ToString();
-
-    private static string Normalize(string value)
-    {
-        return NormalizeRegex().Replace(value, "");
     }
 
     private static bool IsValid(string value, out BarcodeType type)
@@ -63,4 +47,9 @@ public sealed partial class Barcode : ValueObject
 
     [GeneratedRegex(@"^\d+$")]
     private static partial Regex ValidationRegex();
+
+    public override IEnumerable<object> GetAtomicValues() => [Value, Type];
+
+    public override string ToString() => Value;
+    public static implicit operator string(Barcode barcode) => barcode.ToString();
 }

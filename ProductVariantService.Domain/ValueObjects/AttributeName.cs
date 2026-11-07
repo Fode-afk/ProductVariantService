@@ -11,8 +11,7 @@ public sealed class AttributeName : ValueObject
 
     public string Value { get; }
 
-    private AttributeName(string value) =>
-        Value = value;
+    private AttributeName(string value) => Value = value;
 
     public static IResult<AttributeName> Create(string value)
     {
@@ -27,12 +26,8 @@ public sealed class AttributeName : ValueObject
         return Ok(new AttributeName(value));
     }
 
-    public override IEnumerable<object> GetAtomicValues()
-    {
-        yield return Value;
-    }
+    public override IEnumerable<object> GetAtomicValues() => [Value];
 
     public override string ToString() => Value;
-
     public static implicit operator string(AttributeName attributeName) => attributeName.ToString();
 }

@@ -46,22 +46,11 @@ public sealed class Dimensions : ValueObject
                 unit));
     }
 
-    public double Volume()
-        => Length * Width * Height;
+    public double Volume() => Length * Width * Height;
+    public double VolumeInCm3() => Volume() * Unit.ToCmFactor * Unit.ToCmFactor * Unit.ToCmFactor;
 
-    public double VolumeInCm3()
-        => Volume() * Unit.ToCmFactor * Unit.ToCmFactor * Unit.ToCmFactor;
+    public override IEnumerable<object> GetAtomicValues() => [Length, Width, Height, Unit];
 
-    public override IEnumerable<object> GetAtomicValues()
-    {
-        yield return Length;
-        yield return Width;
-        yield return Height;
-        yield return Unit;
-    }
-
-    public override string ToString()
-        => $"{Length}x{Width}x{Height} {Unit}";
-
+    public override string ToString() => $"{Length}x{Width}x{Height} {Unit}";
     public static implicit operator string(Dimensions dimensions) => dimensions.ToString();
 }

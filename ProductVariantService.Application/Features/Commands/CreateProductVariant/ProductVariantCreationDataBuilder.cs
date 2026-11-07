@@ -92,20 +92,14 @@ internal static class ProductVariantCreationDataBuilder
 
             if (nameResult.IsSuccess && valueResult.IsSuccess)
             {
-                var attrResult = VariantAttribute.Create(
+                var attribute = VariantAttribute.Create(
                     characteristicId,
                     nameResult.Value,
                     valueResult.Value,
                     snapshot.CharType,
                     groupName);
 
-                if (attrResult.IsFailure)
-                {
-                    errors.Add(attrResult.Error);
-                    continue;
-                }
-
-                attributes.Add(attrResult.Value);
+                attributes.Add(attribute);
             }
         }
 

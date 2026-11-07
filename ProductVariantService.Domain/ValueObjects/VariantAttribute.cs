@@ -14,7 +14,6 @@ public sealed class VariantAttribute : ValueObject
     public AttributeGroupName? GroupName { get; }
 
     private VariantAttribute() { }
-
     private VariantAttribute(
         Guid characteristicId,
         AttributeName name,
@@ -29,27 +28,19 @@ public sealed class VariantAttribute : ValueObject
         GroupName = groupName;
     }
 
-    public static IResult<VariantAttribute> Create(
+    public static VariantAttribute Create(
         Guid characteristicId,
         AttributeName name,
         AttributeValue value,
         AttributeCharType charType,
-        AttributeGroupName? groupName = null)
-    {
-        return Ok(new VariantAttribute(
+        AttributeGroupName? groupName = null) =>
+        new(
             characteristicId,
             name,
             value,
             charType,
-            groupName));
-    }
+            groupName);
 
-    public override IEnumerable<object> GetAtomicValues()
-    {
-        yield return CharacteristicId;
-        yield return Name;
-        yield return Value;
-        yield return CharType;
-        yield return GroupName ?? string.Empty;
-    }
+    public override IEnumerable<object> GetAtomicValues() =>
+        [CharacteristicId, Name, Value, CharType, GroupName ?? string.Empty];
 }

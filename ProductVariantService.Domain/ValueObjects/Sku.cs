@@ -13,8 +13,7 @@ public sealed partial class Sku : ValueObject
 
     public string Value { get; }
 
-    private Sku(string value) =>
-        Value = value;
+    private Sku(string value) => Value = value;
 
     public static IResult<Sku> Create(string value)
     {
@@ -29,22 +28,8 @@ public sealed partial class Sku : ValueObject
         return Ok(new Sku(value));
     }
 
-    public static IResult<Sku> Generate(string prefix)
-    {
-        if (string.IsNullOrWhiteSpace(prefix))
-            return Fail<Sku>(SkuErrors.NullOrEmpty());
-
-        var random = Guid.NewGuid().ToString("N")[..8].ToUpper();
-        return Create($"{prefix}-{random}");
-    }
-
-
-    public override IEnumerable<object> GetAtomicValues()
-    {
-        yield return Value;
-    }
+    public override IEnumerable<object> GetAtomicValues() => [Value];
 
     public override string ToString() => Value;
-
     public static implicit operator string(Sku sku) => sku.ToString();
 }

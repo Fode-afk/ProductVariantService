@@ -11,8 +11,7 @@ public sealed class AltText : ValueObject
 
     public string Value { get; }
 
-    private AltText(string value) =>
-        Value = value;
+    private AltText(string value) => Value = value;
 
     public static IResult<AltText> Create(string value)
     {
@@ -27,12 +26,8 @@ public sealed class AltText : ValueObject
         return Ok(new AltText(value));
     }
 
-    public override IEnumerable<object> GetAtomicValues()
-    {
-        yield return Value;
-    }
+    public override IEnumerable<object> GetAtomicValues() => [Value];
 
     public override string ToString() => Value;
-
     public static implicit operator string(AltText altText) => altText.ToString();
 }
